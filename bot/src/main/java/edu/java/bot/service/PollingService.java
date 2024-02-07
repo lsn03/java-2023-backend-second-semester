@@ -18,16 +18,21 @@ public class PollingService {
         this.bot = bot;
         this.userMessageProcessor = userMessageProcessor;
     }
+
     @PostConstruct
     public void init() {
         startPolling();
     }
+
     private void startPolling() {
+
         bot.setUpdatesListener(updates -> {
             for (Update update : updates) {
-                userMessageProcessor.process(update);
+                var message = userMessageProcessor.process(update);
+                bot.myExecute(message);
             }
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
+
     }
 }

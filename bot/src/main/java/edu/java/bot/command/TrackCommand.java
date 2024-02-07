@@ -23,8 +23,13 @@ public class TrackCommand implements Command {
 
     @Override
     public SendMessage handle(Update update) {
-        LOGGER.info("User entered {} command", command());
-        return null;
+        LOGGER.info(
+            "User entered {} user id {} user name {}",
+            update.message().text(),
+            update.message().chat().id(),
+            update.message().chat().username()
+        );
+        return new SendMessage(update.message().chat().id(),"Вызвана команда "+command());
     }
 
     @Override
