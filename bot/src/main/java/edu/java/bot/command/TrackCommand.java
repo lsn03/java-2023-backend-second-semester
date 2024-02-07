@@ -29,7 +29,7 @@ public class TrackCommand implements Command {
             update.message().chat().id(),
             update.message().chat().username()
         );
-        return new SendMessage(update.message().chat().id(),"Вызвана команда "+command());
+        return new SendMessage(update.message().chat().id(), "Вызвана команда " + command());
     }
 
     @Override

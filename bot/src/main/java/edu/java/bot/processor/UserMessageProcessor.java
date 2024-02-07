@@ -27,13 +27,13 @@ public class UserMessageProcessor {
     public SendMessage process(Update update) {
         String text = update.message().text();
         var result = commands.getOrDefault(text, null);
-        SendMessage message = null;
+        SendMessage message;
         if (result != null) {
             message = result.handle(update);
         } else if (text.startsWith("/")) {
             message = unknownCommand.handle(update);
         } else {
-            message = null;
+            message = new SendMessage(update.message().chat().id(),"Запрос принят");
         }
         return message;
     }
