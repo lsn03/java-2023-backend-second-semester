@@ -3,13 +3,21 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.service.CommandService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ListCommand implements Command {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final CommandService commandService;
+
+    @Autowired
+    public ListCommand(CommandService commandService) {
+        this.commandService = commandService;
+    }
 
     @Override
     public String command() {
@@ -23,13 +31,29 @@ public class ListCommand implements Command {
 
     @Override
     public SendMessage handle(Update update) {
+        Long chatId = update.message().chat().id();
         LOGGER.info(
-            "User entered {} user id {} user name {}",
+            "User @{} entered \"{}\" user_id={}",
+            update.message().chat().username(),
             update.message().text(),
-            update.message().chat().id(),
-            update.message().chat().username()
+            chatId
         );
-        return new SendMessage(update.message().chat().id(),"Вызвана команда "+command());
+        var list = commandService.getUserTracks(chatId);
+        if(!list.isEmpty()){
+            StringBuilder st = new StringBuilder();
+            st.append("Отслеживаемые ссылки:").append(System.lineSeparator());
+            for (int i = 0; i < list.size(); i++) {
+                st.append(i + 1).append(". ").append(list.get(i));
+                if (i < list.size() - 1) {
+                    st.append(System.lineSeparator());
+                }
+            }
+
+            return new SendMessage(chatId, st.toString());
+        }else{
+            return new SendMessage(chatId,"Нет ссылок для отслеживания. Введите /track.");
+        }
+
     }
 
     @Override

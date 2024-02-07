@@ -24,13 +24,23 @@ public class HelpCommand implements Command {
 
     @Override
     public SendMessage handle(Update update) {
+        Long chatId = update.message().chat().id();
         LOGGER.info(
-            "User entered {} user id {} user name {}",
+            "User @{} entered \"{}\" user_id={}",
+            update.message().chat().username(),
             update.message().text(),
-            update.message().chat().id(),
-            update.message().chat().username()
+            chatId
         );
-        return new SendMessage(update.message().chat().id(),"Вызвана команда "+command());
+        return new SendMessage(chatId, "Бот позволяет отслеживать обновления сайтов." + System.lineSeparator() +
+            "Поддерживаются сайты: StackOverFlow, Github. Примеры корректных ссылок:" + System.lineSeparator() +
+            "1. https://github.com/lsn03" + System.lineSeparator() +
+            "2. https://stackoverflow.com/questions/6402162/how-to-enable-intellij-hot-code-swap" +
+            System.lineSeparator() + "Примеры некорректных ссылок:" +System.lineSeparator()+
+            "1. github.com/lsn03" + System.lineSeparator() +
+            "2. stackoverflow.com/questions/6402162/how-to-enable-intellij-hot-code-swap" + System.lineSeparator()+
+            "Поддерживаемые комманды доступны в меню"
+        );
+
     }
 
     @Override

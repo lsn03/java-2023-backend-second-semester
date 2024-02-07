@@ -8,18 +8,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StartCommand implements Command {
-
+public class CancelCommand implements Command {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public String command() {
-        return "/start";
+        return "/cancel";
     }
 
     @Override
     public String description() {
-        return "Start command";
+        return "Отменяет ввод URL";
     }
 
     @Override
@@ -31,7 +30,8 @@ public class StartCommand implements Command {
             update.message().text(),
             chatId
         );
-        return new SendMessage(update.message().chat().id(),"Вызвана команда "+command());
+        return new SendMessage(update.message().chat().id(), "Ввод отменен");
+
     }
 
     @Override

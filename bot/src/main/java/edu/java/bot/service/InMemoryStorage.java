@@ -9,9 +9,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class InMemoryStorage {
     private final Map<Long, List<String>> trackedUrls;
+    private final Map<Long, Boolean> awaitingUrls;
 
     public InMemoryStorage() {
         this.trackedUrls = new ConcurrentHashMap<>();
+        this.awaitingUrls = new ConcurrentHashMap<>();
+    }
+
+    public void setAwaitingUrl(Long userId, boolean isAwaiting) {
+        awaitingUrls.put(userId, isAwaiting);
+    }
+
+    public boolean isAwaitingUrl(Long userId) {
+        return awaitingUrls.getOrDefault(userId, false);
     }
 
     public boolean addUrl(Long userId, String url) {
@@ -29,7 +39,7 @@ public class InMemoryStorage {
         List<String> urls = trackedUrls.get(userId);
         if (urls != null) {
             urls.remove(url);
-            if(urls.isEmpty()){
+            if (urls.isEmpty()) {
                 trackedUrls.remove(userId);
             }
             return true;
@@ -38,7 +48,8 @@ public class InMemoryStorage {
         }
 
     }
-    public List<String> getUserTracks(Long userId){
-        return new ArrayList<>(trackedUrls.get(userId));
+
+    public List<String> getUserTracks(Long userId) {
+        return new ArrayList<>(trackedUrls.getOrDefault(userId,List.of()));
     }
 }

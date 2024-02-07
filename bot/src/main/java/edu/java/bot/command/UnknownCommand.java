@@ -24,12 +24,12 @@ public class UnknownCommand implements Command {
 
     @Override
     public SendMessage handle(Update update) {
-
+        Long chatId = update.message().chat().id();
         LOGGER.warn(
-            "User entered {} user id {} user name {}",
+            "User @{} entered \"{}\" user_id={}",
+            update.message().chat().username(),
             update.message().text(),
-            update.message().chat().id(),
-            update.message().chat().username()
+            chatId
         );
 
         return new SendMessage(update.message().chat().id(), "Команда неизвестна. Введите /help");
