@@ -1,4 +1,13 @@
 services:
+  bot:
+    build: ./bot/.
+    ports:
+      - 8081:8081
+      - 5005:5005
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    env_file:
+        - ./.env
   postgresql:
     image: postgres:16
     ports:

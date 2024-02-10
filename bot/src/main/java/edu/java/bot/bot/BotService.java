@@ -24,9 +24,9 @@ public class BotService implements Bot {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public BotService(@Value("${APP_TELEGRAM_TOKEN}") String botToken, List<Command> commandList) {
+    public BotService( List<Command> commandList) {
         this.commandList = commandList;
-        telegramBot = new TelegramBot(botToken);
+        telegramBot = new TelegramBot(System.getenv().get("APP_TELEGRAM_TOKEN"));
     }
 
     @Override
