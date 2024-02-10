@@ -3,21 +3,13 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.service.InMemoryStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TrackCommand implements Command {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final InMemoryStorage storage;
-
-    @Autowired
-    public TrackCommand(InMemoryStorage storage) {
-        this.storage = storage;
-    }
 
     @Override
     public String command() {
@@ -26,7 +18,7 @@ public class TrackCommand implements Command {
 
     @Override
     public String description() {
-        return "Track command";
+        return "Начать отслеживание ссылки";
     }
 
     @Override
@@ -39,7 +31,6 @@ public class TrackCommand implements Command {
             chatId
         );
 
-        storage.setAwaitingUrl(chatId, true);
         return new SendMessage(chatId, "Пожалуйста, отправьте URL для отслеживания.");
 
     }

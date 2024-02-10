@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ListCommand implements Command {
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final CommandService commandService;
 
     @Autowired
@@ -26,20 +26,20 @@ public class ListCommand implements Command {
 
     @Override
     public String description() {
-        return "List command";
+        return "Список отслеживаемых сайтов";
     }
 
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        LOGGER.info(
+        logger.info(
             "User @{} entered \"{}\" user_id={}",
             update.message().chat().username(),
             update.message().text(),
             chatId
         );
         var list = commandService.getUserTracks(chatId);
-        if(!list.isEmpty()){
+        if (!list.isEmpty()) {
             StringBuilder st = new StringBuilder();
             st.append("Отслеживаемые ссылки:").append(System.lineSeparator());
             for (int i = 0; i < list.size(); i++) {
@@ -50,8 +50,8 @@ public class ListCommand implements Command {
             }
 
             return new SendMessage(chatId, st.toString());
-        }else{
-            return new SendMessage(chatId,"Нет ссылок для отслеживания. Введите /track.");
+        } else {
+            return new SendMessage(chatId, "Нет ссылок для отслеживания. Введите /track.");
         }
 
     }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CancelCommand implements Command {
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public String command() {
@@ -18,13 +18,13 @@ public class CancelCommand implements Command {
 
     @Override
     public String description() {
-        return "Отменяет ввод URL";
+        return "Отменяет ввод URL в командах /track и /untrack";
     }
 
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        LOGGER.info(
+        logger.info(
             "User @{} entered \"{}\" user_id={}",
             update.message().chat().username(),
             update.message().text(),

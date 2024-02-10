@@ -14,17 +14,16 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BotService implements Bot {
     private final TelegramBot telegramBot;
     private final List<Command> commandList;
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public BotService( List<Command> commandList) {
+    public BotService(List<Command> commandList) {
         this.commandList = commandList;
         telegramBot = new TelegramBot(System.getenv().get("APP_TELEGRAM_TOKEN"));
     }
@@ -33,14 +32,14 @@ public class BotService implements Bot {
 
     public <T extends BaseRequest<T, R>, R extends BaseResponse> void myExecute(BaseRequest<T, R> request) {
 
-        LOGGER.info("myExecute {}", request.getParameters());
+        logger.info("myExecute {}", request.getParameters());
         telegramBot.execute(request);
 
     }
 
     @Override
     public int process(List<Update> list) {
-        LOGGER.info("process {}", list);
+        logger.info("process {}", list);
         return 0;
     }
 
@@ -58,12 +57,11 @@ public class BotService implements Bot {
 
     @Override
     public void close() throws Exception {
-        LOGGER.info("close");
+        logger.info("close");
         telegramBot.shutdown();
     }
 
     public void setUpdatesListener(UpdatesListener listener) {
-        System.out.println("setUpdatesListener BotService");
         telegramBot.setUpdatesListener(listener, new GetUpdates());
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class StartCommand implements Command {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public String command() {
@@ -19,19 +19,19 @@ public class StartCommand implements Command {
 
     @Override
     public String description() {
-        return "Start command";
+        return "Регистрация в боте";
     }
 
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        LOGGER.info(
+        logger.info(
             "User @{} entered \"{}\" user_id={}",
             update.message().chat().username(),
             update.message().text(),
             chatId
         );
-        return new SendMessage(update.message().chat().id(),"Вызвана команда "+command());
+        return new SendMessage(update.message().chat().id(), "Вы уже авторизованы.");
     }
 
     @Override

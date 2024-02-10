@@ -1,6 +1,6 @@
 package edu.java.bot.exception;
 
-public class UnsupportedSiteException extends IllegalArgumentException{
+public class UnsupportedSiteException extends IllegalArgumentException {
     public UnsupportedSiteException(String s) {
         super(s);
     }

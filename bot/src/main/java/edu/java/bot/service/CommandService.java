@@ -7,11 +7,11 @@ import java.util.List;
 
 @Service
 public class CommandService {
-    private final InMemoryStorage storage;
+    private final Storage storage;
     private final LinkParserService parserService;
 
     @Autowired
-    public CommandService(InMemoryStorage storage, LinkParserService parserService) {
+    public CommandService(Storage storage, LinkParserService parserService) {
         this.storage = storage;
         this.parserService = parserService;
     }
@@ -34,4 +34,7 @@ public class CommandService {
         return false;
     }
 
+    public void authorizeUser(Long chatId) {
+        storage.authUser(chatId);
+    }
 }

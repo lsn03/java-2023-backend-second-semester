@@ -7,9 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class UnknownCommand implements Command {
-    private final Logger LOGGER = LoggerFactory.getLogger(
+    private final Logger logger = LoggerFactory.getLogger(
         this.getClass()
-
     );
 
     @Override
@@ -19,20 +18,23 @@ public class UnknownCommand implements Command {
 
     @Override
     public String description() {
-        return "UnknownCommand";
+        return "Неизвестная комманда.";
     }
 
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        LOGGER.warn(
+        logger.warn(
             "User @{} entered \"{}\" user_id={}",
             update.message().chat().username(),
             update.message().text(),
             chatId
         );
 
-        return new SendMessage(update.message().chat().id(), "Команда неизвестна. Введите /help");
+        return new SendMessage(
+            update.message().chat().id(),
+            "Неизвестная команда. Используйте /help для списка команд."
+        );
     }
 
     @Override

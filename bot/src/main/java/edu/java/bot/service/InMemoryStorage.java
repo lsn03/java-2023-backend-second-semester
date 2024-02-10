@@ -7,23 +7,25 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InMemoryStorage {
+public class InMemoryStorage implements Storage {
     private final Map<Long, List<String>> trackedUrls;
-    private final Map<Long, Boolean> awaitingUrls;
+    private final Map<Long, Boolean> authUser;
 
     public InMemoryStorage() {
         this.trackedUrls = new ConcurrentHashMap<>();
-        this.awaitingUrls = new ConcurrentHashMap<>();
+        this.authUser = new ConcurrentHashMap<>();
     }
 
-    public void setAwaitingUrl(Long userId, boolean isAwaiting) {
-        awaitingUrls.put(userId, isAwaiting);
+    @Override
+    public void authUser(Long userId) {
+        var result = authUser.getOrDefault(userId, false);
+        if (!result) {
+            authUser.put(userId, true);
+        }
+
     }
 
-    public boolean isAwaitingUrl(Long userId) {
-        return awaitingUrls.getOrDefault(userId, false);
-    }
-
+    @Override
     public boolean addUrl(Long userId, String url) {
         List<String> urls = trackedUrls.computeIfAbsent(userId, k -> new ArrayList<>());
         if (urls.contains(url)) {
@@ -35,21 +37,24 @@ public class InMemoryStorage {
 
     }
 
+    @Override
     public boolean removeUrl(Long userId, String url) {
         List<String> urls = trackedUrls.get(userId);
         if (urls != null) {
-            urls.remove(url);
-            if (urls.isEmpty()) {
-                trackedUrls.remove(userId);
+            if (urls.contains(url)) {
+                urls.remove(url);
+                if (urls.isEmpty()) {
+                    trackedUrls.remove(userId);
+                }
+                return true;
             }
-            return true;
-        } else {
-            return false;
         }
+        return false;
 
     }
 
+    @Override
     public List<String> getUserTracks(Long userId) {
-        return new ArrayList<>(trackedUrls.getOrDefault(userId,List.of()));
+        return new ArrayList<>(trackedUrls.getOrDefault(userId, List.of()));
     }
 }
