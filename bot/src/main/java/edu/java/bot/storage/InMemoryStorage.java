@@ -1,9 +1,9 @@
-package edu.java.bot.service;
+package edu.java.bot.storage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,8 +12,8 @@ public class InMemoryStorage implements Storage {
     private final Map<Long, Boolean> authUser;
 
     public InMemoryStorage() {
-        this.trackedUrls = new ConcurrentHashMap<>();
-        this.authUser = new ConcurrentHashMap<>();
+        this.trackedUrls = new HashMap<>();
+        this.authUser = new HashMap<>();
     }
 
     @Override

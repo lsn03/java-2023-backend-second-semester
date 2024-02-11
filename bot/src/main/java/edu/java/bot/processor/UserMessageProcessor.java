@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,23 +81,13 @@ public class UserMessageProcessor {
 
     private SendMessage processUrlInput(Long chatId, String text, UserState state) {
         try {
-            SendMessage message;
-            if (state == UserState.AWAITING_URL_FOR_TRACK) {
-                message = processAddTrack(commandService.addTrack(chatId, text),
-                    chatId,
-                    "URL добавлен в список отслеживаемых.",
-                    "Не удалось добавить URL. Ссылка уже отслеживается."
-                );
-            } else if (state == UserState.AWAITING_URL_FOR_UN_TRACK) {
-                message = processAddTrack(commandService.removeTrack(chatId, text),
-                    chatId,
-                    "URL удалён из списка отслеживаемых.",
-                    "URL не найден. Не удалось удалить URL."
-                );
-            } else {
-                message = new SendMessage(chatId, "Произошла ошибка, попробуйте ещё раз.");
-            }
-            return message;
+
+            return switch (state) {
+                case AWAITING_URL_FOR_TRACK -> processAddTrack(chatId, text);
+                case AWAITING_URL_FOR_UN_TRACK -> processRemoveTrack(chatId, text);
+                default -> new SendMessage(chatId, "Произошла ошибка, попробуйте ещё раз.");
+            };
+
         } catch (UnsupportedSiteException e) {
             return new SendMessage(
                 chatId,
@@ -107,20 +96,26 @@ public class UserMessageProcessor {
         }
     }
 
-    @NotNull
-    private SendMessage processAddTrack(
-        boolean commandService,
-        Long chatId,
-        String text,
-        String text1
-    ) {
+    private SendMessage processRemoveTrack(Long chatId, String text) {
         SendMessage message;
-        var result = commandService;
+        var result = commandService.removeTrack(chatId, text);
         if (result) {
             userStates.put(chatId, UserState.DEFAULT);
-            message = new SendMessage(chatId, text);
+            message = new SendMessage(chatId, "URL удалён из списка отслеживаемых.");
         } else {
-            message = new SendMessage(chatId, text1);
+            message = new SendMessage(chatId, "URL не найден. Не удалось удалить URL.");
+        }
+        return message;
+    }
+
+    private SendMessage processAddTrack(Long chatId, String text) {
+        SendMessage message;
+        var result = commandService.addTrack(chatId, text);
+        if (result) {
+            userStates.put(chatId, UserState.DEFAULT);
+            message = new SendMessage(chatId, "URL добавлен в список отслеживаемых.");
+        } else {
+            message = new SendMessage(chatId, "Не удалось добавить URL. Ссылка уже отслеживается.");
         }
         return message;
     }

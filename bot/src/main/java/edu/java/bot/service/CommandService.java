@@ -1,17 +1,15 @@
 package edu.java.bot.service;
 
-import edu.java.bot.exception.UnsupportedSiteException;
+import edu.java.bot.storage.Storage;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
-@Service
-public class CommandService {
+@Service public class CommandService {
     private final Storage storage;
     private final LinkParserService parserService;
 
-    @Autowired
-    public CommandService(Storage storage, LinkParserService parserService) {
+    @Autowired public CommandService(Storage storage, LinkParserService parserService) {
         this.storage = storage;
         this.parserService = parserService;
     }
