@@ -13,7 +13,6 @@ public class LinkParserService {
     @Autowired
     public LinkParserService(List<ResourceHandler> handlers) {
         this.handlers = handlers;
-
     }
 
     public boolean process(String url) {
