@@ -3,7 +3,7 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.service.CommandService;
+import edu.java.bot.storage.Storage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +12,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class ListCommand extends AbstractCommand {
     public static final String NOTHING_TO_TRACK = "Нет ссылок для отслеживания. Введите /track.";
+    public static final String USER_NOT_REGISTERED =
+        "Вы не зарегистрированы. Функционал бота не доступен. Введите /start для регистрации.";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final CommandService commandService;
+    private final Storage storage;
 
     @Autowired
-    public ListCommand(CommandService commandService) {
+    public ListCommand(Storage storage) {
         super("/list");
-        this.commandService = commandService;
+        this.storage = storage;
     }
 
     @Override
@@ -34,13 +36,19 @@ public class ListCommand extends AbstractCommand {
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
+        String username = update.message().chat().username();
+        String text = update.message().text();
         logger.info(
             "User @{} entered \"{}\" user_id={}",
-            update.message().chat().username(),
-            update.message().text(),
+            username,
+            text,
             chatId
         );
-        var list = commandService.getUserTracks(chatId);
+
+        if (!storage.isUserAuth(chatId)) {
+            return new SendMessage(chatId,USER_NOT_REGISTERED);
+        }
+        var list = storage.getUserTracks(chatId);
         if (!list.isEmpty()) {
             StringBuilder st = new StringBuilder();
             st.append("Отслеживаемые ссылки:").append(System.lineSeparator());

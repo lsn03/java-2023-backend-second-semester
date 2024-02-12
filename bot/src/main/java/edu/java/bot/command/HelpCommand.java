@@ -3,20 +3,28 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.storage.Storage;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class HelpCommand extends AbstractCommand {
+    public static final String USER_NOT_REGISTERED =
+        "Вы не зарегистрированы. Функционал бота не доступен. Введите /start для регистрации.";
+
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final StringBuilder stringBuilder;
     private final List<Command> commandList;
+    private final Storage storage;
 
-    public HelpCommand(List<Command> commandList) {
+    @Autowired
+    public HelpCommand(List<Command> commandList, Storage storage) {
         super("/help");
+        this.storage = storage;
         this.stringBuilder = new StringBuilder();
         this.commandList = commandList;
         this.commandList.add(this);
@@ -42,7 +50,9 @@ public class HelpCommand extends AbstractCommand {
             update.message().text(),
             chatId
         );
-
+        if (!storage.isUserAuth(chatId)) {
+            return new SendMessage(chatId, USER_NOT_REGISTERED);
+        }
         return new SendMessage(chatId, stringBuilder.toString());
 
     }
