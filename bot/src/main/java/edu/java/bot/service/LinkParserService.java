@@ -22,7 +22,7 @@ public class LinkParserService {
                 return true;
             }
         }
-        throw new UnsupportedSiteException("WebSite " + url + " is not supported");
+        throw new UnsupportedSiteException("WebSite " + url + " is not supported.");
 
     }
 }

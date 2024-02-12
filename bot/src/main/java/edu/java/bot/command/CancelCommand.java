@@ -8,12 +8,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CancelCommand implements Command {
+public class CancelCommand extends AbstractCommand {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    public CancelCommand() {
+        super("/cancel");
+    }
 
     @Override
     public String command() {
-        return "/cancel";
+        return super.command;
     }
 
     @Override
@@ -36,11 +40,11 @@ public class CancelCommand implements Command {
 
     @Override
     public boolean supports(Update update) {
-        return Command.super.supports(update);
+        return super.supports(update);
     }
 
     @Override
     public BotCommand toApiCommand() {
-        return Command.super.toApiCommand();
+        return super.toApiCommand();
     }
 }

@@ -9,13 +9,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HelpCommand implements Command {
+public class HelpCommand extends AbstractCommand {
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final StringBuilder stringBuilder;
     private final List<Command> commandList;
 
     public HelpCommand(List<Command> commandList) {
+        super("/help");
         this.stringBuilder = new StringBuilder();
         this.commandList = commandList;
         this.commandList.add(this);
@@ -24,7 +25,7 @@ public class HelpCommand implements Command {
 
     @Override
     public String command() {
-        return "/help";
+        return super.command;
     }
 
     @Override
@@ -48,12 +49,12 @@ public class HelpCommand implements Command {
 
     @Override
     public boolean supports(Update update) {
-        return Command.super.supports(update);
+        return super.supports(update);
     }
 
     @Override
     public BotCommand toApiCommand() {
-        return Command.super.toApiCommand();
+        return super.toApiCommand();
     }
 
     private void initOutputMessage() {
@@ -69,6 +70,7 @@ public class HelpCommand implements Command {
             .append(LINE_SEPARATOR);
         stringBuilder.append("3. vk.com").append(LINE_SEPARATOR);
         stringBuilder.append("Поддерживаемые команды:").append(LINE_SEPARATOR);
+
         for (int i = 0; i < commandList.size(); i++) {
             var elem = commandList.get(i);
             stringBuilder.append(i + 1).append(". ").append(elem.command()).append(" ").append(elem.description())

@@ -29,7 +29,6 @@ public class BotService implements Bot {
     }
 
     @Override
-
     public <T extends BaseRequest<T, R>, R extends BaseResponse> void myExecute(BaseRequest<T, R> request) {
 
         logger.info("myExecute {}", request.getParameters());

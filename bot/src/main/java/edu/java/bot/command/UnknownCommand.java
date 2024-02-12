@@ -6,14 +6,17 @@ import com.pengrad.telegrambot.request.SendMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class UnknownCommand implements Command {
-    private final Logger logger = LoggerFactory.getLogger(
-        this.getClass()
-    );
+public class UnknownCommand extends AbstractCommand {
+    public static final String UNKNOWN_COMMAND_HELP = "Неизвестная команда. Используйте /help для списка команд.";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    public UnknownCommand() {
+        super("/");
+    }
 
     @Override
     public String command() {
-        return "/";
+        return super.command;
     }
 
     @Override
@@ -33,18 +36,17 @@ public class UnknownCommand implements Command {
 
         return new SendMessage(
             update.message().chat().id(),
-            "Неизвестная команда. Используйте /help для списка команд."
+            UNKNOWN_COMMAND_HELP
         );
     }
 
     @Override
     public boolean supports(Update update) {
-
-        return Command.super.supports(update);
+        return super.supports(update);
     }
 
     @Override
     public BotCommand toApiCommand() {
-        return Command.super.toApiCommand();
+        return super.toApiCommand();
     }
 }

@@ -8,12 +8,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TrackCommand implements Command {
+public class TrackCommand extends AbstractCommand {
+    public static final String INPUT_URL_FOR_TRACK = "Пожалуйста, отправьте URL для отслеживания.";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    public TrackCommand() {
+        super("/track");
+    }
 
     @Override
     public String command() {
-        return "/track";
+        return super.command;
     }
 
     @Override
@@ -31,17 +36,17 @@ public class TrackCommand implements Command {
             chatId
         );
 
-        return new SendMessage(chatId, "Пожалуйста, отправьте URL для отслеживания.");
+        return new SendMessage(chatId, INPUT_URL_FOR_TRACK);
 
     }
 
     @Override
     public boolean supports(Update update) {
-        return Command.super.supports(update);
+        return super.supports(update);
     }
 
     @Override
     public BotCommand toApiCommand() {
-        return Command.super.toApiCommand();
+        return super.toApiCommand();
     }
 }

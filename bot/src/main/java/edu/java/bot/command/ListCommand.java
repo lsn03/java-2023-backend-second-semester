@@ -10,18 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ListCommand implements Command {
+public class ListCommand extends AbstractCommand {
+    public static final String NOTHING_TO_TRACK = "Нет ссылок для отслеживания. Введите /track.";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final CommandService commandService;
 
     @Autowired
     public ListCommand(CommandService commandService) {
+        super("/list");
         this.commandService = commandService;
     }
 
     @Override
     public String command() {
-        return "/list";
+        return super.command;
     }
 
     @Override
@@ -51,18 +53,18 @@ public class ListCommand implements Command {
 
             return new SendMessage(chatId, st.toString());
         } else {
-            return new SendMessage(chatId, "Нет ссылок для отслеживания. Введите /track.");
+            return new SendMessage(chatId, NOTHING_TO_TRACK);
         }
 
     }
 
     @Override
     public boolean supports(Update update) {
-        return Command.super.supports(update);
+        return super.supports(update);
     }
 
     @Override
     public BotCommand toApiCommand() {
-        return Command.super.toApiCommand();
+        return super.toApiCommand();
     }
 }

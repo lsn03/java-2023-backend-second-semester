@@ -8,13 +8,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StartCommand implements Command {
+public class StartCommand extends AbstractCommand {
 
+    public static final String ALREADY_AUTH = "Вы уже авторизованы.";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    public StartCommand() {
+        super("/start");
+    }
 
     @Override
     public String command() {
-        return "/start";
+        return super.command;
     }
 
     @Override
@@ -31,16 +36,16 @@ public class StartCommand implements Command {
             update.message().text(),
             chatId
         );
-        return new SendMessage(update.message().chat().id(), "Вы уже авторизованы.");
+        return new SendMessage(update.message().chat().id(), ALREADY_AUTH);
     }
 
     @Override
     public boolean supports(Update update) {
-        return Command.super.supports(update);
+        return super.supports(update);
     }
 
     @Override
     public BotCommand toApiCommand() {
-        return Command.super.toApiCommand();
+        return super.toApiCommand();
     }
 }
