@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UnTrackCommand extends AbstractCommand{
+public class UnTrackCommand extends AbstractCommand {
     public static final String INPUT_URL_FOR_UN_TRACK = "Пожалуйста, отправьте URL для прекращения отслеживания.";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

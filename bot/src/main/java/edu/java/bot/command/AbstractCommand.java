@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 
-public abstract class AbstractCommand implements Command{
+public abstract class AbstractCommand implements Command {
     public final String command;
 
     protected AbstractCommand(String command) {
