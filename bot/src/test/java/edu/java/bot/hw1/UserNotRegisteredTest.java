@@ -23,11 +23,11 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class UserNotRegisteredTest {
     private static final String TEXT = "text";
-    long id = 12345L;
-    Update update;
-    Message message;
-    Chat chat;
-    String expectedString;
+    private long id = 12345L;
+    private Update update;
+    private Message message;
+    private Chat chat;
+    private String expectedString;
     @Mock
     private Storage storage;
 

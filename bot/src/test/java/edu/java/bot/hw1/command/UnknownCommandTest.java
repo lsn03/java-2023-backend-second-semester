@@ -1,4 +1,4 @@
-package edu.java.bot.hw1;
+package edu.java.bot.hw1.command;
 
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
@@ -21,10 +21,10 @@ public class UnknownCommandTest {
     @InjectMocks
     private UnknownCommand unknownCommand;
     private static final String TEXT = "text";
-    long id = 12345L;
-    Update update;
-    Message message;
-    Chat chat;
+    private long id = 12345L;
+    private Update update;
+    private Message message;
+    private Chat chat;
 
     @BeforeEach
     public void setUp() {
