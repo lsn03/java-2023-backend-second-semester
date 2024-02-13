@@ -46,17 +46,13 @@ public class UserNotRegisteredTest {
     @InjectMocks
     private UnknownCommand unknownCommand;
 
-    @Mock
-    private LinkParserService parserService;
-    @Mock
-    private UserMessageProcessor userMessageProcessor;
+
     @Mock
     List<Command> commandList;
 
     @BeforeEach
     public void setUp() {
-        storage = mock(Storage.class);
-        parserService = mock(LinkParserService.class);
+
         commandList = new ArrayList<>();
 
         commandList.add(cancelCommand);
