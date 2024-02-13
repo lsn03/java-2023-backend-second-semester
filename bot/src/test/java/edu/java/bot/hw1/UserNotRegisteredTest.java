@@ -4,21 +4,28 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.command.*;
-import edu.java.bot.processor.UserMessageProcessor;
-import edu.java.bot.service.LinkParserService;
+import edu.java.bot.command.CancelCommand;
+import edu.java.bot.command.Command;
+import edu.java.bot.command.HelpCommand;
+import edu.java.bot.command.ListCommand;
+import edu.java.bot.command.StartCommand;
+import edu.java.bot.command.TrackCommand;
+import edu.java.bot.command.UnTrackCommand;
+import edu.java.bot.command.UnknownCommand;
 import edu.java.bot.storage.Storage;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.util.ArrayList;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserNotRegisteredTest {
@@ -45,7 +52,6 @@ public class UserNotRegisteredTest {
     private UnTrackCommand unTrackCommand;
     @InjectMocks
     private UnknownCommand unknownCommand;
-
 
     @Mock
     List<Command> commandList;

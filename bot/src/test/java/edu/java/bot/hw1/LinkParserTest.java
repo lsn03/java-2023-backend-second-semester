@@ -5,11 +5,9 @@ import edu.java.bot.parser.GitHubHandler;
 import edu.java.bot.parser.ResourceHandler;
 import edu.java.bot.parser.StackOverFlowHandler;
 import edu.java.bot.service.LinkParserService;
+import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
