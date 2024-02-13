@@ -34,10 +34,7 @@ public class UnknownCommand extends AbstractCommand {
             chatId
         );
 
-        return new SendMessage(
-            update.message().chat().id(),
-            UNKNOWN_COMMAND_HELP
-        );
+        return new SendMessage(chatId, UNKNOWN_COMMAND_HELP);
     }
 
     @Override

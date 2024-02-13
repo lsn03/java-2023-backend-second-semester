@@ -15,10 +15,10 @@ public class LinkParserService {
         this.handlers = handlers;
     }
 
-    public boolean process(String url) {
+    public void process(String url) {
         for (ResourceHandler handler : handlers) {
             if (handler.canHandle(url)) {
-                return true;
+                return;
             }
         }
         throw new UnsupportedSiteException("WebSite " + url + " is not supported.");

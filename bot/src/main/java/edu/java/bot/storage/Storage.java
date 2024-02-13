@@ -16,5 +16,5 @@ public interface Storage {
 
     UserState getUserState(Long id);
 
-    UserState setUserState(Long id, UserState state);
+    void setUserState(Long id, UserState state);
 }

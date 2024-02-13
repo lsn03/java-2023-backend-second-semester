@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.storage.Storage;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,13 @@ public class ListCommand extends AbstractCommand {
         "Вы не зарегистрированы. Функционал бота не доступен. Введите /start для регистрации.";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Storage storage;
+    private final StringBuilder st;
 
     @Autowired
     public ListCommand(Storage storage) {
         super("/list");
         this.storage = storage;
+        st = new StringBuilder();
     }
 
     @Override
@@ -38,28 +41,14 @@ public class ListCommand extends AbstractCommand {
         Long chatId = update.message().chat().id();
         String username = update.message().chat().username();
         String text = update.message().text();
-        logger.info(
-            "User @{} entered \"{}\" user_id={}",
-            username,
-            text,
-            chatId
-        );
+        logger.info("User @{} entered \"{}\" user_id={}", username, text, chatId);
 
         if (!storage.isUserAuth(chatId)) {
             return new SendMessage(chatId, USER_NOT_REGISTERED);
         }
         var list = storage.getUserTracks(chatId);
         if (!list.isEmpty()) {
-            StringBuilder st = new StringBuilder();
-            st.append("Отслеживаемые ссылки:").append(System.lineSeparator());
-            for (int i = 0; i < list.size(); i++) {
-                st.append(i + 1).append(". ").append(list.get(i));
-                if (i < list.size() - 1) {
-                    st.append(System.lineSeparator());
-                }
-            }
-
-            return new SendMessage(chatId, st.toString());
+            return processGetList(list, chatId);
         } else {
             return new SendMessage(chatId, NOTHING_TO_TRACK);
         }
@@ -74,5 +63,18 @@ public class ListCommand extends AbstractCommand {
     @Override
     public BotCommand toApiCommand() {
         return super.toApiCommand();
+    }
+
+    private SendMessage processGetList(List<String> list, Long chatId) {
+        st.setLength(0);
+        st.append("Отслеживаемые ссылки:").append(System.lineSeparator());
+        for (int i = 0; i < list.size(); i++) {
+            st.append(i + 1).append(". ").append(list.get(i));
+            if (i < list.size() - 1) {
+                st.append(System.lineSeparator());
+            }
+        }
+
+        return new SendMessage(chatId, st.toString());
     }
 }

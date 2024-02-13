@@ -57,20 +57,30 @@ public class UnTrackCommand extends AbstractCommand {
 
         return switch (state) {
             case UNAUTHORIZED -> new SendMessage(chatId, USER_NOT_REGISTERED);
-            case AWAITING_URL_FOR_UN_TRACK -> proccessUnTrackUrl(chatId, text);
-            case DEFAULT -> proccessDefaultUntrack(chatId);
-            default -> throw new IllegalArgumentException();
+            case AWAITING_URL_FOR_UN_TRACK -> processUnTrackUrl(chatId, text);
+            case DEFAULT -> processDefaultUnTrack(chatId);
+            default -> new SendMessage(chatId, EXCEPTION_MESSAGE);
         };
 
     }
 
-    private SendMessage proccessDefaultUntrack(Long chatId) {
+    @Override
+    public boolean supports(Update update) {
+        return super.supports(update);
+    }
+
+    @Override
+    public BotCommand toApiCommand() {
+        return super.toApiCommand();
+    }
+
+    private SendMessage processDefaultUnTrack(Long chatId) {
         storage.setUserState(chatId, UserState.AWAITING_URL_FOR_UN_TRACK);
 
         return new SendMessage(chatId, INPUT_URL_FOR_UN_TRACK);
     }
 
-    private SendMessage proccessUnTrackUrl(Long chatId, String text) {
+    private SendMessage processUnTrackUrl(Long chatId, String text) {
 
         if (text.startsWith("/")) {
             return new SendMessage(chatId, AWAITING_URL);
@@ -87,15 +97,5 @@ public class UnTrackCommand extends AbstractCommand {
         } catch (UnsupportedSiteException e) {
             return new SendMessage(chatId, e.getMessage() + EXCEPTION_MESSAGE);
         }
-    }
-
-    @Override
-    public boolean supports(Update update) {
-        return super.supports(update);
-    }
-
-    @Override
-    public BotCommand toApiCommand() {
-        return super.toApiCommand();
     }
 }

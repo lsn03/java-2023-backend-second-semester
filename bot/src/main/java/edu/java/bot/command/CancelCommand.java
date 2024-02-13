@@ -56,11 +56,6 @@ public class CancelCommand extends AbstractCommand {
 
     }
 
-    private SendMessage processCancel(Long chatId) {
-        storage.setUserState(chatId, UserState.DEFAULT);
-        return new SendMessage(chatId, CANCEL_INPUT);
-    }
-
     @Override
     public boolean supports(Update update) {
         return super.supports(update);
@@ -69,5 +64,10 @@ public class CancelCommand extends AbstractCommand {
     @Override
     public BotCommand toApiCommand() {
         return super.toApiCommand();
+    }
+
+    private SendMessage processCancel(Long chatId) {
+        storage.setUserState(chatId, UserState.DEFAULT);
+        return new SendMessage(chatId, CANCEL_INPUT);
     }
 }

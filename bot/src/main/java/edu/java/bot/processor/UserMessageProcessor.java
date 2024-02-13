@@ -15,9 +15,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserMessageProcessor {
-
-    public static final String ERROR_TRY_AGAIN = "Произошла ошибка, попробуйте ещё раз.";
-
     private final Storage storage;
     private final Map<String, Command> commands;
     private final UnknownCommand unknownCommand;

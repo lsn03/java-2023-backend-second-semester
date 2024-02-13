@@ -59,9 +59,20 @@ public class TrackCommand extends AbstractCommand {
             case AWAITING_URL_FOR_TRACK -> processAwaitingUrlState(chatId, text);
             case UNAUTHORIZED -> new SendMessage(chatId, USER_NOT_REGISTERED);
             case DEFAULT -> processDefaultState(chatId, text);
-            default -> throw new IllegalArgumentException();
+            default ->  new SendMessage(chatId, EXCEPTION_MESSAGE);
         };
 
+    }
+
+
+    @Override
+    public boolean supports(Update update) {
+        return super.supports(update);
+    }
+
+    @Override
+    public BotCommand toApiCommand() {
+        return super.toApiCommand();
     }
 
     private SendMessage processDefaultState(Long chatId, String text) {
@@ -95,15 +106,5 @@ public class TrackCommand extends AbstractCommand {
             return new SendMessage(chatId, AWAITING_URL);
         }
 
-    }
-
-    @Override
-    public boolean supports(Update update) {
-        return super.supports(update);
-    }
-
-    @Override
-    public BotCommand toApiCommand() {
-        return super.toApiCommand();
     }
 }
