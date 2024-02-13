@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.command.HelpCommand;
 import edu.java.bot.command.ListCommand;
 import edu.java.bot.storage.Storage;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,12 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.util.ArrayList;
+
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,7 +22,6 @@ public class ListCommandTest {
     private static final String TEXT = "text";
     private Long id = 12345L;
 
-    private String expectedString;
     @Mock
     private Storage storage;
 
@@ -38,6 +34,7 @@ public class ListCommandTest {
     @Mock
     private Chat chat;
     private ListCommand listCommand;
+
     @BeforeEach
     public void setUp() {
 
@@ -45,28 +42,29 @@ public class ListCommandTest {
         when(message.chat()).thenReturn(chat);
         when(chat.id()).thenReturn(id);
 
-
         listCommand = new ListCommand(storage);
 
         when(storage.isUserAuth(id)).thenReturn(true);
     }
+
     @Test
-    public void listIsNotEmpty(){
+    public void listIsNotEmpty() {
         var example = "https://github.com/";
         when(storage.getUserTracks(id)).thenReturn(List.of(example));
-        SendMessage response =  listCommand.handle(update);
+        SendMessage response = listCommand.handle(update);
         assertNotNull(response);
-        var text = (String)response.getParameters().get(TEXT);
+        var text = (String) response.getParameters().get(TEXT);
         assertFalse(text.isEmpty());
         assertTrue(text.contains(example));
     }
-    @Test
-    public void listIsEmpty(){
-        when(storage.getUserTracks(id)).thenReturn(List.of());
-        SendMessage response =  listCommand.handle(update);
-        assertNotNull(response);
-        var text = (String)response.getParameters().get(TEXT);
 
-        assertEquals(ListCommand.NOTHING_TO_TRACK,text);
+    @Test
+    public void listIsEmpty() {
+        when(storage.getUserTracks(id)).thenReturn(List.of());
+        SendMessage response = listCommand.handle(update);
+        assertNotNull(response);
+        var text = (String) response.getParameters().get(TEXT);
+
+        assertEquals(ListCommand.NOTHING_TO_TRACK, text);
     }
 }

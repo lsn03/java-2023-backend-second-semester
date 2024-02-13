@@ -12,11 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class StartCommandTest {
@@ -25,7 +24,6 @@ public class StartCommandTest {
     private Update update;
     private Message message;
     private Chat chat;
-    private String expectedString;
     @Mock
     private Storage storage;
     @InjectMocks
@@ -42,11 +40,6 @@ public class StartCommandTest {
         when(chat.id()).thenReturn(id);
     }
 
-    public void defaultInit(Long id, String command) {
-
-
-    }
-
     @Test
     public void testUserRegisteredStart() {
         lenient().when(storage.isUserAuth(id)).thenReturn(false);
@@ -55,6 +48,7 @@ public class StartCommandTest {
         assertNotNull(sendMessage);
         assertEquals(StartCommand.USER_REGISTERED_SUCCESS, sendMessage.getParameters().get(TEXT));
     }
+
     @Test
     public void testUserAlreadyRegisteredStart() {
         lenient().when(storage.isUserAuth(id)).thenReturn(true);

@@ -7,13 +7,15 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.command.Command;
 import edu.java.bot.command.HelpCommand;
 import edu.java.bot.storage.Storage;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
@@ -25,7 +27,6 @@ public class HelpCommandTest {
     private static final String TEXT = "text";
     private Long id = 12345L;
 
-    private String expectedString;
     @Mock
     private Storage storage;
 

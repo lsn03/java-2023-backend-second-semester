@@ -15,13 +15,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
@@ -62,6 +60,7 @@ public class TrackCommandTest {
         assertNotNull(response);
         assertEquals(expectedString, response.getParameters().get("text"));
     }
+
     @Test
     public void testTrackAwaitingUrlCheckException() {
         expectedString = TrackCommand.EXCEPTION_MESSAGE;
@@ -69,11 +68,11 @@ public class TrackCommandTest {
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
         when(update.message().text()).thenReturn(site);
-        doThrow(new UnsupportedSiteException("")).when(storage).addUrl(id,site);
+        doThrow(new UnsupportedSiteException("")).when(storage).addUrl(id, site);
 
         SendMessage response = trackCommand.handle(update);
         assertNotNull(response);
-        assertTrue(((String)response.getParameters().get("text")).contains(expectedString));
+        assertTrue(((String) response.getParameters().get("text")).contains(expectedString));
     }
 
     @Test
@@ -83,11 +82,11 @@ public class TrackCommandTest {
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
         when(update.message().text()).thenReturn(site);
-        when(storage.addUrl(id,site)).thenReturn(true);
+        when(storage.addUrl(id, site)).thenReturn(true);
 
         SendMessage response = trackCommand.handle(update);
         assertNotNull(response);
-        assertEquals(expectedString,response.getParameters().get("text"));
+        assertEquals(expectedString, response.getParameters().get("text"));
     }
 
     @Test
@@ -97,11 +96,11 @@ public class TrackCommandTest {
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
         when(update.message().text()).thenReturn(site);
-        when(storage.addUrl(id,site)).thenReturn(false);
+        when(storage.addUrl(id, site)).thenReturn(false);
 
         SendMessage response = trackCommand.handle(update);
         assertNotNull(response);
-        assertEquals(expectedString,response.getParameters().get("text"));
+        assertEquals(expectedString, response.getParameters().get("text"));
     }
 
     @ParameterizedTest
@@ -115,13 +114,12 @@ public class TrackCommandTest {
     public void testTrackAddUrlFailedEnterCommand(String site) {
         expectedString = TrackCommand.AWAITING_URL;
 
-
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
         when(update.message().text()).thenReturn(site);
-        lenient().when(storage.addUrl(id,site)).thenReturn(true);
+        lenient().when(storage.addUrl(id, site)).thenReturn(true);
 
         SendMessage response = trackCommand.handle(update);
         assertNotNull(response);
-        assertEquals(expectedString,response.getParameters().get("text"));
+        assertEquals(expectedString, response.getParameters().get("text"));
     }
 }
