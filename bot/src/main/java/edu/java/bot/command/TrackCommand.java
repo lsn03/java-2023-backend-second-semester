@@ -4,14 +4,12 @@ import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.exception.UnsupportedSiteException;
-import edu.java.bot.parser.ResourceHandler;
 import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.List;
 
 @Component
 public class TrackCommand extends AbstractCommand {
@@ -54,7 +52,7 @@ public class TrackCommand extends AbstractCommand {
             chatId
         );
         if (!storage.isUserAuth(chatId)) {
-            return new SendMessage(chatId,USER_NOT_REGISTERED);
+            return new SendMessage(chatId, USER_NOT_REGISTERED);
         }
         UserState state = storage.getUserState(chatId);
         return switch (state) {
@@ -68,7 +66,7 @@ public class TrackCommand extends AbstractCommand {
 
     private SendMessage processDefaultState(Long chatId, String text) {
 
-        if (text.equals("/track")) {
+        if (text.equals(command())) {
             storage.setUserState(chatId, UserState.AWAITING_URL_FOR_TRACK);
             return new SendMessage(chatId, INPUT_URL_FOR_TRACK);
         } else {
@@ -90,7 +88,7 @@ public class TrackCommand extends AbstractCommand {
                 }
                 return message;
             } catch (UnsupportedSiteException e) {
-                return new SendMessage(chatId,e.getMessage()+EXCEPTION_MESSAGE);
+                return new SendMessage(chatId, e.getMessage() + EXCEPTION_MESSAGE);
             }
 
         } else {

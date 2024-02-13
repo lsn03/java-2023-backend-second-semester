@@ -85,7 +85,7 @@ public class UserMessageProcessorTest {
 
         parserService = new LinkParserService(resourceHandlerList);
         commandService = new CommandService(storage,parserService);
-        userMessageProcessor = new UserMessageProcessor(commandList, commandService, storage);
+        userMessageProcessor = new UserMessageProcessor(commandList, storage);
 
         update = mock(Update.class);
         message = mock(Message.class);

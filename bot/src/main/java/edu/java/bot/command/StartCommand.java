@@ -47,11 +47,11 @@ public class StartCommand extends AbstractCommand {
             chatId
         );
         if (storage.isUserAuth(chatId)) {
-            logger.info("User @{} id={} already sign in", username,chatId);
+            logger.info("User @{} id={} already sign in", username, chatId);
             return new SendMessage(chatId, ALREADY_AUTH);
         } else {
             storage.authUser(chatId);
-            logger.info("User @{} id={} was successfully registered", username,chatId);
+            logger.info("User @{} id={} was successfully registered", username, chatId);
             return new SendMessage(chatId, USER_REGISTERED_SUCCESS);
         }
 

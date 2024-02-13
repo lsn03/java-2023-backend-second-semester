@@ -51,7 +51,7 @@ public class UnTrackCommand extends AbstractCommand {
             chatId
         );
         if (!storage.isUserAuth(chatId)) {
-            return new SendMessage(chatId,USER_NOT_REGISTERED);
+            return new SendMessage(chatId, USER_NOT_REGISTERED);
         }
         UserState state = storage.getUserState(chatId);
 
@@ -85,7 +85,7 @@ public class UnTrackCommand extends AbstractCommand {
                 return new SendMessage(chatId, URL_NOT_FOUND);
             }
         } catch (UnsupportedSiteException e) {
-            return new SendMessage(chatId,e.getMessage()+EXCEPTION_MESSAGE);
+            return new SendMessage(chatId, e.getMessage() + EXCEPTION_MESSAGE);
         }
     }
 

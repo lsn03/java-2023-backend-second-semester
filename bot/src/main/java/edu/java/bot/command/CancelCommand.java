@@ -57,7 +57,7 @@ public class CancelCommand extends AbstractCommand {
     }
 
     private SendMessage processCancel(Long chatId) {
-        storage.setUserState(chatId,UserState.DEFAULT);
+        storage.setUserState(chatId, UserState.DEFAULT);
         return new SendMessage(chatId, CANCEL_INPUT);
     }
 

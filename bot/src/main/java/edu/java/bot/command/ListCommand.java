@@ -46,7 +46,7 @@ public class ListCommand extends AbstractCommand {
         );
 
         if (!storage.isUserAuth(chatId)) {
-            return new SendMessage(chatId,USER_NOT_REGISTERED);
+            return new SendMessage(chatId, USER_NOT_REGISTERED);
         }
         var list = storage.getUserTracks(chatId);
         if (!list.isEmpty()) {

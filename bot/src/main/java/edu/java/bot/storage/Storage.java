@@ -9,9 +9,12 @@ public interface Storage {
     boolean removeUrl(Long userId, String url);
 
     void authUser(Long userId);
+
     boolean isUserAuth(Long userId);
 
     List<String> getUserTracks(Long userId);
+
     UserState getUserState(Long id);
-    UserState setUserState(Long id,UserState state);
+
+    UserState setUserState(Long id, UserState state);
 }
