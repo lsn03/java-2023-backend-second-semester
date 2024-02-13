@@ -143,46 +143,4 @@ public class UserNotRegisteredTest {
 
     }
 
-//    @Test
-//    public void testStartCommand() {
-//        expectedString = UserMessageProcessor.USER_REGISTERED_SUCCESS;
-//        defaultInit(id, "/start");
-//        SendMessage response = userMessageProcessor.process(update);
-//
-//        assertNotNull(response);
-//        assertEquals(expectedString, response.getParameters().get(TEXT));
-//    }
-//
-//    @Test
-//    public void testTrackCommand() {
-//        expectedString = TrackCommand.INPUT_URL_FOR_TRACK;
-//        defaultInit(id, "/start");
-//        userMessageProcessor.process(update);
-//        defaultInit(id, "/track");
-//        when(trackCommand.handle(update)).thenReturn(new SendMessage(id, TrackCommand.INPUT_URL_FOR_TRACK));
-//        SendMessage response = userMessageProcessor.process(update);
-//        assertNotNull(response);
-//        assertEquals(expectedString, response.getParameters().get(TEXT));
-//    }
-//
-//    @Test
-//    public void testAddUrl() {
-//        testTrackCommand();
-//
-//        expectedString = UserMessageProcessor.URL_SUCCESSFULLY_ADDED;
-//        defaultInit(id, "https://github.com/lsn03");
-//        when(storage.addUrl(id,"https://github.com/lsn03")).thenReturn(true);
-//        SendMessage response = userMessageProcessor.process(update);
-//        assertEquals(expectedString, response.getParameters().get(TEXT));
-//    }
-//    @Test
-//    public void testListUrlEmpty() {
-//        expectedString = ListCommand.NOTHING_TO_TRACK;
-//        defaultInit(id, "/start");
-//        userMessageProcessor.process(update);
-//        defaultInit(id, "/list");
-//        when(listCommand.handle(update)).thenReturn(new SendMessage(id,expectedString));
-//        SendMessage response = userMessageProcessor.process(update);
-//        assertEquals(expectedString, response.getParameters().get(TEXT));
-//    }
 }
