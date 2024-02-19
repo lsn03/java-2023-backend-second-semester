@@ -1,6 +1,7 @@
 package edu.java.model.github.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.java.model.github.dto.info.UserInfoDTO;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -21,8 +22,6 @@ public class PullCommitDTO {
 
     private CommitDetail commit;
 
-    private UserInfoDTO author;
-
     private UserInfoDTO committer;
 
     @AllArgsConstructor
@@ -31,7 +30,6 @@ public class PullCommitDTO {
     @EqualsAndHashCode
     @ToString
     public static class CommitDetail {
-        private CommitDetailInfo author;
         private CommitDetailInfo committer;
         private String message;
 

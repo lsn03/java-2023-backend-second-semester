@@ -1,4 +1,4 @@
-package edu.java;
+package edu.java.service;
 
 import edu.java.configuration.ApplicationConfig;
 import lombok.extern.slf4j.Slf4j;

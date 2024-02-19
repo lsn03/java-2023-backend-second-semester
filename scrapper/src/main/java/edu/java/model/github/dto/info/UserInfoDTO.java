@@ -1,4 +1,4 @@
-package edu.java.model.github.dto;
+package edu.java.model.github.dto.info;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
