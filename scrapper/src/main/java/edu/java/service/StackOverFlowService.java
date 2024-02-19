@@ -1,10 +1,10 @@
 package edu.java.service;
 
 import edu.java.model.stack_over_flow.StackOverFlowModel;
-import edu.java.model.stack_over_flow.wrapper.StackOverFlowHeaderResponseWrapper;
-import edu.java.model.stack_over_flow.wrapper.StackOverFlowAnswerResponseWrapper;
 import edu.java.model.stack_over_flow.dto.QuestionAnswerDTO;
 import edu.java.model.stack_over_flow.dto.QuestionHeaderDTO;
+import edu.java.model.stack_over_flow.wrapper.StackOverFlowAnswerResponseWrapper;
+import edu.java.model.stack_over_flow.wrapper.StackOverFlowHeaderResponseWrapper;
 import edu.java.service.client.BaseUrl;
 import edu.java.service.client.StackOverFlowClient;
 import java.util.List;
@@ -48,16 +48,20 @@ public class StackOverFlowService implements StackOverFlowClient {
 
     @Override
     public Mono<List<QuestionAnswerDTO>> fetchAnswers(int questionId) {
-        return webClient.get().uri("/questions/{questionId}/answers?site=stackoverflow", questionId)
-            .retrieve().bodyToMono(StackOverFlowAnswerResponseWrapper.class)
+        return webClient.get()
+            .uri("/questions/{questionId}/answers?site=stackoverflow", questionId)
+            .retrieve()
+            .bodyToMono(StackOverFlowAnswerResponseWrapper.class)
             .map(StackOverFlowAnswerResponseWrapper::getQuestionAnswerDTOList);
 
     }
 
     @Override
     public Mono<QuestionHeaderDTO> fetchHeader(int questionId) {
-        return webClient.get().uri("/questions/{questionId}?order=desc&sort=activity&site=stackoverflow", questionId)
-            .retrieve().bodyToMono(StackOverFlowHeaderResponseWrapper.class)
+        return webClient.get()
+            .uri("/questions/{questionId}?order=desc&sort=activity&site=stackoverflow", questionId)
+            .retrieve()
+            .bodyToMono(StackOverFlowHeaderResponseWrapper.class)
             .map(stackOverFlowHeaderResponseWrapper -> stackOverFlowHeaderResponseWrapper.getList().get(0));
     }
 }
