@@ -17,14 +17,14 @@ public class GitHubService implements GitHubClient {
     private final WebClient webClient;
 
     public GitHubService() {
-        this(BaseUrl.GITHUB_BASE_URL);
+        this(BaseUrl.GITHUB_BASE_URL.getUrl());
     }
 
-    public GitHubService(BaseUrl url) {
+    public GitHubService(String url) {
         String githubApiBaseUrl = BaseUrl.GITHUB_BASE_URL.getUrl();
 
-        if (!url.getUrl().isEmpty() && !url.getUrl().isBlank()) {
-            githubApiBaseUrl = url.getUrl();
+        if (!url.isEmpty() && !url.isBlank()) {
+            githubApiBaseUrl = url;
         }
         webClient = WebClient.builder()
             .baseUrl(githubApiBaseUrl)
