@@ -47,6 +47,7 @@ public class QuestionHeaderDTO {
         this.questionId = questionId;
         this.link = link;
     }
+
     public void setCreationDate(OffsetDateTime time) {
         lastEdit = time;
     }
