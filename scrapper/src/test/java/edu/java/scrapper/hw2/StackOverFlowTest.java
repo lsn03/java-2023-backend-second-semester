@@ -32,7 +32,7 @@ public class StackOverFlowTest {
         String link = "sof.link";
         long lastEdit = 1451131815;
         QuestionHeaderDTO dto = new QuestionHeaderDTO(owner, isAnswered, lastEdit, title, questionId, link);
-        System.out.println(dto.getLastEdit());
+
         WireMock.stubFor(
             WireMock.get(url)
                 .willReturn(WireMock.aResponse()
@@ -83,7 +83,8 @@ public class StackOverFlowTest {
         long lastActivityDate = 1451131815;
         Long lastEdit = null;
         int answerId = 1;
-        QuestionAnswerDTO dto = new QuestionAnswerDTO(owner, isAccepted, creationDate, lastActivityDate, lastEdit, answerId);
+        QuestionAnswerDTO dto =
+            new QuestionAnswerDTO(owner, isAccepted, creationDate, lastActivityDate, lastEdit, answerId);
         var list = List.of(dto);
         WireMock.stubFor(
             WireMock.get(url)
@@ -120,6 +121,6 @@ public class StackOverFlowTest {
 
         var response = client.fetchAnswers(questionId).block();
 
-        assertEquals( list,response);
+        assertEquals(list, response);
     }
 }
