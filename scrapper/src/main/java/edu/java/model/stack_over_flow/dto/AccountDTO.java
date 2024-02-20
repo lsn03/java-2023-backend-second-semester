@@ -15,5 +15,4 @@ public class AccountDTO {
     private int userId;
     @JsonProperty("display_name")
     private String name;
-
 }

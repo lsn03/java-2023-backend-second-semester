@@ -5,7 +5,7 @@ import edu.java.model.stack_over_flow.dto.QuestionAnswerDTO;
 import edu.java.model.stack_over_flow.dto.QuestionHeaderDTO;
 import edu.java.model.stack_over_flow.wrapper.StackOverFlowAnswerResponseWrapper;
 import edu.java.model.stack_over_flow.wrapper.StackOverFlowHeaderResponseWrapper;
-import edu.java.service.client.BaseUrl;
+import edu.java.util.BaseUrl;
 import edu.java.service.client.StackOverFlowClient;
 import java.util.List;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -17,14 +17,14 @@ public class StackOverFlowService implements StackOverFlowClient {
     private final WebClient webClient;
 
     public StackOverFlowService() {
-        this(BaseUrl.STACK_OVER_FLOW_BASE_URL);
+        this(BaseUrl.STACK_OVER_FLOW_BASE_URL.getUrl());
     }
 
-    public StackOverFlowService(BaseUrl url) {
+    public StackOverFlowService(String url) {
         String stackOverFlowBaseApi = BaseUrl.STACK_OVER_FLOW_BASE_URL.getUrl();
 
-        if (!url.getUrl().isEmpty() && !url.getUrl().isBlank()) {
-            stackOverFlowBaseApi = url.getUrl();
+        if (!url.isEmpty() && !url.isBlank()) {
+            stackOverFlowBaseApi = url;
         }
         webClient = WebClient.builder()
             .baseUrl(stackOverFlowBaseApi)

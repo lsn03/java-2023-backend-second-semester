@@ -1,5 +1,6 @@
 package edu.java.model.github;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.java.model.github.dto.IssueCommentDTO;
 import edu.java.model.github.dto.PullCommentDTO;
 import edu.java.model.github.dto.PullCommitDTO;
@@ -17,9 +18,13 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 public class PullRequestModel {
+    @JsonProperty("issue_comment_dto")
     private List<IssueCommentDTO> issueCommentDTOS;
+    @JsonProperty("pull_comment_dto")
     private List<PullCommentDTO> pullCommentDTOS;
+    @JsonProperty("pull_commit_dto")
     private List<PullCommitDTO> pullCommitDTOS;
+    @JsonProperty("pull_review_dto")
     private List<PullReviewDTO> pullReviewDTOS;
 
 }

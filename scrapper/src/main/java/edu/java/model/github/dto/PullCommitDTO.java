@@ -33,7 +33,7 @@ public class PullCommitDTO {
         private CommitDetailInfo committer;
         private String message;
 
-        record CommitDetailInfo(String name, String email, OffsetDateTime date) {
+        public record CommitDetailInfo(String name, String email, OffsetDateTime date) {
 
         }
 

@@ -2,12 +2,12 @@ package edu.java.model.stack_over_flow.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import edu.java.util.Utils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.OffsetDateTime;
 
 @Getter
 @Setter
@@ -21,6 +21,12 @@ public class QuestionAnswerDTO {
     @JsonProperty("creation_date")
     private OffsetDateTime creationDate;
 
+    @JsonProperty("last_activity_date")
+    private OffsetDateTime lastActivityDate;
+
+    @JsonProperty("last_edit_date")
+    private OffsetDateTime lastEditDate;
+
     @JsonProperty("answer_id")
     private int answerId;
 
@@ -28,20 +34,19 @@ public class QuestionAnswerDTO {
     public QuestionAnswerDTO(
         @JsonProperty("owner") AccountDTO owner,
         @JsonProperty("is_accepted") boolean isAccepted,
-        @JsonProperty("creation_date") long creationDate,
+        @JsonProperty("creation_date") Long creationDate,
+        @JsonProperty("last_activity_date") Long lastActivityDate,
+        @JsonProperty("last_edit_date") Long lastEditDate,
         @JsonProperty("answer_id") int answerId
     ) {
         this.owner = owner;
         this.isAccepted = isAccepted;
-        this.creationDate = Instant.ofEpochSecond(creationDate).atOffset(ZoneOffset.UTC);
+        this.creationDate = Utils.convertLongToOffsetDayTime(creationDate);
+        this.lastEditDate = Utils.convertLongToOffsetDayTime(lastEditDate);
+        this.lastActivityDate = lastActivityDate==null?null: Utils.convertLongToOffsetDayTime(lastActivityDate);
         this.answerId = answerId;
+
     }
 
-    public void setCreationDate(OffsetDateTime time) {
-        creationDate = time;
-    }
 
-    public void setCreationDate(long time) {
-        creationDate = Instant.ofEpochSecond(time).atOffset(ZoneOffset.UTC);
-    }
 }
