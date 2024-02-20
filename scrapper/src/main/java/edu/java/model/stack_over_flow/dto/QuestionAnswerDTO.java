@@ -3,11 +3,10 @@ package edu.java.model.stack_over_flow.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.java.util.Utils;
+import java.time.OffsetDateTime;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.OffsetDateTime;
 
 @Getter
 @Setter
@@ -43,10 +42,9 @@ public class QuestionAnswerDTO {
         this.isAccepted = isAccepted;
         this.creationDate = Utils.convertLongToOffsetDayTime(creationDate);
         this.lastEditDate = Utils.convertLongToOffsetDayTime(lastEditDate);
-        this.lastActivityDate = lastActivityDate==null?null: Utils.convertLongToOffsetDayTime(lastActivityDate);
+        this.lastActivityDate = lastActivityDate == null ? null : Utils.convertLongToOffsetDayTime(lastActivityDate);
         this.answerId = answerId;
 
     }
-
 
 }
