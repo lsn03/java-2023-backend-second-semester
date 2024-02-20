@@ -1,4 +1,4 @@
-package edu.java.service.client;
+package edu.java.util;
 
 import lombok.Getter;
 

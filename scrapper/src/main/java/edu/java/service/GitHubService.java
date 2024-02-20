@@ -5,7 +5,7 @@ import edu.java.model.github.dto.IssueCommentDTO;
 import edu.java.model.github.dto.PullCommentDTO;
 import edu.java.model.github.dto.PullCommitDTO;
 import edu.java.model.github.dto.PullReviewDTO;
-import edu.java.service.client.BaseUrl;
+import edu.java.util.BaseUrl;
 import edu.java.service.client.GitHubClient;
 import java.util.List;
 import org.springframework.core.ParameterizedTypeReference;
