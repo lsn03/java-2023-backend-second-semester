@@ -1,9 +1,6 @@
 package edu.java.bot.exception;
 
 public class IncorrectParametersException extends RuntimeException {
-    public IncorrectParametersException() {
-        super();
-    }
 
     public IncorrectParametersException(String message) {
         super(message);

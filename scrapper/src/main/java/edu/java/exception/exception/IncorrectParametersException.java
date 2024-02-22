@@ -1,9 +1,6 @@
 package edu.java.exception.exception;
 
-public class IncorrectParametersException extends RuntimeException{
-    public IncorrectParametersException() {
-        super();
-    }
+public class IncorrectParametersException extends RuntimeException {
 
     public IncorrectParametersException(String message) {
         super(message);

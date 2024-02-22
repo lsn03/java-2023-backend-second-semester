@@ -1,16 +1,17 @@
 package edu.java.bot.exception;
 
 import edu.java.bot.model.dto.ApiErrorResponse;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     public static final String ERROR_INCORRECT_PARAMETERS = "Некорректные параметры запроса";
+
     @ExceptionHandler(IncorrectParametersException.class)
     public ResponseEntity<ApiErrorResponse> handleIncorrectParametersException(IncorrectParametersException ex) {
         HttpStatus status = HttpStatus.BAD_REQUEST;

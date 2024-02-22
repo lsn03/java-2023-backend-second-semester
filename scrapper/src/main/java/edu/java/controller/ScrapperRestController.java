@@ -21,8 +21,9 @@ public class ScrapperRestController {
     public static final String HEADER_TG_CHAT_ID = "Tg-Chat-Id";
     public static final String GET_LINKS_SUCCESSFUL = "Ссылки успешно получены";
     public static final String LINK_SUCCESSFUL_ADDED = "Ссылка успешно добавлена";
+    public static final String ERROR_CHAT_ALREADY_EXIST = "Чат уже существует";
 
-    @PostMapping("/tg-chat/{id}")
+    @PostMapping(value = "/tg-chat/{id}", produces = {"application/json"})
     public ResponseEntity<?> signUpChat(@PathVariable Long id) {
         return ResponseEntity.ok(CHAT_SUCCESSFUL_SIGN_UP);
     }

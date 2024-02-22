@@ -1,9 +1,6 @@
 package edu.java.exception.exception;
 
 public class ListEmptyException extends RuntimeException {
-    public ListEmptyException() {
-        super();
-    }
 
     public ListEmptyException(String message) {
         super(message);

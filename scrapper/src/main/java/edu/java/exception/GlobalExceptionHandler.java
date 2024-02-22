@@ -8,7 +8,9 @@ import edu.java.exception.exception.UserAlreadyExistException;
 import edu.java.exception.exception.UserDoesntExistException;
 import edu.java.model.scrapper.dto.ApiErrorResponse;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,7 +27,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RepeatTrackException.class)
     public ResponseEntity<ApiErrorResponse> handleRepeatTrackException(RepeatTrackException ex) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.CONFLICT;
 
         ApiErrorResponse errorResponse = new ApiErrorResponse();
 
@@ -33,8 +35,7 @@ public class GlobalExceptionHandler {
         errorResponse.setExceptionMessage(ex.getMessage());
         errorResponse.setExceptionName(RepeatTrackException.class.getSimpleName());
         errorResponse.setDescription(ERROR_LINK_ALREADY_TRACKED);
-        errorResponse.setStacktrace(Arrays.stream(ex.getStackTrace()).map(StackTraceElement::toString).collect(
-            Collectors.toList()));
+        errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));
         return ResponseEntity.status(status).body(errorResponse);
     }
 
@@ -49,15 +50,13 @@ public class GlobalExceptionHandler {
         errorResponse.setExceptionName(LinkNotFoundException.class.getSimpleName());
         errorResponse.setDescription(ERROR_LINK_NOT_FOUND);
 
-        errorResponse.setStacktrace(Arrays.stream(ex.getStackTrace())
-            .map(StackTraceElement::toString)
-            .collect(Collectors.toList()));
+        errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));
         return ResponseEntity.status(status).body(errorResponse);
     }
 
     @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<ApiErrorResponse> handleUserAlreadyExistException(UserAlreadyExistException ex) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.CONFLICT;
 
         ApiErrorResponse errorResponse = new ApiErrorResponse();
 
@@ -66,9 +65,7 @@ public class GlobalExceptionHandler {
         errorResponse.setExceptionName(UserAlreadyExistException.class.getSimpleName());
         errorResponse.setDescription(ERROR_CHAT_ALREADY_EXIST);
 
-        errorResponse.setStacktrace(Arrays.stream(ex.getStackTrace())
-            .map(StackTraceElement::toString)
-            .collect(Collectors.toList()));
+        errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));
         return ResponseEntity.status(status).body(errorResponse);
     }
 
@@ -83,15 +80,13 @@ public class GlobalExceptionHandler {
         errorResponse.setExceptionName(UserDoesntExistException.class.getSimpleName());
         errorResponse.setDescription(ERROR_CHAT_NOT_EXIST);
 
-        errorResponse.setStacktrace(Arrays.stream(ex.getStackTrace())
-            .map(StackTraceElement::toString)
-            .collect(Collectors.toList()));
+        errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));
         return ResponseEntity.status(status).body(errorResponse);
     }
 
     @ExceptionHandler(ListEmptyException.class)
     public ResponseEntity<ApiErrorResponse> handleListEmptyException(ListEmptyException ex) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.CONFLICT;
 
         ApiErrorResponse errorResponse = new ApiErrorResponse();
 
@@ -100,9 +95,7 @@ public class GlobalExceptionHandler {
         errorResponse.setExceptionName(ListEmptyException.class.getSimpleName());
         errorResponse.setDescription(ERROR_LIST_EMPTY);
 
-        errorResponse.setStacktrace(Arrays.stream(ex.getStackTrace())
-            .map(StackTraceElement::toString)
-            .collect(Collectors.toList()));
+        errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));
         return ResponseEntity.status(status).body(errorResponse);
     }
 
@@ -117,9 +110,14 @@ public class GlobalExceptionHandler {
         errorResponse.setExceptionName(IncorrectParametersException.class.getSimpleName());
         errorResponse.setDescription(ERROR_INCORRECT_PARAMETERS);
 
-        errorResponse.setStacktrace(Arrays.stream(ex.getStackTrace())
-            .map(StackTraceElement::toString)
-            .collect(Collectors.toList()));
+        errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));
         return ResponseEntity.status(status).body(errorResponse);
+    }
+
+    @NotNull
+    private static List<String> stacktraceArrayToListString(StackTraceElement[] ex) {
+        return Arrays.stream(ex)
+            .map(StackTraceElement::toString)
+            .collect(Collectors.toList());
     }
 }
