@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ScrapperRestController {
 
     public static final String CHAT_SUCCESSFUL_SIGN_UP = "Чат зарегистрирован";
-    public static final String ERROR_INCORRECT_PARAMETERS = "Некорректные параметры запроса";
     public static final String CHAT_SUCCESSFUL_REMOVED = "Чат успешно удалён";
-    public static final String CHAT_IS_NOT_EXIST = "Чат не существует";
     public static final String HEADER_TG_CHAT_ID = "Tg-Chat-Id";
     public static final String GET_LINKS_SUCCESSFUL = "Ссылки успешно получены";
     public static final String LINK_SUCCESSFUL_ADDED = "Ссылка успешно добавлена";
