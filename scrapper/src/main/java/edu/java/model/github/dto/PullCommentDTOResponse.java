@@ -14,17 +14,21 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class PullReviewDTO {
+public class PullCommentDTOResponse {
+
     private Long id;
+
+    private String body;
 
     @JsonProperty("html_url")
     private String htmlUrl;
 
+    @JsonProperty("created_at")
+    private OffsetDateTime createdAt;
+
+    @JsonProperty("updated_at")
+    private OffsetDateTime updatedAt;
+
     private UserInfoDTO user;
-
-    private String body;
-
-    @JsonProperty("submitted_at")
-    private OffsetDateTime submittedAt;
 
 }

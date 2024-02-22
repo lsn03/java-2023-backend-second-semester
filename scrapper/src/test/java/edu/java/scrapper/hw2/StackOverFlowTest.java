@@ -4,8 +4,8 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.model.stack_over_flow.dto.AccountDTO;
-import edu.java.model.stack_over_flow.dto.QuestionAnswerDTO;
-import edu.java.model.stack_over_flow.dto.QuestionHeaderDTO;
+import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
+import edu.java.model.stack_over_flow.dto.QuestionHeaderDTOResponse;
 import edu.java.service.StackOverFlowService;
 import edu.java.service.client.StackOverFlowClient;
 import java.time.OffsetDateTime;
@@ -31,7 +31,8 @@ public class StackOverFlowTest {
         boolean isAnswered = false;
         String link = "sof.link";
         long lastEdit = 1451131815;
-        QuestionHeaderDTO dto = new QuestionHeaderDTO(owner, isAnswered, lastEdit, title, questionId, link);
+        QuestionHeaderDTOResponse
+            dto = new QuestionHeaderDTOResponse(owner, isAnswered, lastEdit, title, questionId, link);
 
         WireMock.stubFor(
             WireMock.get(url)
@@ -83,8 +84,8 @@ public class StackOverFlowTest {
         long lastActivityDate = 1451131815;
         Long lastEdit = null;
         int answerId = 1;
-        QuestionAnswerDTO dto =
-            new QuestionAnswerDTO(owner, isAccepted, creationDate, lastActivityDate, lastEdit, answerId);
+        QuestionAnswerDTOResponse dto =
+            new QuestionAnswerDTOResponse(owner, isAccepted, creationDate, lastActivityDate, lastEdit, answerId);
         var list = List.of(dto);
         WireMock.stubFor(
             WireMock.get(url)

@@ -14,20 +14,29 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class IssueCommentDTO {
+public class PullCommitDTOResponse {
+    private String sha;
+
     @JsonProperty("html_url")
     private String htmlUrl;
 
-    private Long id;
+    private CommitDetail commit;
 
-    private UserInfoDTO user;
+    private UserInfoDTO committer;
 
-    private String body;
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    @EqualsAndHashCode
+    @ToString
+    public static class CommitDetail {
+        private CommitDetailInfo committer;
+        private String message;
 
-    @JsonProperty("created_at")
-    private OffsetDateTime createdAt;
+        public record CommitDetailInfo(String name, String email, OffsetDateTime date) {
 
-    @JsonProperty("updated_at")
-    private OffsetDateTime updatedAt;
+        }
+
+    }
 
 }

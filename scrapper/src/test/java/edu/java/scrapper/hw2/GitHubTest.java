@@ -3,10 +3,10 @@ package edu.java.scrapper.hw2;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
-import edu.java.model.github.dto.IssueCommentDTO;
-import edu.java.model.github.dto.PullCommentDTO;
-import edu.java.model.github.dto.PullCommitDTO;
-import edu.java.model.github.dto.PullReviewDTO;
+import edu.java.model.github.dto.IssueCommentDTOResponse;
+import edu.java.model.github.dto.PullCommentDTOResponse;
+import edu.java.model.github.dto.PullCommitDTOResponse;
+import edu.java.model.github.dto.PullReviewDTOResponse;
 import edu.java.model.github.dto.info.UserInfoDTO;
 import edu.java.service.GitHubService;
 import edu.java.service.client.GitHubClient;
@@ -37,8 +37,9 @@ public class GitHubTest {
 
         String url = String.format("/repos/%s/%s/issues/%d/comments", owner, repo, pullNumber);
 
-        IssueCommentDTO dto = new IssueCommentDTO(expectedUrl, expectedId, expectedUser, body, createdAt, updatedAt);
-        List<IssueCommentDTO> expected = List.of(dto);
+        IssueCommentDTOResponse
+            dto = new IssueCommentDTOResponse(expectedUrl, expectedId, expectedUser, body, createdAt, updatedAt);
+        List<IssueCommentDTOResponse> expected = List.of(dto);
         WireMock.stubFor(
             WireMock.get(url)
                 .willReturn(WireMock.aResponse()
@@ -74,8 +75,9 @@ public class GitHubTest {
 
         String url = String.format("/repos/%s/%s/pulls/%d/comments", owner, repo, pullNumber);
 
-        PullCommentDTO dto = new PullCommentDTO(expectedId, body, expectedUrl, createdAt, updatedAt, expectedUser);
-        List<PullCommentDTO> expected = List.of(dto);
+        PullCommentDTOResponse
+            dto = new PullCommentDTOResponse(expectedId, body, expectedUrl, createdAt, updatedAt, expectedUser);
+        List<PullCommentDTOResponse> expected = List.of(dto);
         WireMock.stubFor(
             WireMock.get(url)
                 .willReturn(WireMock.aResponse()
@@ -113,8 +115,8 @@ public class GitHubTest {
 
         String url = String.format("/repos/%s/%s/pulls/%d/reviews", owner, repo, pullNumber);
 
-        PullReviewDTO dto = new PullReviewDTO(expectedId, expectedUrl, expectedUser, body, createdAt);
-        List<PullReviewDTO> expected = List.of(dto);
+        PullReviewDTOResponse dto = new PullReviewDTOResponse(expectedId, expectedUrl, expectedUser, body, createdAt);
+        List<PullReviewDTOResponse> expected = List.of(dto);
         WireMock.stubFor(
             WireMock.get(url)
                 .willReturn(WireMock.aResponse()
@@ -149,15 +151,15 @@ public class GitHubTest {
         int port = wireMockRuntimeInfo.getHttpPort();
 
         String url = String.format("/repos/%s/%s/pulls/%d/commits", owner, repo, pullNumber);
-        PullCommitDTO.CommitDetail.CommitDetailInfo commitDetailInfo =
-            new PullCommitDTO.CommitDetail.CommitDetailInfo(owner, "1@mail.ru", createdAt);
-        PullCommitDTO dto = new PullCommitDTO(
+        PullCommitDTOResponse.CommitDetail.CommitDetailInfo commitDetailInfo =
+            new PullCommitDTOResponse.CommitDetail.CommitDetailInfo(owner, "1@mail.ru", createdAt);
+        PullCommitDTOResponse dto = new PullCommitDTOResponse(
             "IC_kwDOKcJnTc5obaHC",
             expectedUrl,
-            new PullCommitDTO.CommitDetail(commitDetailInfo, "aboba"),
+            new PullCommitDTOResponse.CommitDetail(commitDetailInfo, "aboba"),
             expectedUser
         );
-        List<PullCommitDTO> expected = List.of(dto);
+        List<PullCommitDTOResponse> expected = List.of(dto);
         WireMock.stubFor(
             WireMock.get(url)
                 .willReturn(WireMock.aResponse()

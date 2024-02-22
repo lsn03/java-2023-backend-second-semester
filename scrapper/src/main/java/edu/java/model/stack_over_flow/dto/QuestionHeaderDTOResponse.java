@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @EqualsAndHashCode
-public class QuestionHeaderDTO {
+public class QuestionHeaderDTOResponse {
 
     private AccountDTO owner;
 
@@ -32,7 +32,7 @@ public class QuestionHeaderDTO {
     private String link;
 
     @JsonCreator
-    public QuestionHeaderDTO(
+    public QuestionHeaderDTOResponse(
         AccountDTO owner,
         @JsonProperty("is_answered") boolean isAnswered,
         @JsonProperty("last_edit_date") long lastEdit,

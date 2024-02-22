@@ -1,8 +1,8 @@
 package edu.java.model.stack_over_flow;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.java.model.stack_over_flow.dto.QuestionAnswerDTO;
-import edu.java.model.stack_over_flow.dto.QuestionHeaderDTO;
+import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
+import edu.java.model.stack_over_flow.dto.QuestionHeaderDTOResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,8 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class StackOverFlowModel {
     @JsonProperty("question_header")
-    private QuestionHeaderDTO questionHeader;
+    private QuestionHeaderDTOResponse questionHeader;
     @JsonProperty("question_answer_list")
-    private List<QuestionAnswerDTO> questionAnswerList;
+    private List<QuestionAnswerDTOResponse> questionAnswerList;
 
 }

@@ -1,8 +1,8 @@
 package edu.java.service;
 
 import edu.java.model.stack_over_flow.StackOverFlowModel;
-import edu.java.model.stack_over_flow.dto.QuestionAnswerDTO;
-import edu.java.model.stack_over_flow.dto.QuestionHeaderDTO;
+import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
+import edu.java.model.stack_over_flow.dto.QuestionHeaderDTOResponse;
 import edu.java.model.stack_over_flow.wrapper.StackOverFlowAnswerResponseWrapper;
 import edu.java.model.stack_over_flow.wrapper.StackOverFlowHeaderResponseWrapper;
 import edu.java.service.client.StackOverFlowClient;
@@ -47,7 +47,7 @@ public class StackOverFlowService implements StackOverFlowClient {
     }
 
     @Override
-    public Mono<List<QuestionAnswerDTO>> fetchAnswers(int questionId) {
+    public Mono<List<QuestionAnswerDTOResponse>> fetchAnswers(int questionId) {
         return webClient.get()
             .uri("/questions/{questionId}/answers?site=stackoverflow", questionId)
             .retrieve()
@@ -57,7 +57,7 @@ public class StackOverFlowService implements StackOverFlowClient {
     }
 
     @Override
-    public Mono<QuestionHeaderDTO> fetchHeader(int questionId) {
+    public Mono<QuestionHeaderDTOResponse> fetchHeader(int questionId) {
         return webClient.get()
             .uri("/questions/{questionId}?order=desc&sort=activity&site=stackoverflow", questionId)
             .retrieve()

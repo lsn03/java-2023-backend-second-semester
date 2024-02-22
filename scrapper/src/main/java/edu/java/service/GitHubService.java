@@ -1,10 +1,10 @@
 package edu.java.service;
 
-import edu.java.model.github.PullRequestModel;
-import edu.java.model.github.dto.IssueCommentDTO;
-import edu.java.model.github.dto.PullCommentDTO;
-import edu.java.model.github.dto.PullCommitDTO;
-import edu.java.model.github.dto.PullReviewDTO;
+import edu.java.model.github.PullRequestModelResponse;
+import edu.java.model.github.dto.IssueCommentDTOResponse;
+import edu.java.model.github.dto.PullCommentDTOResponse;
+import edu.java.model.github.dto.PullCommitDTOResponse;
+import edu.java.model.github.dto.PullReviewDTOResponse;
 import edu.java.service.client.GitHubClient;
 import edu.java.util.BaseUrl;
 import java.util.List;
@@ -35,15 +35,15 @@ public class GitHubService implements GitHubClient {
     }
 
     @Override
-    public Mono<PullRequestModel> fetchPullRequest(String owner, String repo, int pullNumber) {
-        Mono<List<IssueCommentDTO>> issueCommentsMono = getIssueComments(owner, repo, pullNumber);
-        Mono<List<PullReviewDTO>> pullReviewsMono = getPullReviews(owner, repo, pullNumber);
-        Mono<List<PullCommentDTO>> pullCommentsMono = getPullComments(owner, repo, pullNumber);
-        Mono<List<PullCommitDTO>> pullCommitsMono = getAllCommitsInPullRequest(owner, repo, pullNumber);
+    public Mono<PullRequestModelResponse> fetchPullRequest(String owner, String repo, int pullNumber) {
+        Mono<List<IssueCommentDTOResponse>> issueCommentsMono = getIssueComments(owner, repo, pullNumber);
+        Mono<List<PullReviewDTOResponse>> pullReviewsMono = getPullReviews(owner, repo, pullNumber);
+        Mono<List<PullCommentDTOResponse>> pullCommentsMono = getPullComments(owner, repo, pullNumber);
+        Mono<List<PullCommitDTOResponse>> pullCommitsMono = getAllCommitsInPullRequest(owner, repo, pullNumber);
 
         return Mono.zip(issueCommentsMono, pullReviewsMono, pullCommentsMono, pullCommitsMono)
             .map(objects -> {
-                PullRequestModel model = new PullRequestModel();
+                PullRequestModelResponse model = new PullRequestModelResponse();
                 model.setIssueCommentDTOS(objects.getT1());
                 model.setPullReviewDTOS(objects.getT2());
                 model.setPullCommentDTOS(objects.getT3());
@@ -53,7 +53,7 @@ public class GitHubService implements GitHubClient {
     }
 
     @Override
-    public Mono<List<IssueCommentDTO>> getIssueComments(String owner, String repo, int pullNumber) {
+    public Mono<List<IssueCommentDTOResponse>> getIssueComments(String owner, String repo, int pullNumber) {
         return webClient.get().uri("/repos/{owner}/{repo}/issues/{pullNumber}/comments", owner, repo, pullNumber)
             .retrieve()
             .bodyToMono(new ParameterizedTypeReference<>() {
@@ -62,14 +62,14 @@ public class GitHubService implements GitHubClient {
     }
 
     @Override
-    public Mono<List<PullReviewDTO>> getPullReviews(String owner, String repo, int pullNumber) {
+    public Mono<List<PullReviewDTOResponse>> getPullReviews(String owner, String repo, int pullNumber) {
         return webClient.get().uri("/repos/{owner}/{repo}/pulls/{pullNumber}/reviews", owner, repo, pullNumber)
             .retrieve().bodyToMono(new ParameterizedTypeReference<>() {
             });
     }
 
     @Override
-    public Mono<List<PullCommentDTO>> getPullComments(String owner, String repo, int pullNumber) {
+    public Mono<List<PullCommentDTOResponse>> getPullComments(String owner, String repo, int pullNumber) {
         return webClient.get().uri("repos/{owner}/{repo}/pulls/{pullNumber}/comments", owner, repo, pullNumber)
             .retrieve().bodyToMono(new ParameterizedTypeReference<>() {
             });
@@ -77,7 +77,7 @@ public class GitHubService implements GitHubClient {
     }
 
     @Override
-    public Mono<List<PullCommitDTO>> getAllCommitsInPullRequest(String owner, String repo, int pullNumber) {
+    public Mono<List<PullCommitDTOResponse>> getAllCommitsInPullRequest(String owner, String repo, int pullNumber) {
         return webClient.get().uri("/repos/{owner}/{repo}/pulls/{pullNumber}/commits", owner, repo, pullNumber)
             .retrieve().bodyToMono(new ParameterizedTypeReference<>() {
             });

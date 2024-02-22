@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class QuestionAnswerDTO {
+public class QuestionAnswerDTOResponse {
     private AccountDTO owner;
 
     @JsonProperty("is_accepted")
@@ -30,7 +30,7 @@ public class QuestionAnswerDTO {
     private int answerId;
 
     @JsonCreator
-    public QuestionAnswerDTO(
+    public QuestionAnswerDTOResponse(
         @JsonProperty("owner") AccountDTO owner,
         @JsonProperty("is_accepted") boolean isAccepted,
         @JsonProperty("creation_date") Long creationDate,
