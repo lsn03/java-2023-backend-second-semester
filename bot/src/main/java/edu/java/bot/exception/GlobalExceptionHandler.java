@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
         errorResponse.setCode(String.valueOf(status.value()));
         errorResponse.setExceptionMessage(ex.getMessage());
-        errorResponse.setExceptionName(IncorrectParametersException.class.getName());
+        errorResponse.setExceptionName(IncorrectParametersException.class.getSimpleName());
         errorResponse.setDescription(ERROR_INCORRECT_PARAMETERS);
 
         errorResponse.setStacktrace(Arrays.stream(ex.getStackTrace())
