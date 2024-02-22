@@ -6,7 +6,10 @@ spring:
     name: bot
   jackson:
     time-zone: UTC
-
+    
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
 server:
   port: 8090
 
