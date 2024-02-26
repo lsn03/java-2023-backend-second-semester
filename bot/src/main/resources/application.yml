@@ -13,5 +13,8 @@ springdoc:
 server:
   port: 8090
 
+scrapper:
+  base-url: ${BASE_URL:http://localhost:8080}
+
 logging:
   config: classpath:log4j2-plain.xml

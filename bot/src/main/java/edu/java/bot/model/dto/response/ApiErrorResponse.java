@@ -1,4 +1,4 @@
-package edu.java.bot.model.dto;
+package edu.java.bot.model.dto.response;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiErrorResponse {
+public class ApiErrorResponse extends MyResponse{
 
     private String description;
     private String code;

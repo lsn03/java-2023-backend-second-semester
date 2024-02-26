@@ -1,4 +1,4 @@
-package edu.java.bot.model.dto;
+package edu.java.bot.model.dto.request;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LinkUpdateRequest {
+public class LinkUpdateRequest extends MyRequest {
     private long id;
     private String url;
     private String description;
