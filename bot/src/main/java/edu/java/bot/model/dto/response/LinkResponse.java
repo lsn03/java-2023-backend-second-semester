@@ -1,10 +1,10 @@
 package edu.java.bot.model.dto.response;
 
+import java.net.URI;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.net.URI;
 
 @NoArgsConstructor
 @AllArgsConstructor

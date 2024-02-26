@@ -19,3 +19,4 @@ logging:
 client:
   github-base-url: ${GITHUB_BASE_URL:https://api.github.com}
   sof-base-url: ${SOF_BASE_URL:https://api.stackexchange.com/2.3}
+  bot-base-url: ${BOT_BASE_URL:http://localhost:8090}

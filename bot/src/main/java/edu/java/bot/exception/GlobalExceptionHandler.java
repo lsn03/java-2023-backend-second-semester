@@ -29,6 +29,7 @@ public class GlobalExceptionHandler {
             .collect(Collectors.toList()));
         return ResponseEntity.status(status).body(errorResponse);
     }
+
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleNoResourceFoundException(NoResourceFoundException ex) {
         HttpStatus status = HttpStatus.NOT_FOUND;

@@ -11,7 +11,8 @@ public class BotRestController {
 
     @PostMapping("/updates")
     public ResponseEntity<?> getUpdates(@RequestBody LinkUpdateRequest body) {
-        return ResponseEntity.ok("Обновление обработано");
+//        throw new IncorrectParametersException("default");
+        return ResponseEntity.ok(body);
     }
 }
 

@@ -6,6 +6,7 @@ import edu.java.bot.model.dto.response.ApiErrorResponse;
 import edu.java.bot.model.dto.response.LinkResponse;
 import edu.java.bot.model.dto.response.ListLinksResponse;
 import edu.java.bot.model.dto.response.MyResponse;
+import java.util.Optional;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -24,20 +25,31 @@ public class ScrapperHttpClient {
 
     }
 
-    public Mono<Object> makeChat(Long id) {
+    public Mono<Optional<ApiErrorResponse>> makeChat(Long id) {
 
         return client.post()
             .uri(String.format(TG_CHAT, id))
-            .exchangeToMono(ScrapperHttpClient::processChatResponse);
+            .exchangeToMono(clientResponse -> {
+                if (clientResponse.statusCode().isError()) {
+                    return (clientResponse.bodyToMono(ApiErrorResponse.class).map(Optional::of));
+                } else {
+                    return Mono.just(Optional.empty());
+                }
+            });
 
     }
 
-    public Mono<Object> deleteChat(Long id) {
+    public Mono<Optional<ApiErrorResponse>> deleteChat(Long id) {
 
         return client.delete()
             .uri(String.format(TG_CHAT, id))
-            .exchangeToMono(ScrapperHttpClient::processChatResponse);
-
+            .exchangeToMono(clientResponse -> {
+                if (clientResponse.statusCode().isError()) {
+                    return (clientResponse.bodyToMono(ApiErrorResponse.class).map(Optional::of));
+                } else {
+                    return Mono.just(Optional.empty());
+                }
+            });
     }
 
     public Mono<? extends MyResponse> getLinks(Long id) {
@@ -61,14 +73,6 @@ public class ScrapperHttpClient {
             .header(HEADER_TG_CHAT_ID, id.toString())
             .bodyValue(removeLinkRequest)
             .exchangeToMono(clientResponse -> processLink(clientResponse, LinkResponse.class));
-    }
-
-    private static Mono<Object> processChatResponse(ClientResponse clientResponse) {
-        if (clientResponse.statusCode().is2xxSuccessful()) {
-            return clientResponse.bodyToMono(String.class);
-        } else {
-            return clientResponse.bodyToMono(ApiErrorResponse.class);
-        }
     }
 
     private static Mono<MyResponse> processLink(

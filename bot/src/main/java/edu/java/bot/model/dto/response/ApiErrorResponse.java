@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiErrorResponse extends MyResponse{
+public class ApiErrorResponse extends MyResponse {
 
     private String description;
     private String code;
