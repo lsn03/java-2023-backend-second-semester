@@ -6,7 +6,6 @@ import edu.java.model.stack_over_flow.dto.QuestionHeaderDTOResponse;
 import edu.java.model.stack_over_flow.wrapper.StackOverFlowAnswerResponseWrapper;
 import edu.java.model.stack_over_flow.wrapper.StackOverFlowHeaderResponseWrapper;
 import edu.java.service.client.StackOverFlowClient;
-import edu.java.util.BaseUrl;
 import java.util.List;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -16,18 +15,10 @@ public class StackOverFlowService implements StackOverFlowClient {
 
     private final WebClient webClient;
 
-    public StackOverFlowService() {
-        this(BaseUrl.STACK_OVER_FLOW_BASE_URL.getUrl());
-    }
-
     public StackOverFlowService(String url) {
-        String stackOverFlowBaseApi = BaseUrl.STACK_OVER_FLOW_BASE_URL.getUrl();
 
-        if (!url.isEmpty() && !url.isBlank()) {
-            stackOverFlowBaseApi = url;
-        }
         webClient = WebClient.builder()
-            .baseUrl(stackOverFlowBaseApi)
+            .baseUrl(url)
             .defaultHeader("User-Agent", "lsn03")
             .defaultHeader("Accept", "application/json")
             .build();

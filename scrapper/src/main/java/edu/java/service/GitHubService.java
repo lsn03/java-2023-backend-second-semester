@@ -6,7 +6,6 @@ import edu.java.model.github.dto.PullCommentDTOResponse;
 import edu.java.model.github.dto.PullCommitDTOResponse;
 import edu.java.model.github.dto.PullReviewDTOResponse;
 import edu.java.service.client.GitHubClient;
-import edu.java.util.BaseUrl;
 import java.util.List;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,18 +15,10 @@ public class GitHubService implements GitHubClient {
     private static final String GITHUB_TOKEN = System.getenv().get("APP_GITHUB_TOKEN");
     private final WebClient webClient;
 
-    public GitHubService() {
-        this(BaseUrl.GITHUB_BASE_URL.getUrl());
-    }
-
     public GitHubService(String url) {
-        String githubApiBaseUrl = BaseUrl.GITHUB_BASE_URL.getUrl();
 
-        if (!url.isEmpty() && !url.isBlank()) {
-            githubApiBaseUrl = url;
-        }
         webClient = WebClient.builder()
-            .baseUrl(githubApiBaseUrl)
+            .baseUrl(url)
             .defaultHeader("User-Agent", "lsn03")
             .defaultHeader("Accept", "application/vnd.github+json")
             .defaultHeader("Authorization", "token " + GITHUB_TOKEN)

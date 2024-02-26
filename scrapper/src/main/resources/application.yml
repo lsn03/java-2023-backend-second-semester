@@ -10,6 +10,8 @@ spring:
 
 server:
   port: 8080
-
 logging:
   config: classpath:log4j2-plain.xml
+client:
+  github-base-url: ${GITHUB_BASE_URL:https://api.github.com}
+  sof-base-url: ${SOF_BASE_URL:https://api.stackexchange.com/2.3}
