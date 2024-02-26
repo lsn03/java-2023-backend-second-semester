@@ -1,4 +1,4 @@
-package edu.java.model.scrapper.dto;
+package edu.java.model.scrapper.dto.response;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

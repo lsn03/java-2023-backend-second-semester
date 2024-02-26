@@ -1,9 +1,9 @@
 package edu.java.controller;
 
-import edu.java.model.scrapper.dto.AddLinkRequest;
-import edu.java.model.scrapper.dto.LinkResponse;
-import edu.java.model.scrapper.dto.ListLinksResponse;
-import edu.java.model.scrapper.dto.RemoveLinkRequest;
+import edu.java.model.scrapper.dto.request.AddLinkRequest;
+import edu.java.model.scrapper.dto.response.LinkResponse;
+import edu.java.model.scrapper.dto.response.ListLinksResponse;
+import edu.java.model.scrapper.dto.request.RemoveLinkRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +34,7 @@ public class ScrapperRestController {
     }
 
     @PostMapping("/links")
-    public ResponseEntity<?> getLinkToList(
+    public ResponseEntity<?> trackLink(
         @RequestBody AddLinkRequest addLinkRequest,
         @RequestHeader(HEADER_TG_CHAT_ID) Long chatId
     ) {
@@ -43,7 +43,7 @@ public class ScrapperRestController {
     }
 
     @DeleteMapping("/links")
-    public ResponseEntity<?> removeLinkFromList(
+    public ResponseEntity<?> unTrackLink(
         @RequestBody RemoveLinkRequest removeLinkRequest,
         @RequestHeader(HEADER_TG_CHAT_ID) Long chatId
     ) {

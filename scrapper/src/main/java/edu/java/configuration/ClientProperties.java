@@ -12,4 +12,5 @@ import org.springframework.context.annotation.Configuration;
 public class ClientProperties {
     private String githubBaseUrl;
     private String sofBaseUrl;
+    private String botBaseUrl;
 }

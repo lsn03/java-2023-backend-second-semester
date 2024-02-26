@@ -6,7 +6,7 @@ import edu.java.exception.exception.ListEmptyException;
 import edu.java.exception.exception.RepeatTrackException;
 import edu.java.exception.exception.UserAlreadyExistException;
 import edu.java.exception.exception.UserDoesntExistException;
-import edu.java.model.scrapper.dto.ApiErrorResponse;
+import edu.java.model.scrapper.dto.response.ApiErrorResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -114,6 +114,7 @@ public class GlobalExceptionHandler {
         errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));
         return ResponseEntity.status(status).body(errorResponse);
     }
+
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleNoResourceFoundException(NoResourceFoundException ex) {
         HttpStatus status = HttpStatus.NOT_FOUND;
@@ -125,9 +126,7 @@ public class GlobalExceptionHandler {
         errorResponse.setExceptionName(NoResourceFoundException.class.getSimpleName());
         errorResponse.setDescription(status.getReasonPhrase());
 
-        errorResponse.setStacktrace(Arrays.stream(ex.getStackTrace())
-            .map(StackTraceElement::toString)
-            .collect(Collectors.toList()));
+        errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));
         return ResponseEntity.status(status).body(errorResponse);
     }
 

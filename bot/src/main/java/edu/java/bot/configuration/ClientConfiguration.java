@@ -15,7 +15,6 @@ public class ClientConfiguration {
 
     @Bean
     public ScrapperHttpClient scrapperHttpClient() {
-
         return new ScrapperHttpClient(scrapperProperties.getBaseUrl());
     }
 }

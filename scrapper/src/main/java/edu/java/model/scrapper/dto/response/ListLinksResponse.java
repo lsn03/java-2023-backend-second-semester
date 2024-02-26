@@ -1,5 +1,6 @@
-package edu.java.model.scrapper.dto;
+package edu.java.model.scrapper.dto.response;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class LinkResponse {
-    private Long id;
-    private String url;
+public class ListLinksResponse extends MyResponse {
+    List<LinkResponse> lists;
+    Integer size;
 }

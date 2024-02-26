@@ -1,4 +1,4 @@
-package edu.java.model.scrapper.dto;
+package edu.java.model.scrapper.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddLinkRequest {
+public class AddLinkRequest extends MyRequest {
     private String link;
 }
