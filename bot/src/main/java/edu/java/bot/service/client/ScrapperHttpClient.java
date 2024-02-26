@@ -25,29 +25,29 @@ public class ScrapperHttpClient {
 
     }
 
-    public Mono<Optional<ApiErrorResponse>> makeChat(Long id) {
+    public Mono<ApiErrorResponse> makeChat(Long id) {
 
         return client.post()
             .uri(String.format(TG_CHAT, id))
             .exchangeToMono(clientResponse -> {
                 if (clientResponse.statusCode().isError()) {
-                    return (clientResponse.bodyToMono(ApiErrorResponse.class).map(Optional::of));
+                    return (clientResponse.bodyToMono(ApiErrorResponse.class));
                 } else {
-                    return Mono.just(Optional.empty());
+                    return Mono.empty();
                 }
             });
 
     }
 
-    public Mono<Optional<ApiErrorResponse>> deleteChat(Long id) {
+    public Mono<ApiErrorResponse> deleteChat(Long id) {
 
         return client.delete()
             .uri(String.format(TG_CHAT, id))
             .exchangeToMono(clientResponse -> {
                 if (clientResponse.statusCode().isError()) {
-                    return (clientResponse.bodyToMono(ApiErrorResponse.class).map(Optional::of));
+                    return (clientResponse.bodyToMono(ApiErrorResponse.class));
                 } else {
-                    return Mono.just(Optional.empty());
+                    return Mono.empty();
                 }
             });
     }

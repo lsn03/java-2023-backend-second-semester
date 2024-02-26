@@ -17,11 +17,11 @@ public class for_test {
     private ScrapperHttpClient client;
 
     @GetMapping("/1")
-    public Mono<Optional<ApiErrorResponse>> t1(){
+    public Mono<ApiErrorResponse> t1(){
        return client.makeChat(1L);
     }
     @GetMapping("/2")
-    public Mono<Optional<ApiErrorResponse>> t2(){
+    public Mono<ApiErrorResponse> t2(){
         return client.deleteChat(1L);
     }
     @GetMapping("/3")
