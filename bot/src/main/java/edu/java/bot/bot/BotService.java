@@ -9,54 +9,58 @@ import com.pengrad.telegrambot.request.GetUpdates;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.command.Command;
+import edu.java.bot.configuration.ApplicationConfig;
 import jakarta.annotation.PostConstruct;
+
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class BotService implements Bot {
     private final TelegramBot telegramBot;
     private final List<Command> commandList;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final ApplicationConfig applicationConfig;
 
-    @Autowired
-    public BotService(List<Command> commandList) {
+    public BotService(List<Command> commandList, ApplicationConfig applicationConfig, BotFactory botFactory) {
         this.commandList = commandList;
-        telegramBot = new TelegramBot(System.getenv().get("APP_TELEGRAM_TOKEN"));
+        this.applicationConfig = applicationConfig;
+        telegramBot = botFactory.create(applicationConfig.telegramToken());
+        log.info("Create BotService with");
+
     }
 
     @Override
     public <T extends BaseRequest<T, R>, R extends BaseResponse> void myExecute(BaseRequest<T, R> request) {
 
-        logger.info("myExecute {}", request.getParameters());
+        log.info("myExecute {}", request.getParameters());
         telegramBot.execute(request);
 
     }
 
     @Override
     public int process(List<Update> list) {
-        logger.info("process {}", list);
+        log.info("process {}", list);
         return 0;
     }
 
-    @PostConstruct
+    @Override
+//    @PostConstruct
     public void start() {
-
+        log.info("start?");
         BotCommand[] botCommands = commandList.stream().map(command -> new BotCommand(
             command.command(),
             command.description()
         )).toArray(BotCommand[]::new);
 
-        telegramBot.execute(new SetMyCommands(botCommands));
-
+//        telegramBot.execute(new SetMyCommands(botCommands));
     }
 
     @Override
     public void close() throws Exception {
-        logger.info("close");
+        log.info("close");
         telegramBot.shutdown();
     }
 
