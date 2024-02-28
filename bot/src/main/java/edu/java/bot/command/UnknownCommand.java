@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class UnknownCommand implements Command {
-    public static final String UNKNOWN_COMMAND_HELP = "Неизвестная команда. Используйте /help для списка команд.";
 
     @Override
     public String command() {
@@ -29,7 +28,7 @@ public class UnknownCommand implements Command {
             chatId
         );
 
-        return new SendMessage(chatId, UNKNOWN_COMMAND_HELP);
+        return new SendMessage(chatId, CommandUtils.UNKNOWN_COMMAND_HELP);
     }
 
     @Override

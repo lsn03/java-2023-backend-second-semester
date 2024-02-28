@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.command.CommandUtils;
 import edu.java.bot.command.StartCommand;
 import edu.java.bot.storage.Storage;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +48,7 @@ public class StartCommandTest {
         when(message.text()).thenReturn(command);
         SendMessage sendMessage = startCommand.handle(update);
         assertNotNull(sendMessage);
-        assertEquals(StartCommand.USER_REGISTERED_SUCCESS, sendMessage.getParameters().get(TEXT));
+        assertEquals(CommandUtils.USER_REGISTERED_SUCCESS, sendMessage.getParameters().get(TEXT));
     }
 
     @Test
@@ -56,6 +57,6 @@ public class StartCommandTest {
         when(message.text()).thenReturn(command);
         SendMessage sendMessage = startCommand.handle(update);
         assertNotNull(sendMessage);
-        assertEquals(StartCommand.ALREADY_AUTH, sendMessage.getParameters().get(TEXT));
+        assertEquals(CommandUtils.ALREADY_AUTH, sendMessage.getParameters().get(TEXT));
     }
 }

@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.command.CommandUtils;
 import edu.java.bot.command.UnknownCommand;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +42,7 @@ public class UnknownCommandTest {
         "there is no help"
     })
     public void testUserUnknownCommand(String command) {
-        String expectedString = UnknownCommand.UNKNOWN_COMMAND_HELP;
+        String expectedString = CommandUtils.UNKNOWN_COMMAND_HELP;
 
         when(update.message()).thenReturn(message);
         when(message.chat()).thenReturn(chat);

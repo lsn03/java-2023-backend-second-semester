@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.command.CancelCommand;
 import edu.java.bot.command.Command;
+import edu.java.bot.command.CommandUtils;
 import edu.java.bot.command.HelpCommand;
 import edu.java.bot.command.ListCommand;
 import edu.java.bot.command.StartCommand;
@@ -34,7 +35,7 @@ public class UserNotRegisteredTest {
     private Update update;
     private Message message;
     private Chat chat;
-    private String expectedString;
+    private String expectedString = CommandUtils.USER_NOT_REGISTERED;
     @Mock
     private Storage storage;
 
@@ -82,7 +83,7 @@ public class UserNotRegisteredTest {
 
     @Test
     public void testUserNotRegisteredCancel() {
-        expectedString = CancelCommand.USER_NOT_REGISTERED;
+
         Command currentCommand = cancelCommand;
         defaultInit(id, currentCommand.command());
         lenient().when(storage.isUserAuth(id)).thenReturn(false);
@@ -95,7 +96,7 @@ public class UserNotRegisteredTest {
 
     @Test
     public void testUserNotRegisteredHelp() {
-        expectedString = HelpCommand.USER_NOT_REGISTERED;
+
         Command currentCommand = helpCommand;
         defaultInit(id, currentCommand.command());
         lenient().when(storage.isUserAuth(id)).thenReturn(false);
@@ -108,7 +109,7 @@ public class UserNotRegisteredTest {
 
     @Test
     public void testUserNotRegisteredList() {
-        expectedString = ListCommand.USER_NOT_REGISTERED;
+
         Command currentCommand = listCommand;
         defaultInit(id, currentCommand.command());
         lenient().when(storage.isUserAuth(id)).thenReturn(false);
@@ -121,7 +122,7 @@ public class UserNotRegisteredTest {
 
     @Test
     public void testUserNotRegisteredTrack() {
-        expectedString = ListCommand.USER_NOT_REGISTERED;
+
         Command currentCommand = trackCommand;
         defaultInit(id, currentCommand.command());
         lenient().when(storage.isUserAuth(id)).thenReturn(false);
@@ -134,7 +135,7 @@ public class UserNotRegisteredTest {
 
     @Test
     public void testUserNotRegisteredUnTrack() {
-        expectedString = ListCommand.USER_NOT_REGISTERED;
+
         Command currentCommand = unTrackCommand;
         defaultInit(id, currentCommand.command());
         lenient().when(storage.isUserAuth(id)).thenReturn(false);

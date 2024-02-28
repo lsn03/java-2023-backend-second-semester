@@ -6,23 +6,17 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.storage.Storage;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class HelpCommand implements Command {
-    public static final String USER_NOT_REGISTERED =
-        "Вы не зарегистрированы. Функционал бота не доступен. Введите /start для регистрации.";
 
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
     private final StringBuilder stringBuilder;
     private final List<Command> commandList;
     private final Storage storage;
-
 
     public HelpCommand(List<Command> commandList, Storage storage) {
 
@@ -53,7 +47,7 @@ public class HelpCommand implements Command {
             chatId
         );
         if (!storage.isUserAuth(chatId)) {
-            return new SendMessage(chatId, USER_NOT_REGISTERED);
+            return new SendMessage(chatId, CommandUtils.USER_NOT_REGISTERED);
         }
         return new SendMessage(chatId, stringBuilder.toString());
 
@@ -68,7 +62,6 @@ public class HelpCommand implements Command {
     public BotCommand toApiCommand() {
         return Command.super.toApiCommand();
     }
-
 
     private void initOutputMessage() {
         stringBuilder.append("Бот позволяет отслеживать обновления сайтов.").append(LINE_SEPARATOR);

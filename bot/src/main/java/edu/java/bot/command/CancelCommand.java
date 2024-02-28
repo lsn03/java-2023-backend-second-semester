@@ -7,24 +7,14 @@ import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CancelCommand implements Command  {
-    public static final String CANCEL_INPUT = "Ввод отменён.";
-    public static final String NOTHING_TO_CANCEL = "Нечего отменять.";
-    public static final String USER_NOT_REGISTERED =
-        "Вы не зарегистрированы. Функционал бота не доступен. Введите /start для регистрации.";
+public class CancelCommand implements Command {
 
     private final Storage storage;
-
-
-
 
     @Override
     public String command() {
@@ -46,12 +36,12 @@ public class CancelCommand implements Command  {
             chatId
         );
         if (!storage.isUserAuth(chatId)) {
-            return new SendMessage(chatId, USER_NOT_REGISTERED);
+            return new SendMessage(chatId, CommandUtils.USER_NOT_REGISTERED);
         } else {
             UserState state = storage.getUserState(chatId);
             return switch (state) {
                 case AWAITING_URL_FOR_UN_TRACK, AWAITING_URL_FOR_TRACK -> processCancel(chatId);
-                default -> new SendMessage(chatId, NOTHING_TO_CANCEL);
+                default -> new SendMessage(chatId, CommandUtils.NOTHING_TO_CANCEL);
             };
         }
 
@@ -69,6 +59,6 @@ public class CancelCommand implements Command  {
 
     private SendMessage processCancel(Long chatId) {
         storage.setUserState(chatId, UserState.DEFAULT);
-        return new SendMessage(chatId, CANCEL_INPUT);
+        return new SendMessage(chatId, CommandUtils.CANCEL_INPUT);
     }
 }

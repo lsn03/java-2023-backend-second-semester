@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.command.CommandUtils;
 import edu.java.bot.command.ListCommand;
 import edu.java.bot.storage.Storage;
 import java.util.List;
@@ -65,7 +66,6 @@ public class ListCommandTest {
         SendMessage response = listCommand.handle(update);
         assertNotNull(response);
         var text = (String) response.getParameters().get(TEXT);
-
-        assertEquals(ListCommand.NOTHING_TO_TRACK, text);
+        assertEquals(CommandUtils.NOTHING_TO_TRACK, text);
     }
 }

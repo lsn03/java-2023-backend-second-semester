@@ -14,13 +14,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 public class UnTrackCommand implements Command {
-    public static final String USER_NOT_REGISTERED =
-        "Вы не зарегистрированы. Функционал бота не доступен. Введите /start для регистрации.";
-    public static final String AWAITING_URL = "Ожидается ввод URL. Для отмены используйте /cancel.";
-    public static final String INPUT_URL_FOR_UN_TRACK = "Пожалуйста, отправьте URL для прекращения отслеживания.";
-    public static final String URL_SUCCESSFULLY_REMOVED = "URL удалён из списка отслеживаемых.";
-    public static final String URL_NOT_FOUND = "URL не найден. Не удалось удалить URL.";
-    public static final String EXCEPTION_MESSAGE = " Попробуйте другой URL или используйте /cancel для отмены.";
 
     private final Storage storage;
 
@@ -46,15 +39,15 @@ public class UnTrackCommand implements Command {
             chatId
         );
         if (!storage.isUserAuth(chatId)) {
-            return new SendMessage(chatId, USER_NOT_REGISTERED);
+            return new SendMessage(chatId, CommandUtils.USER_NOT_REGISTERED);
         }
         UserState state = storage.getUserState(chatId);
 
         return switch (state) {
-            case UNAUTHORIZED -> new SendMessage(chatId, USER_NOT_REGISTERED);
+            case UNAUTHORIZED -> new SendMessage(chatId, CommandUtils.USER_NOT_REGISTERED);
             case AWAITING_URL_FOR_UN_TRACK -> processUnTrackUrl(chatId, text);
             case DEFAULT -> processDefaultUnTrack(chatId);
-            default -> new SendMessage(chatId, EXCEPTION_MESSAGE);
+            default -> new SendMessage(chatId, CommandUtils.EXCEPTION_MESSAGE);
         };
 
     }
@@ -72,25 +65,25 @@ public class UnTrackCommand implements Command {
     private SendMessage processDefaultUnTrack(Long chatId) {
         storage.setUserState(chatId, UserState.AWAITING_URL_FOR_UN_TRACK);
 
-        return new SendMessage(chatId, INPUT_URL_FOR_UN_TRACK);
+        return new SendMessage(chatId, CommandUtils.INPUT_URL_FOR_UN_TRACK);
     }
 
     private SendMessage processUnTrackUrl(Long chatId, String text) {
 
         if (text.startsWith("/")) {
-            return new SendMessage(chatId, AWAITING_URL);
+            return new SendMessage(chatId, CommandUtils.AWAITING_URL);
         }
 
         try {
             var result = storage.removeUrl(chatId, text);
             if (result) {
                 storage.setUserState(chatId, UserState.DEFAULT);
-                return new SendMessage(chatId, URL_SUCCESSFULLY_REMOVED);
+                return new SendMessage(chatId, CommandUtils.URL_SUCCESSFULLY_REMOVED);
             } else {
-                return new SendMessage(chatId, URL_NOT_FOUND);
+                return new SendMessage(chatId, CommandUtils.URL_NOT_FOUND);
             }
         } catch (UnsupportedSiteException e) {
-            return new SendMessage(chatId, e.getMessage() + EXCEPTION_MESSAGE);
+            return new SendMessage(chatId, e.getMessage() + CommandUtils.EXCEPTION_MESSAGE);
         }
     }
 }

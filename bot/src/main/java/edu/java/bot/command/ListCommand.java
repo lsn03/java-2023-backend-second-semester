@@ -11,9 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ListCommand implements Command {
-    public static final String NOTHING_TO_TRACK = "Нет ссылок для отслеживания. Введите /track.";
-    public static final String USER_NOT_REGISTERED =
-        "Вы не зарегистрированы. Функционал бота не доступен. Введите /start для регистрации.";
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Storage storage;
     private final StringBuilder st;
@@ -42,13 +40,13 @@ public class ListCommand implements Command {
         logger.info("User @{} entered \"{}\" user_id={}", username, text, chatId);
 
         if (!storage.isUserAuth(chatId)) {
-            return new SendMessage(chatId, USER_NOT_REGISTERED);
+            return new SendMessage(chatId, CommandUtils.USER_NOT_REGISTERED);
         }
         var list = storage.getUserTracks(chatId);
         if (!list.isEmpty()) {
             return processGetList(list, chatId);
         } else {
-            return new SendMessage(chatId, NOTHING_TO_TRACK);
+            return new SendMessage(chatId, CommandUtils.NOTHING_TO_TRACK);
         }
 
     }

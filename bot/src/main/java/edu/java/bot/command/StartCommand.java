@@ -12,9 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class StartCommand implements Command {
 
-    public static final String ALREADY_AUTH = "Вы уже авторизованы.";
-    public static final String USER_REGISTERED_SUCCESS =
-        "Вы зарегистрированы. Функционал бота доступен. Используйте /help для списка команд.";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Storage storage;
@@ -48,11 +45,11 @@ public class StartCommand implements Command {
         );
         if (storage.isUserAuth(chatId)) {
             logger.info("User @{} id={} already sign in", username, chatId);
-            return new SendMessage(chatId, ALREADY_AUTH);
+            return new SendMessage(chatId, CommandUtils.ALREADY_AUTH);
         } else {
             storage.authUser(chatId);
             logger.info("User @{} id={} was successfully registered", username, chatId);
-            return new SendMessage(chatId, USER_REGISTERED_SUCCESS);
+            return new SendMessage(chatId, CommandUtils.USER_REGISTERED_SUCCESS);
         }
 
     }

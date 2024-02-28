@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.command.CommandUtils;
 import edu.java.bot.command.UnTrackCommand;
 import edu.java.bot.exception.UnsupportedSiteException;
 import edu.java.bot.processor.UserState;
@@ -51,7 +52,7 @@ public class UnTrackCommandTest {
 
     @Test
     public void testUnTrackFirstTIme() {
-        expectedString = UnTrackCommand.INPUT_URL_FOR_UN_TRACK;
+        expectedString = CommandUtils.INPUT_URL_FOR_UN_TRACK;
 
         when(update.message().text()).thenReturn("/untrack");
         when(storage.getUserState(id)).thenReturn(UserState.DEFAULT);
@@ -63,7 +64,7 @@ public class UnTrackCommandTest {
 
     @Test
     public void testUnTrackAwaitingUrlCheckException() {
-        expectedString = UnTrackCommand.EXCEPTION_MESSAGE;
+        expectedString = CommandUtils.EXCEPTION_MESSAGE;
         String site = "abracadbra";
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_UN_TRACK);
@@ -77,7 +78,7 @@ public class UnTrackCommandTest {
 
     @Test
     public void testUnTrackRemoveUrlSuccess() {
-        expectedString = UnTrackCommand.URL_SUCCESSFULLY_REMOVED;
+        expectedString = CommandUtils.URL_SUCCESSFULLY_REMOVED;
         String site = "abracadbra";
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_UN_TRACK);
@@ -91,7 +92,7 @@ public class UnTrackCommandTest {
 
     @Test
     public void testUnTrackRemoveUrlFailed() {
-        expectedString = UnTrackCommand.URL_NOT_FOUND;
+        expectedString = CommandUtils.URL_NOT_FOUND;
         String site = "abracadbra";
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_UN_TRACK);
@@ -112,7 +113,7 @@ public class UnTrackCommandTest {
         "/help",
     })
     public void testUnTrackRemoveUrlFailedEnterCommand(String site) {
-        expectedString = UnTrackCommand.AWAITING_URL;
+        expectedString = CommandUtils.AWAITING_URL;
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_UN_TRACK);
         when(update.message().text()).thenReturn(site);

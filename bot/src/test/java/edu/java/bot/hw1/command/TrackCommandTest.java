@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.command.CommandUtils;
 import edu.java.bot.command.TrackCommand;
 import edu.java.bot.exception.UnsupportedSiteException;
 import edu.java.bot.processor.UserState;
@@ -51,7 +52,7 @@ public class TrackCommandTest {
 
     @Test
     public void testTrackFirstTIme() {
-        expectedString = TrackCommand.INPUT_URL_FOR_TRACK;
+        expectedString = CommandUtils.INPUT_URL_FOR_TRACK;
 
         when(update.message().text()).thenReturn("/track");
         when(storage.getUserState(id)).thenReturn(UserState.DEFAULT);
@@ -63,7 +64,7 @@ public class TrackCommandTest {
 
     @Test
     public void testTrackAwaitingUrlCheckException() {
-        expectedString = TrackCommand.EXCEPTION_MESSAGE;
+        expectedString = CommandUtils.EXCEPTION_MESSAGE;
         String site = "abracadbra";
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
@@ -77,7 +78,7 @@ public class TrackCommandTest {
 
     @Test
     public void testTrackAddUrlSuccess() {
-        expectedString = TrackCommand.URL_SUCCESSFULLY_ADDED;
+        expectedString = CommandUtils.URL_SUCCESSFULLY_ADDED;
         String site = "abracadbra";
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
@@ -91,7 +92,7 @@ public class TrackCommandTest {
 
     @Test
     public void testTrackAddUrlFailed() {
-        expectedString = TrackCommand.URL_ALREADY_EXIST;
+        expectedString = CommandUtils.URL_ALREADY_EXIST;
         String site = "abracadbra";
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
@@ -112,7 +113,7 @@ public class TrackCommandTest {
         "/help",
     })
     public void testTrackAddUrlFailedEnterCommand(String site) {
-        expectedString = TrackCommand.AWAITING_URL;
+        expectedString = CommandUtils.AWAITING_URL;
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
         when(update.message().text()).thenReturn(site);

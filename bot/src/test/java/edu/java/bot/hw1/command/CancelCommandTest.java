@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.command.CancelCommand;
+import edu.java.bot.command.CommandUtils;
 import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +47,7 @@ public class CancelCommandTest {
     @ParameterizedTest
     @EnumSource(value = UserState.class, names = {"DEFAULT", "UNAUTHORIZED"})
     public void nothingToCancelTest(UserState state) {
-        expectedString = CancelCommand.NOTHING_TO_CANCEL;
+        expectedString = CommandUtils.NOTHING_TO_CANCEL;
         when(storage.getUserState(id)).thenReturn(state);
 
         var response = cancelCommand.handle(update);
@@ -56,7 +57,7 @@ public class CancelCommandTest {
     @ParameterizedTest
     @EnumSource(value = UserState.class, names = {"AWAITING_URL_FOR_TRACK", "AWAITING_URL_FOR_UN_TRACK"})
     public void testCancelInput(UserState state) {
-        expectedString = CancelCommand.CANCEL_INPUT;
+        expectedString = CommandUtils.CANCEL_INPUT;
         when(storage.getUserState(id)).thenReturn(state);
 
         var response = cancelCommand.handle(update);
