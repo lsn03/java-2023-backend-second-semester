@@ -12,12 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LinkParserTest {
-    private List<ResourceHandler> resourceHandlerList = List.of(
+    private final List<ResourceHandler> resourceHandlerList = List.of(
         new StackOverFlowHandler(),
         new GitHubHandler()
     );
-    private LinkParserService parserService = new LinkParserService(resourceHandlerList);
-    ;
+    private final LinkParserService parserService = new LinkParserService(resourceHandlerList);
 
     @ParameterizedTest
     @CsvSource(value = {

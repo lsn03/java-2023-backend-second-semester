@@ -9,16 +9,18 @@ import edu.java.bot.command.Command;
 import edu.java.bot.command.CommandUtils;
 import edu.java.bot.command.HelpCommand;
 import edu.java.bot.command.ListCommand;
-import edu.java.bot.command.StartCommand;
 import edu.java.bot.command.TrackCommand;
 import edu.java.bot.command.UnTrackCommand;
 import edu.java.bot.command.UnknownCommand;
 import edu.java.bot.storage.Storage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,15 +34,16 @@ import static org.mockito.Mockito.when;
 public class UserNotRegisteredTest {
     private static final String TEXT = "text";
     private long id = 12345L;
+    @Mock
     private Update update;
+    @Mock
     private Message message;
+    @Mock
     private Chat chat;
-    private String expectedString = CommandUtils.USER_NOT_REGISTERED;
+    private String expectedString;
     @Mock
     private Storage storage;
 
-    @InjectMocks
-    private StartCommand startCommand;
     @InjectMocks
     private CancelCommand cancelCommand;
     @InjectMocks
@@ -57,6 +60,18 @@ public class UserNotRegisteredTest {
     @Mock
     List<Command> commandList;
 
+    static Stream<Command> commandProvider() {
+        Storage storage1 = mock(Storage.class);
+
+        return Stream.of(
+            new CancelCommand(storage1),
+            new HelpCommand(new ArrayList<>(), storage1),
+            new ListCommand(storage1),
+            new UnTrackCommand(storage1),
+            new TrackCommand(storage1)
+        );
+    }
+
     @BeforeEach
     public void setUp() {
 
@@ -69,9 +84,6 @@ public class UserNotRegisteredTest {
         commandList.add(unTrackCommand);
         commandList.add(unknownCommand);
 
-        update = mock(Update.class);
-        message = mock(Message.class);
-        chat = mock(Chat.class);
     }
 
     public void defaultInit(Long id, String command) {
@@ -81,62 +93,22 @@ public class UserNotRegisteredTest {
         when(message.text()).thenReturn(command);
     }
 
+    @ParameterizedTest
+    @MethodSource("commandProvider")
+    public void testUserNotRegisteredCommands(Command command) {
+        expectedString = CommandUtils.USER_NOT_REGISTERED;
+        defaultInit(id, command.command());
+        lenient().when(storage.isUserAuth(id)).thenReturn(false);
+        SendMessage response = command.handle(update);
+
+        assertNotNull(response);
+        assertEquals(expectedString, response.getParameters().get(TEXT));
+    }
+
     @Test
     public void testUserNotRegisteredCancel() {
-
-        Command currentCommand = cancelCommand;
-        defaultInit(id, currentCommand.command());
-        lenient().when(storage.isUserAuth(id)).thenReturn(false);
-        SendMessage response = currentCommand.handle(update);
-
-        assertNotNull(response);
-        assertEquals(expectedString, response.getParameters().get(TEXT));
-
-    }
-
-    @Test
-    public void testUserNotRegisteredHelp() {
-
-        Command currentCommand = helpCommand;
-        defaultInit(id, currentCommand.command());
-        lenient().when(storage.isUserAuth(id)).thenReturn(false);
-        SendMessage response = currentCommand.handle(update);
-
-        assertNotNull(response);
-        assertEquals(expectedString, response.getParameters().get(TEXT));
-
-    }
-
-    @Test
-    public void testUserNotRegisteredList() {
-
-        Command currentCommand = listCommand;
-        defaultInit(id, currentCommand.command());
-        lenient().when(storage.isUserAuth(id)).thenReturn(false);
-        SendMessage response = currentCommand.handle(update);
-
-        assertNotNull(response);
-        assertEquals(expectedString, response.getParameters().get(TEXT));
-
-    }
-
-    @Test
-    public void testUserNotRegisteredTrack() {
-
-        Command currentCommand = trackCommand;
-        defaultInit(id, currentCommand.command());
-        lenient().when(storage.isUserAuth(id)).thenReturn(false);
-        SendMessage response = currentCommand.handle(update);
-
-        assertNotNull(response);
-        assertEquals(expectedString, response.getParameters().get(TEXT));
-
-    }
-
-    @Test
-    public void testUserNotRegisteredUnTrack() {
-
-        Command currentCommand = unTrackCommand;
+        expectedString = CommandUtils.UNKNOWN_COMMAND_HELP;
+        Command currentCommand = unknownCommand;
         defaultInit(id, currentCommand.command());
         lenient().when(storage.isUserAuth(id)).thenReturn(false);
         SendMessage response = currentCommand.handle(update);
