@@ -6,13 +6,14 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.exception.UnsupportedSiteException;
 import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UnTrackCommand extends AbstractCommand {
+@Slf4j
+@RequiredArgsConstructor
+public class UnTrackCommand implements Command {
     public static final String USER_NOT_REGISTERED =
         "Вы не зарегистрированы. Функционал бота не доступен. Введите /start для регистрации.";
     public static final String AWAITING_URL = "Ожидается ввод URL. Для отмены используйте /cancel.";
@@ -20,18 +21,12 @@ public class UnTrackCommand extends AbstractCommand {
     public static final String URL_SUCCESSFULLY_REMOVED = "URL удалён из списка отслеживаемых.";
     public static final String URL_NOT_FOUND = "URL не найден. Не удалось удалить URL.";
     public static final String EXCEPTION_MESSAGE = " Попробуйте другой URL или используйте /cancel для отмены.";
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private Storage storage;
 
-    @Autowired
-    public UnTrackCommand(Storage storage) {
-        super("/untrack");
-        this.storage = storage;
-    }
+    private final Storage storage;
 
     @Override
     public String command() {
-        return super.command;
+        return "/untrack";
     }
 
     @Override
@@ -44,7 +39,7 @@ public class UnTrackCommand extends AbstractCommand {
         Long chatId = update.message().chat().id();
         String username = update.message().chat().username();
         String text = update.message().text();
-        logger.info(
+        log.info(
             "User @{} entered \"{}\" user_id={}",
             username,
             text,
@@ -66,12 +61,12 @@ public class UnTrackCommand extends AbstractCommand {
 
     @Override
     public boolean supports(Update update) {
-        return super.supports(update);
+        return Command.super.supports(update);
     }
 
     @Override
     public BotCommand toApiCommand() {
-        return super.toApiCommand();
+        return Command.super.toApiCommand();
     }
 
     private SendMessage processDefaultUnTrack(Long chatId) {

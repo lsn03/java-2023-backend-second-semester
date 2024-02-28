@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TrackCommand extends AbstractCommand {
+public class TrackCommand implements Command {
     public static final String AWAITING_URL = "Ожидается ввод URL. Для отмены используйте /cancel.";
     public static final String URL_SUCCESSFULLY_ADDED = "URL добавлен в список отслеживаемых.";
     public static final String URL_ALREADY_EXIST = "Не удалось добавить URL. Ссылка уже отслеживается.";
@@ -25,14 +25,14 @@ public class TrackCommand extends AbstractCommand {
 
     @Autowired
     public TrackCommand(Storage storage) {
-        super("/track");
+
         this.storage = storage;
 
     }
 
     @Override
     public String command() {
-        return super.command;
+        return "/track";
     }
 
     @Override
@@ -59,20 +59,19 @@ public class TrackCommand extends AbstractCommand {
             case AWAITING_URL_FOR_TRACK -> processAwaitingUrlState(chatId, text);
             case UNAUTHORIZED -> new SendMessage(chatId, USER_NOT_REGISTERED);
             case DEFAULT -> processDefaultState(chatId, text);
-            default ->  new SendMessage(chatId, EXCEPTION_MESSAGE);
+            default -> new SendMessage(chatId, EXCEPTION_MESSAGE);
         };
 
     }
 
-
     @Override
     public boolean supports(Update update) {
-        return super.supports(update);
+        return Command.super.supports(update);
     }
 
     @Override
     public BotCommand toApiCommand() {
-        return super.toApiCommand();
+        return Command.super.toApiCommand();
     }
 
     private SendMessage processDefaultState(Long chatId, String text) {

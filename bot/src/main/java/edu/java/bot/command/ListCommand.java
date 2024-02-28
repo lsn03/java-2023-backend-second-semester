@@ -7,11 +7,10 @@ import edu.java.bot.storage.Storage;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ListCommand extends AbstractCommand {
+public class ListCommand implements Command {
     public static final String NOTHING_TO_TRACK = "Нет ссылок для отслеживания. Введите /track.";
     public static final String USER_NOT_REGISTERED =
         "Вы не зарегистрированы. Функционал бота не доступен. Введите /start для регистрации.";
@@ -19,16 +18,15 @@ public class ListCommand extends AbstractCommand {
     private final Storage storage;
     private final StringBuilder st;
 
-    @Autowired
     public ListCommand(Storage storage) {
-        super("/list");
+
         this.storage = storage;
         st = new StringBuilder();
     }
 
     @Override
     public String command() {
-        return super.command;
+        return "/list";
     }
 
     @Override
@@ -57,12 +55,12 @@ public class ListCommand extends AbstractCommand {
 
     @Override
     public boolean supports(Update update) {
-        return super.supports(update);
+        return Command.super.supports(update);
     }
 
     @Override
     public BotCommand toApiCommand() {
-        return super.toApiCommand();
+        return Command.super.toApiCommand();
     }
 
     private SendMessage processGetList(List<String> list, Long chatId) {

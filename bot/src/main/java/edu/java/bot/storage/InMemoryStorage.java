@@ -62,14 +62,13 @@ public class InMemoryStorage implements Storage {
         if (!isUserAuth(userId)) {
             return false;
         }
-        List<String> urls = trackedUrls.get(userId);
+        List<String> urls = (trackedUrls.get(userId));
         if (urls == null) {
             return false;
         }
 
         parserService.process(url);
-        if (urls.contains(url)) {
-            urls.remove(url);
+        if (urls.remove(url)) {
             if (urls.isEmpty()) {
                 trackedUrls.remove(userId);
             }

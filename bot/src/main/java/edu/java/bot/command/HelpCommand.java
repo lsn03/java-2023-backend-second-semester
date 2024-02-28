@@ -5,25 +5,27 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.storage.Storage;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HelpCommand extends AbstractCommand {
+@Slf4j
+public class HelpCommand implements Command {
     public static final String USER_NOT_REGISTERED =
         "Вы не зарегистрированы. Функционал бота не доступен. Введите /start для регистрации.";
 
     private static final String LINE_SEPARATOR = System.lineSeparator();
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final StringBuilder stringBuilder;
     private final List<Command> commandList;
     private final Storage storage;
 
-    @Autowired
+
     public HelpCommand(List<Command> commandList, Storage storage) {
-        super("/help");
+
         this.storage = storage;
         this.stringBuilder = new StringBuilder();
         this.commandList = commandList;
@@ -33,7 +35,7 @@ public class HelpCommand extends AbstractCommand {
 
     @Override
     public String command() {
-        return super.command;
+        return "/help";
     }
 
     @Override
@@ -44,7 +46,7 @@ public class HelpCommand extends AbstractCommand {
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        logger.info(
+        log.info(
             "User @{} entered \"{}\" user_id={}",
             update.message().chat().username(),
             update.message().text(),
@@ -59,13 +61,14 @@ public class HelpCommand extends AbstractCommand {
 
     @Override
     public boolean supports(Update update) {
-        return super.supports(update);
+        return Command.super.supports(update);
     }
 
     @Override
     public BotCommand toApiCommand() {
-        return super.toApiCommand();
+        return Command.super.toApiCommand();
     }
+
 
     private void initOutputMessage() {
         stringBuilder.append("Бот позволяет отслеживать обновления сайтов.").append(LINE_SEPARATOR);

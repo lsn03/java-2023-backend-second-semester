@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StartCommand extends AbstractCommand {
+public class StartCommand implements Command {
 
     public static final String ALREADY_AUTH = "Вы уже авторизованы.";
     public static final String USER_REGISTERED_SUCCESS =
@@ -21,13 +21,13 @@ public class StartCommand extends AbstractCommand {
 
     @Autowired
     public StartCommand(Storage storage) {
-        super("/start");
+
         this.storage = storage;
     }
 
     @Override
     public String command() {
-        return super.command;
+        return "/start";
     }
 
     @Override
@@ -59,11 +59,12 @@ public class StartCommand extends AbstractCommand {
 
     @Override
     public boolean supports(Update update) {
-        return super.supports(update);
+        return Command.super.supports(update);
     }
 
     @Override
     public BotCommand toApiCommand() {
-        return super.toApiCommand();
+        return Command.super.toApiCommand();
     }
+
 }
