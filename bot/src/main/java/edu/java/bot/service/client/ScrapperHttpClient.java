@@ -6,7 +6,6 @@ import edu.java.bot.model.dto.response.ApiErrorResponse;
 import edu.java.bot.model.dto.response.LinkResponse;
 import edu.java.bot.model.dto.response.ListLinksResponse;
 import edu.java.bot.model.dto.response.MyResponse;
-import java.util.Optional;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
