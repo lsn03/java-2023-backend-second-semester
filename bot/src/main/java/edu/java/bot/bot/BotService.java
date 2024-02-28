@@ -11,8 +11,9 @@ import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.command.Command;
 import edu.java.bot.configuration.ApplicationConfig;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,11 +28,12 @@ public class BotService implements Bot {
         this.commandList = commandList;
         this.applicationConfig = applicationConfig;
         telegramBot = botFactory.create(applicationConfig.telegramToken());
-        setUpCommands();
         log.info("Create BotService");
     }
 
+    @EventListener(ApplicationReadyEvent.class)
     private void setUpCommands() {
+        log.info("set up commands");
         BotCommand[] botCommands = commandList.stream().map(command -> new BotCommand(
             command.command(),
             command.description()

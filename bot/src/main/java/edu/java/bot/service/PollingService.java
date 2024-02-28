@@ -4,11 +4,14 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.bot.BotService;
 import edu.java.bot.processor.UserMessageProcessor;
-import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class PollingService {
     private final BotService bot;
     private final UserMessageProcessor userMessageProcessor;
@@ -19,13 +22,9 @@ public class PollingService {
         this.userMessageProcessor = userMessageProcessor;
     }
 
-    @PostConstruct
-    public void init() {
-        startPolling();
-    }
-
-    private void startPolling() {
-
+    @EventListener(ApplicationReadyEvent.class)
+    public void startPolling() {
+        log.info("Start polling?");
         bot.setUpdatesListener(updates -> {
             for (Update update : updates) {
                 var message = userMessageProcessor.process(update);
