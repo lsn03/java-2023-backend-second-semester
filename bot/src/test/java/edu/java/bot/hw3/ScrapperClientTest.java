@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @WireMockTest
 public class ScrapperClientTest {
     public static final String TG_CHAT_TEMPLATE = "/tg-chat/%d";
+    public static final String LINKS = "/links";
     private String baseUrl = "http://localhost:";
     ScrapperHttpClient client;
 
@@ -25,7 +26,7 @@ public class ScrapperClientTest {
     long chatId = 1;
 
     @Test
-    public void createChatSuccess(WireMockRuntimeInfo wireMockRuntimeInfo)  {
+    public void createChatSuccess(WireMockRuntimeInfo wireMockRuntimeInfo) {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
         client = new ScrapperHttpClient(baseUrlWithPort);
@@ -50,9 +51,14 @@ public class ScrapperClientTest {
 
         String url = String.format(TG_CHAT_TEMPLATE, chatId);
 
-        apiErrorResponse = new ApiErrorResponse("User Already Exist", "409", "UserExistException", "This user already Exist", List.of());
+        apiErrorResponse = new ApiErrorResponse("User Already Exist",
+            "409",
+            "UserExistException",
+            "This user already Exist",
+            List.of()
+        );
 
-        json =  om.writeValueAsString(apiErrorResponse);
+        json = om.writeValueAsString(apiErrorResponse);
 
         WireMock.stubFor(
             WireMock.post(url)
@@ -64,11 +70,11 @@ public class ScrapperClientTest {
         );
 
         ApiErrorResponse response = (client.makeChat(chatId).block());
-        assertEquals(apiErrorResponse,response);
+        assertEquals(apiErrorResponse, response);
     }
 
     @Test
-    public void deleteChatSuccess(WireMockRuntimeInfo wireMockRuntimeInfo)  {
+    public void deleteChatSuccess(WireMockRuntimeInfo wireMockRuntimeInfo) {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
         client = new ScrapperHttpClient(baseUrlWithPort);
@@ -82,8 +88,9 @@ public class ScrapperClientTest {
                     .withStatus(200)
                 )
         );
-        assertNull(client.makeChat(chatId).block());
+        assertNull(client.deleteChat(chatId).block());
     }
+
     @Test
     public void deleteChatError(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
@@ -92,9 +99,10 @@ public class ScrapperClientTest {
 
         String url = String.format(TG_CHAT_TEMPLATE, chatId);
 
-        apiErrorResponse = new ApiErrorResponse("User Does not Exist", "404", "UserDoesNotExistException", "", List.of());
+        apiErrorResponse =
+            new ApiErrorResponse("User Does not Exist", "404", "UserDoesNotExistException", "", List.of());
 
-        json =  om.writeValueAsString(apiErrorResponse);
+        json = om.writeValueAsString(apiErrorResponse);
 
         WireMock.stubFor(
             WireMock.delete(url)
@@ -105,25 +113,25 @@ public class ScrapperClientTest {
                 )
         );
 
-        ApiErrorResponse response = (client.makeChat(chatId).block());
-        assertEquals(apiErrorResponse,response);
+        ApiErrorResponse response = (client.deleteChat(chatId).block());
+        assertEquals(apiErrorResponse, response);
     }
 
-    @Test
-    public void getLinkSuccess(WireMockRuntimeInfo wireMockRuntimeInfo)  {
-        int port = wireMockRuntimeInfo.getHttpPort();
-        String baseUrlWithPort = baseUrl + port;
-        client = new ScrapperHttpClient(baseUrlWithPort);
-
-        String url = String.format(TG_CHAT_TEMPLATE, chatId);
-
-        WireMock.stubFor(
-            WireMock.delete(url)
-                .willReturn(WireMock.aResponse()
-                    .withHeader("Content-Type", "application/json")
-                    .withStatus(200)
-                )
-        );
-        assertNull(client.makeChat(chatId).block());
-    }
+//    @Test
+//    public void getLinkSuccess(WireMockRuntimeInfo wireMockRuntimeInfo)  {
+//        int port = wireMockRuntimeInfo.getHttpPort();
+//        String baseUrlWithPort = baseUrl + port;
+//        client = new ScrapperHttpClient(baseUrlWithPort);
+//
+//
+//
+//        WireMock.stubFor(
+//            WireMock.get(LINKS)
+//                .willReturn(WireMock.aResponse()
+//                    .withHeader("Content-Type", "application/json")
+//                    .withStatus(200)
+//                )
+//        );
+////        assertNull(client.trackLink(chatId).block());
+//    }
 }
