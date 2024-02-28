@@ -23,11 +23,14 @@ public class BotService implements Bot {
     private final TelegramBot telegramBot;
     private final List<Command> commandList;
     private final ApplicationConfig applicationConfig;
+    private final BotFactory botFactory;
 
     public BotService(List<Command> commandList, ApplicationConfig applicationConfig, BotFactory botFactory) {
         this.commandList = commandList;
         this.applicationConfig = applicationConfig;
-        telegramBot = botFactory.create(applicationConfig.telegramToken());
+        this.botFactory = botFactory;
+
+        telegramBot = this.botFactory.create(applicationConfig.telegramToken());
         log.info("Create BotService");
     }
 
@@ -57,10 +60,8 @@ public class BotService implements Bot {
     }
 
     @Override
-
     public void start() {
         log.info("start");
-
     }
 
     @Override
