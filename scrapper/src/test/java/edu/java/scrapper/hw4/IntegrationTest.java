@@ -1,4 +1,4 @@
-package edu.java.scrapper;
+package edu.java.scrapper.hw4;
 
 import liquibase.Contexts;
 import liquibase.LabelExpression;
@@ -35,13 +35,13 @@ public abstract class IntegrationTest {
     private static void runMigrations(JdbcDatabaseContainer<?> c) {
         String migrationFile = "master.xml";
         try (Connection conn = DriverManager.getConnection(c.getJdbcUrl(), c.getUsername(), c.getPassword())) {
-            Liquibase liquibase = new liquibase.Liquibase(migrationFile, new ClassLoaderResourceAccessor(), new JdbcConnection(conn));
+            Liquibase liquibase =
+                new liquibase.Liquibase(migrationFile, new ClassLoaderResourceAccessor(), new JdbcConnection(conn));
             liquibase.update(new Contexts(), new LabelExpression());
         } catch (SQLException | LiquibaseException e) {
-            throw new RuntimeException("Не удалось выполнить миграции Liquibase", e);
+            throw new RuntimeException(e);
         }
     }
-
 
     @DynamicPropertySource
     static void jdbcProperties(DynamicPropertyRegistry registry) {
