@@ -1,6 +1,5 @@
 package edu.java.controller;
 
-import edu.java.domain.model.ChatDTO;
 import edu.java.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.model.scrapper.dto.request.AddLinkRequest;
 import edu.java.model.scrapper.dto.request.RemoveLinkRequest;
@@ -27,11 +26,11 @@ public class ScrapperRestController {
     public static final String LINK_SUCCESSFUL_ADDED = "Ссылка успешно добавлена";
     public static final String ERROR_CHAT_ALREADY_EXIST = "Чат уже существует";
 
-   private final JdbcChatRepository chatRepository;
-
+    private final JdbcChatRepository chatRepository;
 
     @PostMapping(value = "/tg-chat/{id}", produces = {"application/json"})
     public ResponseEntity<?> signUpChat(@PathVariable Long id) {
+
         return ResponseEntity.ok(CHAT_SUCCESSFUL_SIGN_UP);
     }
 
@@ -53,7 +52,7 @@ public class ScrapperRestController {
         @RequestHeader(HEADER_TG_CHAT_ID) Long chatId
     ) {
         LinkResponse linkResponse = new LinkResponse();
-        chatRepository.add(new ChatDTO(2l,true));
+
         return ResponseEntity.ok("");
     }
 

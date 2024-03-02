@@ -1,5 +1,6 @@
 package edu.java.domain.model;
 
+import java.net.URI;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 public class LinkDTO {
-    private String uri;
+    private URI uri;
+    private Long tgChatId;
     private Long linkId;
 }
