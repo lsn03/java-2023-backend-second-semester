@@ -1,9 +1,12 @@
 package edu.java.controller;
 
+import edu.java.domain.model.ChatDTO;
+import edu.java.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.model.scrapper.dto.request.AddLinkRequest;
 import edu.java.model.scrapper.dto.request.RemoveLinkRequest;
 import edu.java.model.scrapper.dto.response.LinkResponse;
 import edu.java.model.scrapper.dto.response.ListLinksResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class ScrapperRestController {
 
     public static final String CHAT_SUCCESSFUL_SIGN_UP = "Чат зарегистрирован";
@@ -22,6 +26,9 @@ public class ScrapperRestController {
     public static final String GET_LINKS_SUCCESSFUL = "Ссылки успешно получены";
     public static final String LINK_SUCCESSFUL_ADDED = "Ссылка успешно добавлена";
     public static final String ERROR_CHAT_ALREADY_EXIST = "Чат уже существует";
+
+   private final JdbcChatRepository chatRepository;
+
 
     @PostMapping(value = "/tg-chat/{id}", produces = {"application/json"})
     public ResponseEntity<?> signUpChat(@PathVariable Long id) {
@@ -36,7 +43,8 @@ public class ScrapperRestController {
     @GetMapping("/links")
     public ResponseEntity<?> getTrackedLinks(@RequestHeader(HEADER_TG_CHAT_ID) Long chatId) {
         ListLinksResponse listLinksResponse = new ListLinksResponse();
-        return ResponseEntity.ok(listLinksResponse);
+        return ResponseEntity.ok(chatRepository.findAll());
+//        return ResponseEntity.ok(listLinksResponse);
     }
 
     @PostMapping("/links")
@@ -45,7 +53,8 @@ public class ScrapperRestController {
         @RequestHeader(HEADER_TG_CHAT_ID) Long chatId
     ) {
         LinkResponse linkResponse = new LinkResponse();
-        return ResponseEntity.ok(linkResponse);
+        chatRepository.add(new ChatDTO(2l,true));
+        return ResponseEntity.ok("");
     }
 
     @DeleteMapping("/links")
