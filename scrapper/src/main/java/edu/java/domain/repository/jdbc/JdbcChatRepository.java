@@ -4,7 +4,6 @@ import edu.java.domain.model.ChatDTO;
 import edu.java.domain.repository.ChatRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

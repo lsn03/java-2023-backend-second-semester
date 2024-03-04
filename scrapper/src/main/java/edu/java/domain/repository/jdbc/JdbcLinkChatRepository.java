@@ -2,7 +2,6 @@ package edu.java.domain.repository.jdbc;
 
 import edu.java.domain.model.LinkDTO;
 import edu.java.domain.repository.LinkChatRepository;
-import java.net.URI;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @AllArgsConstructor
 public class JdbcLinkChatRepository implements LinkChatRepository {
+    private static final String URI = "uri";
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -47,13 +47,14 @@ public class JdbcLinkChatRepository implements LinkChatRepository {
     @Transactional
     public List<LinkDTO> findAllByChatId(Long tgChatId) {
         return jdbcTemplate.query(
-            "select link.link_id,uri from link inner join link_chat c on c.link_id = link.link_id where c.chat_id = (?)",
+            "select link.link_id,uri "
+                + "from link inner join link_chat c on c.link_id = link.link_id where c.chat_id = (?)",
             new Object[] {tgChatId},
             (rs, rowNum) -> {
                 var ans = new LinkDTO();
                 ans.setTgChatId(tgChatId);
                 ans.setLinkId(rs.getLong("link_id"));
-                ans.setUri(URI.create(rs.getString("uri")));
+                ans.setUri(java.net.URI.create(rs.getString(URI)));
                 return ans;
             }
         );
@@ -63,13 +64,14 @@ public class JdbcLinkChatRepository implements LinkChatRepository {
     @Transactional
     public List<LinkDTO> findAllByLinkId(Long linkId) {
         return jdbcTemplate.query(
-            "select chat_id, uri, c.link_id from link inner join link_chat c on c.link_id = link.link_id where c.link_id = (?)",
+            "select chat_id, uri, c.link_id "
+                + "from link inner join link_chat c on c.link_id = link.link_id where c.link_id = (?)",
             new Object[] {linkId},
             (rs, rowNum) -> {
                 var ans = new LinkDTO();
                 ans.setLinkId(linkId);
                 ans.setTgChatId(rs.getLong("chat_id"));
-                ans.setUri(URI.create(rs.getString("uri")));
+                ans.setUri(java.net.URI.create(rs.getString(URI)));
                 return ans;
             }
         );

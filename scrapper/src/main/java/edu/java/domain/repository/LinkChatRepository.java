@@ -1,7 +1,6 @@
 package edu.java.domain.repository;
 
 import edu.java.domain.model.LinkDTO;
-
 import java.util.List;
 
 public interface LinkChatRepository {
