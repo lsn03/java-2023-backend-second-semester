@@ -4,6 +4,8 @@ import edu.java.domain.model.ChatDTO;
 import edu.java.domain.repository.ChatRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,11 +19,17 @@ public class JdbcChatRepository implements ChatRepository {
     @Override
     @Transactional
     public void add(Long tgChatId) {
-        jdbcTemplate.update(
-            "insert into chat (chat_id) values (?)",
-            tgChatId
-        );
-
+        if (findUserById(tgChatId)) {
+            jdbcTemplate.update(
+                "update chat set active = true where chat_id = (?)",
+                tgChatId
+            );
+        } else {
+            jdbcTemplate.update(
+                "insert into chat (chat_id) values (?)",
+                tgChatId
+            );
+        }
     }
 
     @Override
@@ -40,5 +48,18 @@ public class JdbcChatRepository implements ChatRepository {
             return new ChatDTO(rs.getLong("chat_id"), rs.getBoolean("active"));
         });
 
+    }
+
+    private boolean findUserById(Long tgChatId) {
+        try {
+            Boolean isActive = jdbcTemplate.queryForObject(
+                "select active from chat where chat_id = ? and active = false ",
+                new Object[] {tgChatId},
+                Boolean.class
+            );
+            return isActive == null || !isActive.booleanValue();
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
     }
 }

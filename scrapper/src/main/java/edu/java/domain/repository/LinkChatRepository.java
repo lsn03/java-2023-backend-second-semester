@@ -1,6 +1,7 @@
 package edu.java.domain.repository;
 
 import edu.java.domain.model.LinkDTO;
+
 import java.util.List;
 
 public interface LinkChatRepository {
@@ -8,5 +9,9 @@ public interface LinkChatRepository {
 
     Integer remove(LinkDTO linkDTO);
 
-    List<LinkDTO> findAll(Long tgChatId);
+    Integer remove(Long tgChatId);
+
+    List<LinkDTO> findAllByChatId(Long tgChatId);
+
+    List<LinkDTO> findAllByLinkId(Long tgChatId);
 }
