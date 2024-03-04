@@ -11,12 +11,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
+@ToString
 public class PullRequestModelResponse {
     @JsonProperty("issue_comment_dto")
     private List<IssueCommentDTOResponse> issueCommentDTOS;

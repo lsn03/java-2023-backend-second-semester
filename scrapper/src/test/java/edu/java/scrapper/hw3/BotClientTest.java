@@ -21,7 +21,7 @@ public class BotClientTest {
     private final String baseUrl = "http://localhost:";
     private BotHttpClient client;
     private final LinkUpdateRequest linkUpdateRequest =
-        new LinkUpdateRequest(1l, "http://example.com", "decr", List.of(1, 2, 3));
+        new LinkUpdateRequest(1l, "http://example.com", "decr", List.of(1l, 2l, 3l));
     private final ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
     private String json;
     private final String url = "/updates";
