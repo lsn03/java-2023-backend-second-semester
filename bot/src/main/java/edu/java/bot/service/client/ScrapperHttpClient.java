@@ -24,7 +24,7 @@ public class ScrapperHttpClient {
 
     }
 
-    public Mono<ApiErrorResponse> makeChat(Long id) {
+    public ApiErrorResponse makeChat(Long id) {
 
         return client.post()
             .uri(String.format(TG_CHAT, id))
@@ -34,11 +34,11 @@ public class ScrapperHttpClient {
                 } else {
                     return Mono.empty();
                 }
-            });
+            }).block();
 
     }
 
-    public Mono<ApiErrorResponse> deleteChat(Long id) {
+    public ApiErrorResponse deleteChat(Long id) {
 
         return client.delete()
             .uri(String.format(TG_CHAT, id))
@@ -48,30 +48,30 @@ public class ScrapperHttpClient {
                 } else {
                     return Mono.empty();
                 }
-            });
+            }).block();
     }
 
-    public Mono<? extends MyResponse> getLinks(Long id) {
+    public MyResponse getLinks(Long id) {
         return client.get()
             .uri(LINK)
             .header(HEADER_TG_CHAT_ID, id.toString())
-            .exchangeToMono(clientResponse -> processLink(clientResponse, ListLinksResponse.class));
+            .exchangeToMono(clientResponse -> processLink(clientResponse, ListLinksResponse.class)).block();
     }
 
-    public Mono<? extends MyResponse> trackLink(AddLinkRequest addLinkRequest, Long id) {
+    public MyResponse trackLink(AddLinkRequest addLinkRequest, Long id) {
         return client.post()
             .uri(LINK)
             .header(HEADER_TG_CHAT_ID, id.toString())
             .bodyValue(addLinkRequest)
-            .exchangeToMono(clientResponse -> processLink(clientResponse, LinkResponse.class));
+            .exchangeToMono(clientResponse -> processLink(clientResponse, LinkResponse.class)).block();
     }
 
-    public Mono<? extends MyResponse> unTrackLink(RemoveLinkRequest removeLinkRequest, Long id) {
+    public MyResponse unTrackLink(RemoveLinkRequest removeLinkRequest, Long id) {
         return client.method(HttpMethod.DELETE)
             .uri(LINK)
             .header(HEADER_TG_CHAT_ID, id.toString())
             .bodyValue(removeLinkRequest)
-            .exchangeToMono(clientResponse -> processLink(clientResponse, LinkResponse.class));
+            .exchangeToMono(clientResponse -> processLink(clientResponse, LinkResponse.class)).block();
     }
 
     private static Mono<MyResponse> processLink(
