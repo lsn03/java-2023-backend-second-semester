@@ -2,14 +2,12 @@ package edu.java.model.scrapper.dto.response;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 public class ListLinksResponse extends MyResponse {
     List<LinkResponse> lists;
     Integer size;

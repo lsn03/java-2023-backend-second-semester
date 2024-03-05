@@ -7,16 +7,12 @@ import edu.java.model.github.dto.PullCommitDTOResponse;
 import edu.java.model.github.dto.PullReviewDTOResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 public class PullRequestModelResponse {
     @JsonProperty("issue_comment_dto")
     private List<IssueCommentDTOResponse> issueCommentDTOS;

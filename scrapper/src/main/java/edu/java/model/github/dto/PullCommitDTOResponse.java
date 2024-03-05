@@ -4,16 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.java.model.github.dto.info.UserInfoDTO;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
 public class PullCommitDTOResponse {
     private String sha;
 

@@ -1,4 +1,4 @@
 package edu.java.bot.model.dto.response;
 
-public class MyResponse {
+public abstract class MyResponse {
 }

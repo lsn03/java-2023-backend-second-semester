@@ -8,12 +8,10 @@ import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
 import edu.java.model.stack_over_flow.dto.QuestionHeaderDTOResponse;
 import edu.java.service.StackOverFlowService;
 import edu.java.service.client.StackOverFlowClient;
-import org.junit.jupiter.api.Test;
-
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WireMockTest
