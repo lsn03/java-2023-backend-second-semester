@@ -14,7 +14,10 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,17 +38,30 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     private final Handler stackOverFlowHandler;
 
     private List<LinkDTO> getLinkDTOList() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+
         return jdbcTemplate.query(
             "select lc.link_id,uri,created_at,last_update,hash,chat_id "
                 + "from link left join link_chat lc on link.link_id = lc.link_id "
                 + "where last_update is null or  last_update < now() - interval '10 minutes';",
             (rs, rowNum) -> {
                 LinkDTO linkDTO = new LinkDTO();
+
+                LocalDateTime localDateTimeCreatedAt = LocalDateTime.parse(rs.getString("created_at"), formatter);
+
+                var lastUpdateString = rs.getString("last_update");
+                LocalDateTime lastUpdate;
+                if (lastUpdateString == null) {
+                    lastUpdate = OffsetDateTime.now().toLocalDateTime();
+                } else {
+                    lastUpdate = LocalDateTime.parse(lastUpdateString, formatter);
+                }
+                linkDTO.setLastUpdate(lastUpdate.atOffset(ZoneOffset.UTC));
                 linkDTO.setTgChatId(rs.getLong("chat_id"));
                 linkDTO.setLinkId(rs.getLong("link_id"));
                 linkDTO.setUri(URI.create(rs.getString("uri")));
-                linkDTO.setCreatedAt(OffsetDateTime.parse(rs.getString("created_at")));
-                linkDTO.setLastUpdate(OffsetDateTime.parse(rs.getString("last_update")));
+                linkDTO.setCreatedAt(localDateTimeCreatedAt.atOffset(ZoneOffset.UTC));
+
                 linkDTO.setHash(rs.getString("hash"));
 
                 return linkDTO;
@@ -78,13 +94,13 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
                 string = process(string);
             }
 
-            if (elem.getLastUpdate() == null) {
+            if (elem.getLastUpdate() == null || elem.getHash() == null) {
                 elem.setHash(string);
                 elem.setLastUpdate(OffsetDateTime.now());
-            } else {
-                if (!elem.getHash().equals(string)) {
-                    listForUpdate.add(elem);
-                }
+                listForUpdate.add(elem);
+            }
+            if (!elem.getHash().equals(string)) {
+                listForUpdate.add(elem);
             }
 
         }
@@ -121,10 +137,9 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     private void updateDatabase(List<LinkDTO> list) {
         for (var elem : list) {
             jdbcTemplate.update(
-                "update link set uri = ?, created_at = ?, last_update = now(), hash = ? where link_id = ? ",
+                "update link set uri = ?, last_update = now(), hash = ? where link_id = ? ",
                 new Object[] {
-                    elem.getUri(),
-                    elem.getCreatedAt(),
+                    elem.getUri().toString(),
                     elem.getHash(),
                     elem.getLinkId(),
                 }
