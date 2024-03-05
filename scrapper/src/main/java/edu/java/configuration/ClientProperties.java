@@ -1,15 +1,17 @@
 package edu.java.configuration;
 
-import lombok.Getter;
+import java.util.Map;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@Getter
 @Setter
 @ConfigurationProperties(prefix = "client")
 public class ClientProperties {
-    private String githubBaseUrl;
-    private String sofBaseUrl;
+    private Map<String, String> properties;
+
+    public String getValue(String key) {
+        return properties.getOrDefault(key, null);
+    }
 }
