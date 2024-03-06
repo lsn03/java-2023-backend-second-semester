@@ -56,7 +56,7 @@ public class JdbcChatRepository implements ChatRepository {
                 new Object[] {tgChatId},
                 Boolean.class
             );
-            return isActive == null || !isActive.booleanValue();
+            return isActive != null || isActive.booleanValue();
         } catch (EmptyResultDataAccessException e) {
             return false;
         }
