@@ -1,8 +1,10 @@
 package edu.java.service;
 
 import edu.java.domain.model.LinkDTO;
+import edu.java.domain.repository.LinkRepository;
 import edu.java.model.GitHubPullRequestUriDTO;
 import edu.java.model.StackOverFlowQuestionUriDTO;
+import edu.java.model.UriDTO;
 import edu.java.model.github.PullRequestModelResponse;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import edu.java.model.stack_over_flow.StackOverFlowModel;
@@ -14,84 +16,36 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class LinkUpdateServiceImpl implements LinkUpdaterService {
-    public static final int MASK = 0xff;
-    private final JdbcTemplate jdbcTemplate;
+    private static final int MASK = 0xff;
+    private final LinkRepository linkRepository;
     private final GitHubClient gitHubClient;
     private final StackOverFlowClient stackOverFlowClient;
-
-    private final Handler gitHubHandler;
-    private final Handler stackOverFlowHandler;
-
-    private List<LinkDTO> getLinkDTOList() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-
-        return jdbcTemplate.query(
-            "select lc.link_id,uri,created_at,last_update,hash,chat_id "
-                + "from link left join link_chat lc on link.link_id = lc.link_id "
-                + "where last_update is null or  last_update < now() - interval '10 minutes';",
-            (rs, rowNum) -> {
-                LinkDTO linkDTO = new LinkDTO();
-
-                LocalDateTime localDateTimeCreatedAt = LocalDateTime.parse(rs.getString("created_at"), formatter);
-
-                var lastUpdateString = rs.getString("last_update");
-                LocalDateTime lastUpdate;
-                if (lastUpdateString == null) {
-                    lastUpdate = OffsetDateTime.now().toLocalDateTime();
-                } else {
-                    lastUpdate = LocalDateTime.parse(lastUpdateString, formatter);
-                }
-                linkDTO.setLastUpdate(lastUpdate.atOffset(ZoneOffset.UTC));
-                linkDTO.setTgChatId(rs.getLong("chat_id"));
-                linkDTO.setLinkId(rs.getLong("link_id"));
-                linkDTO.setUri(URI.create(rs.getString("uri")));
-                linkDTO.setCreatedAt(localDateTimeCreatedAt.atOffset(ZoneOffset.UTC));
-
-                linkDTO.setHash(rs.getString("hash"));
-
-                return linkDTO;
-            }
-        );
-    }
+    private final List<Handler> handlers;
 
     @Override
     public List<LinkUpdateRequest> update() throws NoSuchAlgorithmException {
-        List<LinkDTO> list = getLinkDTOList();
+        List<LinkDTO> list = linkRepository.findAllOldLinks(10, "minutes");
         List<LinkDTO> listForUpdate = new ArrayList<>();
-        GitHubPullRequestUriDTO gitHubPullRequestUriDTO;
-        StackOverFlowQuestionUriDTO stackOverFlowQuestionUriDTO;
+
         String string = "";
         for (LinkDTO elem : list) {
             URI uri = elem.getUri();
-            if (gitHubHandler.canHandle(uri)) {
-                gitHubPullRequestUriDTO = (GitHubPullRequestUriDTO) gitHubHandler.handle(uri);
-                PullRequestModelResponse response =
-                    gitHubClient.fetchPullRequest(gitHubPullRequestUriDTO.getOwner(), gitHubPullRequestUriDTO.getRepo(),
-                        gitHubPullRequestUriDTO.getPullNumber()
-                    ).block();
-                string = response.toString();
-                string = process(string);
-            } else if (stackOverFlowHandler.canHandle(uri)) {
-                stackOverFlowQuestionUriDTO = (StackOverFlowQuestionUriDTO) stackOverFlowHandler.handle(uri);
-                StackOverFlowModel response =
-                    stackOverFlowClient.fetchQuestionData(stackOverFlowQuestionUriDTO.getQuestionId()).block();
-                string = response.toString();
-                string = process(string);
+            for (var handler : handlers) {
+                if (handler.canHandle(uri)) {
+                    var uriDto = handler.handle(uri);
+                    string = processDto(uriDto);
+                }
             }
 
             if (elem.getLastUpdate() == null || elem.getHash() == null) {
@@ -106,13 +60,45 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         }
         if (!listForUpdate.isEmpty()) {
             updateDatabase(listForUpdate);
-            return converLinkDTOTOLinkUpdateRequest(listForUpdate);
+            return convertLinkDtoToLinkUpdateRequest(listForUpdate);
         }
 
-        return null;
+        return List.of();
     }
 
-    private List<LinkUpdateRequest> converLinkDTOTOLinkUpdateRequest(List<LinkDTO> linkDTOList) {
+    private String processDto(UriDTO uriDto) throws NoSuchAlgorithmException {
+        String answer = "";
+        if (uriDto instanceof GitHubPullRequestUriDTO) {
+            answer = processGitHubUriDTO((GitHubPullRequestUriDTO) uriDto);
+        } else if (uriDto instanceof StackOverFlowQuestionUriDTO) {
+            answer = processStackOverFlowUriDTO((StackOverFlowQuestionUriDTO) uriDto);
+        }
+        return answer;
+    }
+
+    private String processStackOverFlowUriDTO(StackOverFlowQuestionUriDTO uriDto) throws NoSuchAlgorithmException {
+        String string;
+
+        StackOverFlowModel response =
+            stackOverFlowClient.fetchQuestionData(uriDto.getQuestionId()).block();
+        string = response.toString();
+        return getHashOfResponse(string);
+
+    }
+
+    private String processGitHubUriDTO(GitHubPullRequestUriDTO uriDto) throws NoSuchAlgorithmException {
+        String string;
+
+        PullRequestModelResponse response =
+            gitHubClient.fetchPullRequest(uriDto.getOwner(), uriDto.getRepo(),
+                uriDto.getPullNumber()
+            ).block();
+        string = response.toString();
+        return getHashOfResponse(string);
+
+    }
+
+    private List<LinkUpdateRequest> convertLinkDtoToLinkUpdateRequest(List<LinkDTO> linkDTOList) {
 
         Map<Long, Map<URI, List<LinkDTO>>> groupedByLinkIdAndUri = linkDTOList.stream()
             .collect(Collectors.groupingBy(
@@ -136,18 +122,11 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     private void updateDatabase(List<LinkDTO> list) {
         for (var elem : list) {
-            jdbcTemplate.update(
-                "update link set uri = ?, last_update = now(), hash = ? where link_id = ? ",
-                new Object[] {
-                    elem.getUri().toString(),
-                    elem.getHash(),
-                    elem.getLinkId(),
-                }
-            );
+            linkRepository.updateLink(elem);
         }
     }
 
-    private String process(String string) throws NoSuchAlgorithmException {
+    private String getHashOfResponse(String string) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] encodedHash = digest.digest(
             string.getBytes(StandardCharsets.UTF_8));
@@ -156,8 +135,8 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     private static String bytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
-        for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(MASK & hash[i]);
+        for (byte b : hash) {
+            String hex = Integer.toHexString(MASK & b);
             if (hex.length() == 1) {
                 hexString.append('0');
             }

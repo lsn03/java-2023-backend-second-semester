@@ -5,6 +5,10 @@ import edu.java.domain.repository.LinkRepository;
 import edu.java.exception.exception.LinkNotFoundException;
 import java.net.URI;
 import java.sql.PreparedStatement;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
@@ -86,4 +90,52 @@ public class JdbcLinkRepository implements LinkRepository {
         return jdbcLinkChatRepository.findAllByChatId(tgChatId);
     }
 
+    @Transactional
+    @Override
+    public void updateLink(LinkDTO linkDTO) {
+        jdbcTemplate.update(
+            "update link set uri = ?, last_update = now(), hash = ? where link_id = ? ",
+            new Object[] {
+                linkDTO.getUri().toString(),
+                linkDTO.getHash(),
+                linkDTO.getLinkId(),
+            }
+        );
+    }
+
+    @Override
+    @Transactional
+    public List<LinkDTO> findAllOldLinks(Integer time, String timeUnit) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+        String interval = " interval '" + time + " " + timeUnit + "'";
+
+        return jdbcTemplate.query(
+            "select lc.link_id,uri,created_at,last_update,hash,chat_id "
+                + "from link left join link_chat lc on link.link_id = lc.link_id "
+                + "where last_update is null or  last_update < now() - ? ",
+            new Object[] {interval},
+            (rs, rowNum) -> {
+                LinkDTO linkDTO = new LinkDTO();
+
+                LocalDateTime localDateTimeCreatedAt = LocalDateTime.parse(rs.getString("created_at"), formatter);
+
+                var lastUpdateString = rs.getString("last_update");
+                LocalDateTime lastUpdate;
+                if (lastUpdateString == null) {
+                    lastUpdate = OffsetDateTime.now().toLocalDateTime();
+                } else {
+                    lastUpdate = LocalDateTime.parse(lastUpdateString, formatter);
+                }
+                linkDTO.setLastUpdate(lastUpdate.atOffset(ZoneOffset.UTC));
+                linkDTO.setTgChatId(rs.getLong("chat_id"));
+                linkDTO.setLinkId(rs.getLong("link_id"));
+                linkDTO.setUri(URI.create(rs.getString("uri")));
+                linkDTO.setCreatedAt(localDateTimeCreatedAt.atOffset(ZoneOffset.UTC));
+
+                linkDTO.setHash(rs.getString("hash"));
+
+                return linkDTO;
+            }
+        );
+    }
 }
