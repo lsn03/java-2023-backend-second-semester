@@ -35,7 +35,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     @Override
     public List<LinkUpdateRequest> update() throws NoSuchAlgorithmException {
-        List<LinkDTO> list = linkRepository.findAllOldLinks(10, "minutes");
+        List<LinkDTO> list = linkRepository.findAllOldLinks(10, "seconds");
         List<LinkDTO> listForUpdate = new ArrayList<>();
 
         String string = "";

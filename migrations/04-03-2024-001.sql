@@ -1,6 +1,6 @@
-drop table if exists chat;
-drop table if exists link;
-drop table if exists link_chat;
+drop table if exists chat cascade ;
+drop table if exists link cascade ;
+drop table if exists link_chat cascade ;
 
 create table if not exists chat
 (

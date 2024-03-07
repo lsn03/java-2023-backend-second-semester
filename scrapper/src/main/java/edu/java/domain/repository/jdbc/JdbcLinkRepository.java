@@ -107,13 +107,12 @@ public class JdbcLinkRepository implements LinkRepository {
     @Transactional
     public List<LinkDTO> findAllOldLinks(Integer time, String timeUnit) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-        String interval = " interval '" + time + " " + timeUnit + "'";
+        String interval = "'" + time + " " + timeUnit + "'";
 
         return jdbcTemplate.query(
             "select lc.link_id,uri,created_at,last_update,hash,chat_id "
                 + "from link left join link_chat lc on link.link_id = lc.link_id "
-                + "where last_update is null or  last_update < now() - ? ",
-            new Object[] {interval},
+                + "where last_update is null or  last_update < now() - interval " + interval,
             (rs, rowNum) -> {
                 LinkDTO linkDTO = new LinkDTO();
 
