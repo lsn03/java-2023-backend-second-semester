@@ -32,7 +32,7 @@ public class JdbcLinkRepository implements LinkRepository {
         jdbcTemplate.update(
             connection -> {
                 PreparedStatement ps = connection.prepareStatement(
-                    "insert into link (uri) values (?)",
+                    "insert into link (uri,created_at)  values (?,now())",
                     new String[] {"link_id"} // Имя столбца сгенерированного ключа
                 );
                 ps.setString(1, String.valueOf(linkDTO.getUri()));
@@ -106,7 +106,7 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     @Transactional
     public List<LinkDTO> findAllOldLinks(Integer time, String timeUnit) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String interval = "'" + time + " " + timeUnit + "'";
 
         return jdbcTemplate.query(
@@ -115,14 +115,18 @@ public class JdbcLinkRepository implements LinkRepository {
                 + "where last_update is null or  last_update < now() - interval " + interval,
             (rs, rowNum) -> {
                 LinkDTO linkDTO = new LinkDTO();
-
-                LocalDateTime localDateTimeCreatedAt = LocalDateTime.parse(rs.getString("created_at"), formatter);
+                String createdAt =  rs.getString("created_at");
+                int index = createdAt.lastIndexOf(".");
+                createdAt = createdAt.substring(0,index);
+                LocalDateTime localDateTimeCreatedAt = LocalDateTime.parse(createdAt, formatter);
 
                 var lastUpdateString = rs.getString("last_update");
                 LocalDateTime lastUpdate;
                 if (lastUpdateString == null) {
                     lastUpdate = OffsetDateTime.now().toLocalDateTime();
                 } else {
+                    index = lastUpdateString.lastIndexOf(".");
+                    lastUpdateString = lastUpdateString.substring(0,index);
                     lastUpdate = LocalDateTime.parse(lastUpdateString, formatter);
                 }
                 linkDTO.setLastUpdate(lastUpdate.atOffset(ZoneOffset.UTC));
