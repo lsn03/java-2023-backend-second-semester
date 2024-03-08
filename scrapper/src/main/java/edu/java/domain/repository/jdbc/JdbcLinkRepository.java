@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @AllArgsConstructor
 public class JdbcLinkRepository implements LinkRepository {
+    public static final String LINK_ID = "link_id";
     private final JdbcTemplate jdbcTemplate;
     private final JdbcLinkChatRepository jdbcLinkChatRepository;
 
@@ -33,7 +34,7 @@ public class JdbcLinkRepository implements LinkRepository {
             connection -> {
                 PreparedStatement ps = connection.prepareStatement(
                     "insert into link (uri,created_at)  values (?,now())",
-                    new String[] {"link_id"} // Имя столбца сгенерированного ключа
+                    new String[] {LINK_ID} // Имя столбца сгенерированного ключа
                 );
                 ps.setString(1, String.valueOf(linkDTO.getUri()));
                 return ps;
@@ -51,6 +52,7 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional
     public Long findUrl(URI uri) {
 
         try {
@@ -115,9 +117,9 @@ public class JdbcLinkRepository implements LinkRepository {
                 + "where last_update is null or  last_update < now() - interval " + interval,
             (rs, rowNum) -> {
                 LinkDTO linkDTO = new LinkDTO();
-                String createdAt =  rs.getString("created_at");
+                String createdAt = rs.getString("created_at");
                 int index = createdAt.lastIndexOf(".");
-                createdAt = createdAt.substring(0,index);
+                createdAt = createdAt.substring(0, index);
                 LocalDateTime localDateTimeCreatedAt = LocalDateTime.parse(createdAt, formatter);
 
                 var lastUpdateString = rs.getString("last_update");
@@ -126,12 +128,12 @@ public class JdbcLinkRepository implements LinkRepository {
                     lastUpdate = OffsetDateTime.now().toLocalDateTime();
                 } else {
                     index = lastUpdateString.lastIndexOf(".");
-                    lastUpdateString = lastUpdateString.substring(0,index);
+                    lastUpdateString = lastUpdateString.substring(0, index);
                     lastUpdate = LocalDateTime.parse(lastUpdateString, formatter);
                 }
                 linkDTO.setLastUpdate(lastUpdate.atOffset(ZoneOffset.UTC));
                 linkDTO.setTgChatId(rs.getLong("chat_id"));
-                linkDTO.setLinkId(rs.getLong("link_id"));
+                linkDTO.setLinkId(rs.getLong(LINK_ID));
                 linkDTO.setUri(URI.create(rs.getString("uri")));
                 linkDTO.setCreatedAt(localDateTimeCreatedAt.atOffset(ZoneOffset.UTC));
 

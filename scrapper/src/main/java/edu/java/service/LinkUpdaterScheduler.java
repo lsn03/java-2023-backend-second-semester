@@ -24,7 +24,7 @@ public class LinkUpdaterScheduler {
         try {
 
             List<LinkUpdateRequest> response = linkUpdaterService.update();
-            log.info("update {}",response);
+            log.info("update {}", response);
             if (response != null) {
                 for (var elem : response) {
                     ApiErrorResponse ans = botHttpClient.sendUpdates(elem).block();
