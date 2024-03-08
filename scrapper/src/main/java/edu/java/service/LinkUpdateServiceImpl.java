@@ -12,6 +12,7 @@ import edu.java.service.client.GitHubClient;
 import edu.java.service.client.StackOverFlowClient;
 import edu.java.service.parser.Handler;
 import edu.java.service.process.LinkUpdaterService;
+
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,24 +40,30 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         List<LinkDTO> list = linkRepository.findAllOldLinks(10, "seconds");
         List<LinkDTO> listForUpdate = new ArrayList<>();
 
-        String string = "";
+
         for (LinkDTO elem : list) {
+
             URI uri = elem.getUri();
             for (var handler : handlers) {
                 if (handler.canHandle(uri)) {
                     var uriDto = handler.handle(uri);
-                    string = processDto(uriDto);
+
+                    String string = processDto(uriDto);
+                    if (elem.getLastUpdate() == null || elem.getHash() == null ) {
+                        elem.setHash(string);
+                        elem.setLastUpdate(OffsetDateTime.now());
+                        updateDatabase(List.of(elem));
+                    }
+                    if (!elem.getHash().equals(string)) {
+                        elem.setLastUpdate(OffsetDateTime.now());
+                        elem.setHash(string);
+                        listForUpdate.add(elem);
+                    }
                 }
+
+
             }
 
-            if (elem.getLastUpdate() == null || elem.getHash() == null) {
-                elem.setHash(string);
-                elem.setLastUpdate(OffsetDateTime.now());
-                listForUpdate.add(elem);
-            }
-            if (!elem.getHash().equals(string)) {
-                listForUpdate.add(elem);
-            }
 
         }
         if (!listForUpdate.isEmpty()) {
@@ -80,7 +88,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         String string;
 
         StackOverFlowModel response =
-            stackOverFlowClient.fetchQuestionData(uriDto.getQuestionId()).block();
+                stackOverFlowClient.fetchQuestionData(uriDto.getQuestionId()).block();
         string = response.toString();
         return getHashOfResponse(string);
 
@@ -90,9 +98,9 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         String string;
 
         PullRequestModelResponse response =
-            gitHubClient.fetchPullRequest(uriDto.getOwner(), uriDto.getRepo(),
-                uriDto.getPullNumber()
-            ).block();
+                gitHubClient.fetchPullRequest(uriDto.getOwner(), uriDto.getRepo(),
+                        uriDto.getPullNumber()
+                ).block();
         string = response.toString();
         return getHashOfResponse(string);
 
@@ -101,18 +109,18 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     private List<LinkUpdateRequest> convertLinkDtoToLinkUpdateRequest(List<LinkDTO> linkDTOList) {
 
         Map<Long, Map<URI, List<LinkDTO>>> groupedByLinkIdAndUri = linkDTOList.stream()
-            .collect(Collectors.groupingBy(
-                LinkDTO::getLinkId,
-                Collectors.groupingBy(LinkDTO::getUri)
-            ));
+                .collect(Collectors.groupingBy(
+                        LinkDTO::getLinkId,
+                        Collectors.groupingBy(LinkDTO::getUri)
+                ));
 
         List<LinkUpdateRequest> linkUpdateRequests = new ArrayList<>();
 
         groupedByLinkIdAndUri.forEach((linkId, uriMap) -> uriMap.forEach((uri, dtos) -> {
             List<Long> tgChatIds = dtos.stream()
-                .map(LinkDTO::getTgChatId)
-                .distinct()
-                .collect(Collectors.toList());
+                    .map(LinkDTO::getTgChatId)
+                    .distinct()
+                    .collect(Collectors.toList());
 
             linkUpdateRequests.add(new LinkUpdateRequest(linkId, uri.toString(), "", tgChatIds));
         }));
@@ -129,7 +137,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     private String getHashOfResponse(String string) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] encodedHash = digest.digest(
-            string.getBytes(StandardCharsets.UTF_8));
+                string.getBytes(StandardCharsets.UTF_8));
         return bytesToHex(encodedHash);
     }
 
