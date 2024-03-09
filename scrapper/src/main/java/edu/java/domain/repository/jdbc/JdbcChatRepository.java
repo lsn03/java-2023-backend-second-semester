@@ -18,7 +18,7 @@ public class JdbcChatRepository implements ChatRepository {
     @Override
     @Transactional
     public void add(Long tgChatId) {
-        if (findUserById(tgChatId)) {
+        if (findInActiveUserById(tgChatId)) {
             jdbcTemplate.update(
                 "update chat set active = true where chat_id = (?)",
                 tgChatId
@@ -49,14 +49,16 @@ public class JdbcChatRepository implements ChatRepository {
 
     }
 
-    private boolean findUserById(Long tgChatId) {
+    private boolean findInActiveUserById(Long tgChatId) {
         try {
-            Boolean isActive = jdbcTemplate.queryForObject(
-                "select active from chat where chat_id = ?",
+            Boolean notActive = jdbcTemplate.queryForObject(
+                "select active from chat where chat_id = ? and active = false",
                 new Object[] {tgChatId},
                 Boolean.class
             );
-            return isActive != null || isActive.booleanValue();
+
+            return notActive != null && !notActive;
+
         } catch (EmptyResultDataAccessException e) {
             return false;
         }

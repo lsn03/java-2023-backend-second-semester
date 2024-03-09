@@ -22,7 +22,11 @@ public class JdbcLinkService implements LinkService {
     @Override
     public LinkDTO add(LinkDTO linkDTO) {
         try {
-            return jdbcLinkRepository.add(linkDTO);
+
+            jdbcLinkRepository.add(linkDTO);
+            jdbcLinkChatRepository.add(linkDTO);
+
+            return linkDTO;
         } catch (DuplicateKeyException e) {
             Long id = jdbcLinkRepository.findUrl(linkDTO.getUri());
             linkDTO.setLinkId(id);
@@ -41,12 +45,13 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     public Integer remove(LinkDTO linkDTO) {
-        return jdbcLinkRepository.remove(linkDTO);
+        int affectRows = jdbcLinkChatRepository.remove(linkDTO);
+        return affectRows + jdbcLinkRepository.remove(linkDTO);
     }
 
     @Override
     public Collection<LinkDTO> findAll(Long tgChatId) {
-        var response = jdbcLinkRepository.findAll(tgChatId);
+        var response = jdbcLinkRepository.findAllByChatId(tgChatId);
         if (response.isEmpty()) {
             throw new ListEmptyException("List empty for chat " + tgChatId);
         }

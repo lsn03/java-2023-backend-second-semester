@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @AllArgsConstructor
 public class JdbcLinkRepository implements LinkRepository {
-    public static final String LINK_ID = "link_id";
+    private static final String LINK_ID = "link_id";
     private final JdbcTemplate jdbcTemplate;
     private final JdbcLinkChatRepository jdbcLinkChatRepository;
 
@@ -45,8 +45,6 @@ public class JdbcLinkRepository implements LinkRepository {
         Objects.requireNonNull(key);
 
         linkDTO.setLinkId(key.longValue());
-
-        jdbcLinkChatRepository.add(linkDTO);
 
         return linkDTO;
     }
@@ -74,10 +72,10 @@ public class JdbcLinkRepository implements LinkRepository {
     public Integer remove(LinkDTO linkDTO) {
         Long linkId = findUrl(linkDTO.getUri());
         linkDTO.setLinkId(linkId);
-        int response = jdbcLinkChatRepository.remove(linkDTO);
+        int response = 0 ;
         List<LinkDTO> list = jdbcLinkChatRepository.findAllByLinkId(linkDTO.getLinkId());
         if (list.isEmpty()) {
-            response += jdbcTemplate.update(
+            response = jdbcTemplate.update(
                 "delete from link where link_id = (?) ;",
                 linkDTO.getLinkId()
             );
@@ -88,8 +86,24 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     @Transactional
-    public List<LinkDTO> findAll(Long tgChatId) {
+    public List<LinkDTO> findAllByChatId(Long tgChatId) {
         return jdbcLinkChatRepository.findAllByChatId(tgChatId);
+    }
+
+    @Override
+    @Transactional
+    public List<LinkDTO> findAll() {
+        return jdbcTemplate.query(
+            "select link_id, uri, hash, created_at, last_update from link",
+            (rs, rowNum) -> new LinkDTO(
+                URI.create(rs.getString("uri")),
+                null,
+                rs.getLong("link_id"),
+                rs.getString("hash"),
+                null,
+                null
+            )
+        );
     }
 
     @Transactional
