@@ -5,6 +5,8 @@ app:
     force-check-delay: 10s
 
 spring:
+  liquibase:
+    enabled: false
   application:
     name: scrapper
   datasource:

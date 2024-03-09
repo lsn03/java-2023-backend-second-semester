@@ -1,3 +1,12 @@
+-- liquibase formatted sql
+--
+-- --changeset lsn03:1
+-- --comment second migration
+
+drop table if exists chat cascade;
+drop table if exists link cascade;
+drop table if exists link_chat cascade;
+
 create table chat
 (
     chat_id bigint not null
