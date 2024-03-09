@@ -52,7 +52,7 @@ public class JdbcChatRepository implements ChatRepository {
     private boolean findUserById(Long tgChatId) {
         try {
             Boolean isActive = jdbcTemplate.queryForObject(
-                "select active from chat where chat_id = ? and active = false ",
+                "select active from chat where chat_id = ?",
                 new Object[] {tgChatId},
                 Boolean.class
             );
