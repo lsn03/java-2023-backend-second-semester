@@ -1,7 +1,6 @@
-package edu.java.scrapper.hw5;
+package edu.java.scrapper.hw5.jdbc.repo;
 
 import edu.java.domain.model.LinkDTO;
-import edu.java.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.domain.repository.jdbc.JdbcLinkRepository;
 import edu.java.exception.exception.LinkNotFoundException;
 import edu.java.scrapper.IntegrationTest;
@@ -19,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class JdbcLinkTest extends IntegrationTest {
+public class JdbcLinkRepoTest extends IntegrationTest {
     @Autowired
     private JdbcLinkRepository jdbcLinkRepository;
 

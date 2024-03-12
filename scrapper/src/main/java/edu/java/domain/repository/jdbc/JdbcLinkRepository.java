@@ -34,7 +34,7 @@ public class JdbcLinkRepository implements LinkRepository {
             connection -> {
                 PreparedStatement ps = connection.prepareStatement(
                     "insert into link (uri,created_at)  values (?,now())",
-                    new String[] {LINK_ID} // Имя столбца сгенерированного ключа
+                    new String[] {LINK_ID}
                 );
                 ps.setString(1, String.valueOf(linkDTO.getUri()));
                 return ps;
@@ -50,7 +50,7 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    @Transactional
+
     public Long findUrl(URI uri) {
 
         try {
@@ -121,9 +121,9 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     @Transactional
-    public List<LinkDTO> findAllOldLinks(Integer time, String timeUnit) {
+    public List<LinkDTO> findAllOldLinks(Integer timeInSeconds) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String interval = "'" + time + " " + timeUnit + "'";
+        String interval = "'" + timeInSeconds + " seconds '";
 
         return jdbcTemplate.query(
             "select lc.link_id,uri,created_at,last_update,hash,chat_id "

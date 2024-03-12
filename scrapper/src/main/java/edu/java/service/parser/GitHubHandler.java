@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 public class GitHubHandler implements Handler {
     private static final Pattern GITHUB_PULL_REQUEST_PATTERN =
         Pattern.compile("https://github\\.com/([^/]+)/([^/]+)/pull/(\\d+)");
-    public static final int GROUP_ID = 3;
-    public static final int GROUP_REPO = 2;
-    public static final int GROUP_OWNER = 1;
+    private static final int GROUP_ID = 3;
+    private static final int GROUP_REPO = 2;
+    private static final int GROUP_OWNER = 1;
 
     @Override
     public boolean canHandle(URI uri) {

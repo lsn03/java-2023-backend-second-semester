@@ -1,25 +1,26 @@
 package edu.java.service.process.jdbc;
 
 import edu.java.domain.model.LinkDTO;
-import edu.java.domain.repository.LinkChatRepository;
-import edu.java.domain.repository.LinkRepository;
+import edu.java.domain.repository.jdbc.JdbcLinkChatRepository;
+import edu.java.domain.repository.jdbc.JdbcLinkRepository;
 import edu.java.exception.exception.ListEmptyException;
 import edu.java.exception.exception.RepeatTrackException;
 import edu.java.exception.exception.UserDoesntExistException;
 import edu.java.service.process.LinkService;
-import java.util.Collection;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@AllArgsConstructor
+@Service @AllArgsConstructor
 public class JdbcLinkService implements LinkService {
-    private final LinkRepository jdbcLinkRepository;
-    private final LinkChatRepository jdbcLinkChatRepository;
+    private final JdbcLinkRepository jdbcLinkRepository;
+    private final JdbcLinkChatRepository jdbcLinkChatRepository;
 
     @Override
+
     public LinkDTO add(LinkDTO linkDTO) {
         try {
 
@@ -30,13 +31,19 @@ public class JdbcLinkService implements LinkService {
         } catch (DuplicateKeyException e) {
             Long id = jdbcLinkRepository.findUrl(linkDTO.getUri());
             linkDTO.setLinkId(id);
-            jdbcLinkChatRepository.add(linkDTO);
+            try {
+                jdbcLinkChatRepository.add(linkDTO);
+            } catch (DuplicateKeyException duplicateKeyException) {
+                if (e.getMessage().contains("already exists")) {
+                    throw new RepeatTrackException(e);
+                } else {
+                    throw new RuntimeException(e);
+                }
+            }
             return linkDTO;
         } catch (DataIntegrityViolationException e) {
             if (e.getMessage().contains("is not present in")) {
                 throw new UserDoesntExistException(e);
-            } else if (e.getMessage().contains("already exists")) {
-                throw new RepeatTrackException(e);
             } else {
                 throw new RuntimeException(e);
             }
@@ -50,7 +57,7 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public Collection<LinkDTO> findAll(Long tgChatId) {
+    public List<LinkDTO> findAll(Long tgChatId) {
         var response = jdbcLinkRepository.findAllByChatId(tgChatId);
         if (response.isEmpty()) {
             throw new ListEmptyException("List empty for chat " + tgChatId);

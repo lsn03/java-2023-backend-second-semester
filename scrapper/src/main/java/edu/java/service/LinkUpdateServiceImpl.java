@@ -28,15 +28,25 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class LinkUpdateServiceImpl implements LinkUpdaterService {
     private static final int MASK = 0xff;
-    private static final int TIME_TO_OLD_LINK = 10;
+    private static final int TIME_TO_OLD_LINK_IN_SECONDS = 10;
     private final LinkRepository linkRepository;
     private final GitHubClient gitHubClient;
     private final StackOverFlowClient stackOverFlowClient;
     private final List<Handler> handlers;
+    private static final MessageDigest digest;
+
+    static {
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
     @Override
     public List<LinkUpdateRequest> update() throws NoSuchAlgorithmException {
-        List<LinkDTO> list = linkRepository.findAllOldLinks(TIME_TO_OLD_LINK, "seconds");
+        List<LinkDTO> list = linkRepository.findAllOldLinks(TIME_TO_OLD_LINK_IN_SECONDS);
         List<LinkDTO> listForUpdate = new ArrayList<>();
 
         for (LinkDTO elem : list) {
@@ -131,7 +141,6 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     }
 
     private String getHashOfResponse(String string) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] encodedHash = digest.digest(
             string.getBytes(StandardCharsets.UTF_8));
         return bytesToHex(encodedHash);

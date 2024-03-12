@@ -49,7 +49,8 @@ public class JdbcChatRepository implements ChatRepository {
 
     }
 
-    private boolean findInActiveUserById(Long tgChatId) {
+    @Transactional
+    protected boolean findInActiveUserById(Long tgChatId) {
         try {
             Boolean notActive = jdbcTemplate.queryForObject(
                 "select active from chat where chat_id = ? and active = false",

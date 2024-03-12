@@ -18,5 +18,5 @@ public interface LinkRepository {
 
     void updateLink(LinkDTO elem);
 
-    List<LinkDTO> findAllOldLinks(Integer time, String timeUnit);
+    List<LinkDTO> findAllOldLinks(Integer timeInSeconds);
 }

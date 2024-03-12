@@ -1,14 +1,14 @@
 package edu.java.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 public class GitHubPullRequestUriDTO extends UriDTO {
     private String owner;
     private String repo;
