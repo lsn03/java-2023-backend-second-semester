@@ -4,15 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.java.util.Utils;
 import java.time.OffsetDateTime;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
 public class QuestionAnswerDTOResponse {
     private AccountDTO owner;
 

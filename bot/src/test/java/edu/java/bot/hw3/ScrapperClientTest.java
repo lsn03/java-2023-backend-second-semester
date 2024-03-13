@@ -49,7 +49,7 @@ public class ScrapperClientTest {
                     .withStatus(200)
                 )
         );
-        assertNull(client.makeChat(chatId).block());
+        assertNull(client.makeChat(chatId));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class ScrapperClientTest {
                 )
         );
 
-        ApiErrorResponse response = (client.makeChat(chatId).block());
+        ApiErrorResponse response = (client.makeChat(chatId));
         assertEquals(apiErrorResponse, response);
     }
 
@@ -98,7 +98,7 @@ public class ScrapperClientTest {
                     .withStatus(200)
                 )
         );
-        assertNull(client.deleteChat(chatId).block());
+        assertNull(client.deleteChat(chatId));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class ScrapperClientTest {
                 )
         );
 
-        ApiErrorResponse response = (client.deleteChat(chatId).block());
+        ApiErrorResponse response = (client.deleteChat(chatId));
         assertEquals(apiErrorResponse, response);
     }
 
@@ -145,7 +145,7 @@ public class ScrapperClientTest {
                     .withStatus(200)
                 )
         );
-        var response = (client.trackLink(req, chatId).block());
+        var response = (client.trackLink(req, chatId));
         assertTrue(response instanceof LinkResponse);
         assertEquals(linkResponse, response);
     }
@@ -169,7 +169,7 @@ public class ScrapperClientTest {
                     .withStatus(400)
                 )
         );
-        var response = (client.trackLink(req, chatId).block());
+        var response = (client.trackLink(req, chatId));
         assertTrue(response instanceof ApiErrorResponse);
         assertEquals(apiErrorResponse, response);
     }
@@ -191,7 +191,7 @@ public class ScrapperClientTest {
                     .withStatus(200)
                 )
         );
-        var response = (client.getLinks(chatId).block());
+        var response = (client.getLinks(chatId));
         assertTrue(response instanceof ListLinksResponse);
         assertEquals(req, response);
     }
@@ -213,7 +213,7 @@ public class ScrapperClientTest {
                     .withStatus(400)
                 )
         );
-        var response = (client.getLinks(chatId).block());
+        var response = (client.getLinks(chatId));
         assertTrue(response instanceof ApiErrorResponse);
         assertEquals(apiErrorResponse, response);
     }
@@ -236,7 +236,7 @@ public class ScrapperClientTest {
                     .withStatus(200)
                 )
         );
-        var response = (client.unTrackLink(req, chatId).block());
+        var response = (client.unTrackLink(req, chatId));
         assertTrue(response instanceof LinkResponse);
         assertEquals(linkResponse, response);
     }
@@ -260,7 +260,7 @@ public class ScrapperClientTest {
                     .withStatus(400)
                 )
         );
-        var response = (client.unTrackLink(req, chatId).block());
+        var response = (client.unTrackLink(req, chatId));
         assertTrue(response instanceof ApiErrorResponse);
         assertEquals(apiErrorResponse, response);
     }
