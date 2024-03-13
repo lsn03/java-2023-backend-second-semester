@@ -2,24 +2,22 @@ package edu.java.scrapper.hw5.jdbc.service;
 
 import edu.java.domain.model.LinkDTO;
 import edu.java.domain.repository.jdbc.JdbcChatRepository;
+import edu.java.exception.exception.LinkNotFoundException;
+import edu.java.exception.exception.ListEmptyException;
 import edu.java.exception.exception.RepeatTrackException;
 import edu.java.exception.exception.UserDoesntExistException;
 import edu.java.scrapper.IntegrationTest;
 import edu.java.service.process.jdbc.JdbcLinkService;
+import java.net.URI;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.transaction.annotation.Transactional;
-import java.net.URI;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class JdbcLinkServiceTest extends IntegrationTest {
@@ -31,6 +29,8 @@ public class JdbcLinkServiceTest extends IntegrationTest {
     private LinkDTO linkForAction;
     long tgChatId = 1;
     URI uri = URI.create("https://github.com/owner/repo/pull/1");
+    @Mock
+    JdbcLinkService mockService;
 
     @Test
     @Rollback
@@ -58,22 +58,51 @@ public class JdbcLinkServiceTest extends IntegrationTest {
         linkForAction = new LinkDTO();
         linkForAction.setTgChatId(tgChatId);
         linkForAction.setUri(uri);
-
         assertThrows(UserDoesntExistException.class, () -> jdbcLinkService.add(linkForAction));
+    }
 
+    @Test
+    public void testAddRepeatTrackException() {
+        linkForAction = new LinkDTO();
+        linkForAction.setTgChatId(tgChatId);
+        linkForAction.setUri(uri);
+        Mockito.when(mockService.add(linkForAction)).thenThrow(RepeatTrackException.class);
+
+        assertThrows(RepeatTrackException.class, () -> mockService.add(linkForAction));
+    }
+
+    @Test
+    @Rollback
+    @Transactional
+    public void testFindLinksFailed() {
+        assertThrows(ListEmptyException.class, () -> jdbcLinkService.findAll(tgChatId));
     }
 
 
+    @Test
+    @Rollback
+    @Transactional
+    public void testRemoveNotFoundException() {
+        linkForAction = new LinkDTO();
+        linkForAction.setTgChatId(tgChatId);
+        linkForAction.setUri(uri);
 
-    public void testAddRepeatTrackException2() {
-//        linkForAction = new LinkDTO();
-//        linkForAction.setTgChatId(tgChatId);
-//        linkForAction.setUri(uri);
-//        jdbcChatRepository.add(tgChatId);
-//        jdbcLinkService.add(linkForAction);
-//
-//        linkForAction.setLinkId(null);
-//        assertThrows(RepeatTrackException.class, () -> jdbcLinkService.add(linkForAction));
+        assertThrows(LinkNotFoundException.class, () -> jdbcLinkService.remove(linkForAction));
+    }
+
+    @Test
+    @Rollback
+    @Transactional
+    public void testRemoveSuccess() {
+        linkForAction = new LinkDTO();
+        linkForAction.setTgChatId(tgChatId);
+        linkForAction.setUri(uri);
+        jdbcChatRepository.add(tgChatId);
+        jdbcLinkService.add(linkForAction);
+
+       Integer cnt =  jdbcLinkService.remove(linkForAction);
+
+       assertEquals(2,cnt);
 
     }
 }

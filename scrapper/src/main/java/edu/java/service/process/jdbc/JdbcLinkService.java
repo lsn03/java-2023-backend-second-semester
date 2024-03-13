@@ -12,15 +12,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service @AllArgsConstructor
+@Service
+@AllArgsConstructor
 public class JdbcLinkService implements LinkService {
     private final JdbcLinkRepository jdbcLinkRepository;
     private final JdbcLinkChatRepository jdbcLinkChatRepository;
 
     @Override
-
     public LinkDTO add(LinkDTO linkDTO) {
         try {
 

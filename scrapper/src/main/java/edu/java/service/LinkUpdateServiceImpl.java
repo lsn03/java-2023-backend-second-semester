@@ -33,11 +33,11 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     private final GitHubClient gitHubClient;
     private final StackOverFlowClient stackOverFlowClient;
     private final List<Handler> handlers;
-    private static final MessageDigest digest;
+    private static final MessageDigest MESSAGE_DIGEST;
 
     static {
         try {
-            digest = MessageDigest.getInstance("SHA-256");
+            MESSAGE_DIGEST = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
@@ -141,7 +141,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     }
 
     private String getHashOfResponse(String string) throws NoSuchAlgorithmException {
-        byte[] encodedHash = digest.digest(
+        byte[] encodedHash = MESSAGE_DIGEST.digest(
             string.getBytes(StandardCharsets.UTF_8));
         return bytesToHex(encodedHash);
     }

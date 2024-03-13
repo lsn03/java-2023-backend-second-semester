@@ -1,9 +1,9 @@
 package edu.java.domain.repository;
 
 import edu.java.domain.model.LinkDTO;
-import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface LinkRepository {
     LinkDTO add(LinkDTO linkDTO);

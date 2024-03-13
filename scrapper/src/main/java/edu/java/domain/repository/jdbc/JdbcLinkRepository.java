@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class JdbcLinkRepository implements LinkRepository {
     private static final String LINK_ID = "link_id";
+    public static final String URI = "uri";
+    public static final String HASH = "hash";
     private final JdbcTemplate jdbcTemplate;
     private final JdbcLinkChatRepository jdbcLinkChatRepository;
 
@@ -72,7 +74,7 @@ public class JdbcLinkRepository implements LinkRepository {
     public Integer remove(LinkDTO linkDTO) {
         Long linkId = findUrl(linkDTO.getUri());
         linkDTO.setLinkId(linkId);
-        int response = 0 ;
+        int response = 0;
         List<LinkDTO> list = jdbcLinkChatRepository.findAllByLinkId(linkDTO.getLinkId());
         if (list.isEmpty()) {
             response = jdbcTemplate.update(
@@ -96,10 +98,10 @@ public class JdbcLinkRepository implements LinkRepository {
         return jdbcTemplate.query(
             "select link_id, uri, hash, created_at, last_update from link",
             (rs, rowNum) -> new LinkDTO(
-                URI.create(rs.getString("uri")),
+                java.net.URI.create(rs.getString(URI)),
                 null,
-                rs.getLong("link_id"),
-                rs.getString("hash"),
+                rs.getLong(LINK_ID),
+                rs.getString(HASH),
                 null,
                 null
             )
@@ -148,10 +150,10 @@ public class JdbcLinkRepository implements LinkRepository {
                 linkDTO.setLastUpdate(lastUpdate.atOffset(ZoneOffset.UTC));
                 linkDTO.setTgChatId(rs.getLong("chat_id"));
                 linkDTO.setLinkId(rs.getLong(LINK_ID));
-                linkDTO.setUri(URI.create(rs.getString("uri")));
+                linkDTO.setUri(java.net.URI.create(rs.getString(URI)));
                 linkDTO.setCreatedAt(localDateTimeCreatedAt.atOffset(ZoneOffset.UTC));
 
-                linkDTO.setHash(rs.getString("hash"));
+                linkDTO.setHash(rs.getString(HASH));
 
                 return linkDTO;
             }
