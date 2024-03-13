@@ -1,7 +1,6 @@
 package edu.java.service.process.jdbc;
 
 import edu.java.domain.model.ChatDTO;
-import edu.java.domain.repository.ChatRepository;
 import edu.java.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.exception.exception.UserAlreadyExistException;
 import edu.java.service.process.TgChatService;
