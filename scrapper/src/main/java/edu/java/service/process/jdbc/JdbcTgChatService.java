@@ -2,6 +2,7 @@ package edu.java.service.process.jdbc;
 
 import edu.java.domain.model.ChatDTO;
 import edu.java.domain.repository.ChatRepository;
+import edu.java.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.exception.exception.UserAlreadyExistException;
 import edu.java.service.process.TgChatService;
 import java.util.List;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class JdbcTgChatService implements TgChatService {
-    private final ChatRepository jdbcChatRepository;
+    private final JdbcChatRepository jdbcChatRepository;
 
     @Override
     public void add(Long tgChatId) {
