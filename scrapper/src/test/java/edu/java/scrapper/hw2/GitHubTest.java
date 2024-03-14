@@ -65,7 +65,7 @@ public class GitHubTest {
                 )
         );
         client = new GitHubService(baseUrl + port);
-        var response = client.getIssueComments(owner, repo, pullNumber).block();
+        var response = client.getIssueComments(owner, repo, pullNumber);
         assertEquals(expected, response);
     }
 
@@ -105,7 +105,7 @@ public class GitHubTest {
 
         client = new GitHubService(baseUrl);
         client = new GitHubService(baseUrl + port);
-        var response = client.getPullComments(owner, repo, pullNumber).block();
+        var response = client.getPullComments(owner, repo, pullNumber);
         assertEquals(expected, response);
     }
 
@@ -142,7 +142,7 @@ public class GitHubTest {
         );
 
         client = new GitHubService(baseUrl + port);
-        var response = client.getPullReviews(owner, repo, pullNumber).block();
+        var response = client.getPullReviews(owner, repo, pullNumber);
         assertEquals(expected, response);
     }
 
@@ -192,7 +192,7 @@ public class GitHubTest {
         );
 
         client = new GitHubService(baseUrl + port);
-        var response = client.getAllCommitsInPullRequest(owner, repo, pullNumber).block();
+        var response = client.getAllCommitsInPullRequest(owner, repo, pullNumber);
         assertEquals(expected, response);
     }
 

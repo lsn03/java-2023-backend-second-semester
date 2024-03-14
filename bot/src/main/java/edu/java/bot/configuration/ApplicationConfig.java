@@ -11,4 +11,5 @@ public record ApplicationConfig(
     String telegramToken,
     String scrapperBaseUrl
 ) {
+
 }
