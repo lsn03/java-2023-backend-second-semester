@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class ScrapperRestController {
 
-    public static final String CHAT_SUCCESSFUL_SIGN_UP = "Чат зарегистрирован";
-    public static final String CHAT_SUCCESSFUL_REMOVED = "Чат успешно удалён";
-    public static final String HEADER_TG_CHAT_ID = "Tg-Chat-Id";
+    private static final String CHAT_SUCCESSFUL_SIGN_UP = "Чат зарегистрирован";
+    private static final String CHAT_SUCCESSFUL_REMOVED = "Чат успешно удалён";
+    private static final String HEADER_TG_CHAT_ID = "Tg-Chat-Id";
 
 
     private final LinkService linkService;

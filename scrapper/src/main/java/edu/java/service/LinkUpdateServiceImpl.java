@@ -29,11 +29,13 @@ import org.springframework.stereotype.Service;
 public class LinkUpdateServiceImpl implements LinkUpdaterService {
     private static final int MASK = 0xff;
     private static final int TIME_TO_OLD_LINK_IN_SECONDS = 10;
+    private static final MessageDigest MESSAGE_DIGEST;
+
     private final LinkRepository linkRepository;
     private final GitHubClient gitHubClient;
     private final StackOverFlowClient stackOverFlowClient;
     private final List<Handler> handlers;
-    private static final MessageDigest MESSAGE_DIGEST;
+
 
     static {
         try {
@@ -41,7 +43,6 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
