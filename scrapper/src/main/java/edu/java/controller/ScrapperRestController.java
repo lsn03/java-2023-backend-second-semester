@@ -27,13 +27,13 @@ public class ScrapperRestController {
     private static final String CHAT_SUCCESSFUL_SIGN_UP = "Чат зарегистрирован";
     private static final String CHAT_SUCCESSFUL_REMOVED = "Чат успешно удалён";
     private static final String HEADER_TG_CHAT_ID = "Tg-Chat-Id";
-
+    private static final String TG_CHAT_ID = "/tg-chat/{id}";
+    private static final String LINKS = "/links";
 
     private final LinkService linkService;
     private final TgChatService chatService;
 
-    private static final String TG_CHAT_ID = "/tg-chat/{id}";
-    private static final String LINKS = "/links";
+
 
     @PostMapping(value = TG_CHAT_ID, produces = {"application/json"})
     public ResponseEntity<?> signUpChat(@PathVariable Long id) {
