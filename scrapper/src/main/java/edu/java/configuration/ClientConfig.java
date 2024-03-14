@@ -27,6 +27,6 @@ public class ClientConfig {
 
     @Bean
     public BotHttpClient botHttpClient() {
-        return new BotHttpClient(properties.getBotBaseUrl());
+        return new BotHttpClient(properties.getValue(Utils.BOT_BASE_URL));
     }
 }
