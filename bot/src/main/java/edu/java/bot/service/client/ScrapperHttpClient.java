@@ -13,15 +13,14 @@ import reactor.core.publisher.Mono;
 
 public class ScrapperHttpClient {
 
-    public static final String LINK = "/links";
-    public static final String HEADER_TG_CHAT_ID = "Tg-Chat-Id";
+    private static final String LINK = "/links";
+    private static final String HEADER_TG_CHAT_ID = "Tg-Chat-Id";
+    private static final String TG_CHAT = "/tg-chat/%d";
+
     private final WebClient client;
-    public static final String TG_CHAT = "/tg-chat/%d";
 
     public ScrapperHttpClient(String baseUrl) {
-
         client = WebClient.builder().baseUrl(baseUrl).build();
-
     }
 
     public ApiErrorResponse makeChat(Long id) {

@@ -1,20 +1,17 @@
 package edu.java.bot.configuration;
 
 import edu.java.bot.service.client.ScrapperHttpClient;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@RequiredArgsConstructor
 public class ClientConfiguration {
-    private final ScrapperProperties scrapperProperties;
-
-    public ClientConfiguration(@Autowired ScrapperProperties scrapperProperties) {
-        this.scrapperProperties = scrapperProperties;
-    }
+    private final ApplicationConfig applicationConfig;
 
     @Bean
     public ScrapperHttpClient scrapperHttpClient() {
-        return new ScrapperHttpClient(scrapperProperties.getBaseUrl());
+        return new ScrapperHttpClient(applicationConfig.scrapperBaseUrl());
     }
 }

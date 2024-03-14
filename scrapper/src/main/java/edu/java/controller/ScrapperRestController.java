@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;
 
 @RestController
 public class ScrapperRestController {
@@ -23,23 +24,26 @@ public class ScrapperRestController {
     public static final String LINK_SUCCESSFUL_ADDED = "Ссылка успешно добавлена";
     public static final String ERROR_CHAT_ALREADY_EXIST = "Чат уже существует";
 
-    @PostMapping(value = "/tg-chat/{id}", produces = {"application/json"})
+    private static final String TG_CHAT_ID = "/tg-chat/{id}";
+    private static final String LINKS = "/links";
+
+    @PostMapping(value = TG_CHAT_ID, produces = {"application/json"})
     public ResponseEntity<?> signUpChat(@PathVariable Long id) {
         return ResponseEntity.ok(CHAT_SUCCESSFUL_SIGN_UP);
     }
 
-    @DeleteMapping("/tg-chat/{id}")
+    @DeleteMapping(value = TG_CHAT_ID, produces = {"application/json"})
     public ResponseEntity<?> deleteChat(@PathVariable Long id) {
         return ResponseEntity.ok(CHAT_SUCCESSFUL_REMOVED);
     }
 
-    @GetMapping("/links")
+    @GetMapping(value = LINKS, produces = {"application/json"})
     public ResponseEntity<?> getTrackedLinks(@RequestHeader(HEADER_TG_CHAT_ID) Long chatId) {
         ListLinksResponse listLinksResponse = new ListLinksResponse();
         return ResponseEntity.ok(listLinksResponse);
     }
 
-    @PostMapping("/links")
+    @PostMapping(value = LINKS, produces = {"application/json"})
     public ResponseEntity<?> trackLink(
         @RequestBody AddLinkRequest addLinkRequest,
         @RequestHeader(HEADER_TG_CHAT_ID) Long chatId
@@ -48,7 +52,7 @@ public class ScrapperRestController {
         return ResponseEntity.ok(linkResponse);
     }
 
-    @DeleteMapping("/links")
+    @DeleteMapping(value = LINKS, produces = {"application/json"})
     public ResponseEntity<?> unTrackLink(
         @RequestBody RemoveLinkRequest removeLinkRequest,
         @RequestHeader(HEADER_TG_CHAT_ID) Long chatId
