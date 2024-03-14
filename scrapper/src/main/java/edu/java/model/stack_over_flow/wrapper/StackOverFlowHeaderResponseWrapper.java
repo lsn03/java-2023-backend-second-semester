@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.java.model.stack_over_flow.dto.QuestionHeaderDTOResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @AllArgsConstructor
-@Getter
-@Setter
 @NoArgsConstructor
+@Data
 public class StackOverFlowHeaderResponseWrapper {
     @JsonProperty("items")
     private List<QuestionHeaderDTOResponse> list;

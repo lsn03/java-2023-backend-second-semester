@@ -19,6 +19,7 @@
         <revision>0.1</revision>
 
         <skip.unit.tests>false</skip.unit.tests>
+        <openapi-starter-webmvc-ui-version>2.3.0</openapi-starter-webmvc-ui-version>
 
         <!-- Spring -->
         <spring-boot.version>3.2.2</spring-boot.version>
