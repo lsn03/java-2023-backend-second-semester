@@ -106,7 +106,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         PullRequestModelResponse response =
             gitHubClient.fetchPullRequest(uriDto.getOwner(), uriDto.getRepo(),
                 uriDto.getPullNumber()
-            ).block();
+            );
         string = response.toString();
         return getHashOfResponse(string);
 
