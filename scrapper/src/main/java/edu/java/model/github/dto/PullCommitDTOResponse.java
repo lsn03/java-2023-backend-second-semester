@@ -7,10 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class PullCommitDTOResponse {
     private String sha;
@@ -23,10 +25,8 @@ public class PullCommitDTOResponse {
     private UserInfoDTO committer;
 
     @AllArgsConstructor
-    @Getter
-    @Setter
-    @EqualsAndHashCode
-    @ToString
+    @NoArgsConstructor
+    @Data
     public static class CommitDetail {
         private CommitDetailInfo committer;
         private String message;
