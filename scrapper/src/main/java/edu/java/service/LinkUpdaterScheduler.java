@@ -1,5 +1,6 @@
 package edu.java.service;
 
+
 import edu.java.configuration.ApplicationConfig;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import edu.java.model.scrapper.dto.response.ApiErrorResponse;

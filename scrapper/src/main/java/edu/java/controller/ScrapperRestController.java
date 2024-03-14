@@ -32,7 +32,10 @@ public class ScrapperRestController {
     private final LinkService linkService;
     private final TgChatService chatService;
 
-    @PostMapping(value = "/tg-chat/{id}", produces = {"application/json"})
+    private static final String TG_CHAT_ID = "/tg-chat/{id}";
+    private static final String LINKS = "/links";
+
+    @PostMapping(value = TG_CHAT_ID, produces = {"application/json"})
     public ResponseEntity<?> signUpChat(@PathVariable Long id) {
 
         chatService.add(id);
@@ -40,13 +43,13 @@ public class ScrapperRestController {
         return ResponseEntity.ok(CHAT_SUCCESSFUL_SIGN_UP);
     }
 
-    @DeleteMapping("/tg-chat/{id}")
+    @DeleteMapping(value = TG_CHAT_ID, produces = {"application/json"})
     public ResponseEntity<?> deleteChat(@PathVariable Long id) {
         chatService.remove(id);
         return ResponseEntity.ok(CHAT_SUCCESSFUL_REMOVED);
     }
 
-    @GetMapping("/links")
+    @GetMapping(value = LINKS, produces = {"application/json"})
     public ResponseEntity<?> getTrackedLinks(@RequestHeader(HEADER_TG_CHAT_ID) Long chatId) {
         List<LinkDTO> list = (List<LinkDTO>) linkService.findAll(chatId);
 
@@ -60,7 +63,7 @@ public class ScrapperRestController {
 
     }
 
-    @PostMapping("/links")
+    @PostMapping(value = LINKS, produces = {"application/json"})
     public ResponseEntity<?> trackLink(
         @RequestBody AddLinkRequest addLinkRequest,
         @RequestHeader(HEADER_TG_CHAT_ID) Long chatId
@@ -76,7 +79,7 @@ public class ScrapperRestController {
         return ResponseEntity.ok(linkResponse);
     }
 
-    @DeleteMapping("/links")
+    @DeleteMapping(value = LINKS, produces = {"application/json"})
     public ResponseEntity<?> unTrackLink(
         @RequestBody RemoveLinkRequest removeLinkRequest,
         @RequestHeader(HEADER_TG_CHAT_ID) Long chatId

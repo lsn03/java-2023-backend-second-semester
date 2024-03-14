@@ -11,7 +11,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    public static final String ERROR_INCORRECT_PARAMETERS = "Некорректные параметры запроса";
+    private static final String ERROR_INCORRECT_PARAMETERS = "Некорректные параметры запроса";
 
     @ExceptionHandler(IncorrectParametersException.class)
     public ResponseEntity<ApiErrorResponse> handleIncorrectParametersException(IncorrectParametersException ex) {
