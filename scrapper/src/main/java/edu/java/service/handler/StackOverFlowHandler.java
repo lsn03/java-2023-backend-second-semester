@@ -1,4 +1,4 @@
-package edu.java.service.parser;
+package edu.java.service.handler;
 
 import edu.java.model.StackOverFlowQuestionUriDTO;
 import edu.java.model.UriDTO;

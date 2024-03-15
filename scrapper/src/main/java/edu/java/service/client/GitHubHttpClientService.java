@@ -1,20 +1,19 @@
-package edu.java.service;
+package edu.java.service.client;
 
 import edu.java.model.github.PullRequestModelResponse;
 import edu.java.model.github.dto.IssueCommentDTOResponse;
 import edu.java.model.github.dto.PullCommentDTOResponse;
 import edu.java.model.github.dto.PullCommitDTOResponse;
 import edu.java.model.github.dto.PullReviewDTOResponse;
-import edu.java.service.client.GitHubClient;
 import java.util.List;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.reactive.function.client.WebClient;
 
-public class GitHubService implements GitHubClient {
+public class GitHubHttpClientService implements GitHubClient {
     private static final String GITHUB_TOKEN = System.getenv().get("APP_GITHUB_TOKEN");
     private final WebClient webClient;
 
-    public GitHubService(String url) {
+    public GitHubHttpClientService(String url) {
 
         webClient = WebClient.builder()
             .baseUrl(url)

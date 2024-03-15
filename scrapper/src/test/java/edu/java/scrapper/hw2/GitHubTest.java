@@ -8,7 +8,7 @@ import edu.java.model.github.dto.PullCommentDTOResponse;
 import edu.java.model.github.dto.PullCommitDTOResponse;
 import edu.java.model.github.dto.PullReviewDTOResponse;
 import edu.java.model.github.dto.info.UserInfoDTO;
-import edu.java.service.GitHubService;
+import edu.java.service.client.GitHubHttpClientService;
 import edu.java.service.client.GitHubClient;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -64,7 +64,7 @@ public class GitHubTest {
                     ).withStatus(200)
                 )
         );
-        client = new GitHubService(baseUrl + port);
+        client = new GitHubHttpClientService(baseUrl + port);
         var response = client.getIssueComments(owner, repo, pullNumber);
         assertEquals(expected, response);
     }
@@ -103,8 +103,8 @@ public class GitHubTest {
                 )
         );
 
-        client = new GitHubService(baseUrl);
-        client = new GitHubService(baseUrl + port);
+        client = new GitHubHttpClientService(baseUrl);
+        client = new GitHubHttpClientService(baseUrl + port);
         var response = client.getPullComments(owner, repo, pullNumber);
         assertEquals(expected, response);
     }
@@ -141,7 +141,7 @@ public class GitHubTest {
                 )
         );
 
-        client = new GitHubService(baseUrl + port);
+        client = new GitHubHttpClientService(baseUrl + port);
         var response = client.getPullReviews(owner, repo, pullNumber);
         assertEquals(expected, response);
     }
@@ -191,7 +191,7 @@ public class GitHubTest {
                 )
         );
 
-        client = new GitHubService(baseUrl + port);
+        client = new GitHubHttpClientService(baseUrl + port);
         var response = client.getAllCommitsInPullRequest(owner, repo, pullNumber);
         assertEquals(expected, response);
     }

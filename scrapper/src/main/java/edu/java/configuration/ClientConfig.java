@@ -1,8 +1,8 @@
 package edu.java.configuration;
 
 import edu.java.service.BotHttpClient;
-import edu.java.service.GitHubService;
-import edu.java.service.StackOverFlowService;
+import edu.java.service.client.GitHubHttpClientService;
+import edu.java.service.client.StackOverFlowHttpClientServiceService;
 import edu.java.service.client.GitHubClient;
 import edu.java.service.client.StackOverFlowClient;
 import edu.java.util.Utils;
@@ -20,12 +20,12 @@ public class ClientConfig {
 
     @Bean
     public GitHubClient gitHubClient() {
-        return new GitHubService(properties.getValue(Utils.GITHUB_BASE_URL));
+        return new GitHubHttpClientService(properties.getValue(Utils.GITHUB_BASE_URL));
     }
 
     @Bean
     public StackOverFlowClient stackOverFlowClient() {
-        return new StackOverFlowService(properties.getValue(Utils.SOF_BASE_URL));
+        return new StackOverFlowHttpClientServiceService(properties.getValue(Utils.SOF_BASE_URL));
     }
 
     @Bean

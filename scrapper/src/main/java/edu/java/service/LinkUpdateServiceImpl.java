@@ -10,7 +10,7 @@ import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import edu.java.model.stack_over_flow.StackOverFlowModel;
 import edu.java.service.client.GitHubClient;
 import edu.java.service.client.StackOverFlowClient;
-import edu.java.service.parser.Handler;
+import edu.java.service.handler.Handler;
 import edu.java.service.process.LinkUpdaterService;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -97,7 +96,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         String string;
 
         StackOverFlowModel response =
-            stackOverFlowClient.fetchQuestionData(uriDto.getQuestionId()).block();
+            stackOverFlowClient.fetchQuestionData(uriDto.getQuestionId());
         string = response.toString();
         return getHashOfResponse(string);
 

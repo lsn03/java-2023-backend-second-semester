@@ -1,8 +1,7 @@
 package edu.java.scrapper.hw5.handler;
 
-import edu.java.model.GitHubPullRequestUriDTO;
 import edu.java.model.StackOverFlowQuestionUriDTO;
-import edu.java.service.parser.StackOverFlowHandler;
+import edu.java.service.handler.StackOverFlowHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import java.net.URI;
