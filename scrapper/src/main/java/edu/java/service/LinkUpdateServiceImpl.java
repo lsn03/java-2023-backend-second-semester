@@ -31,12 +31,10 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     private static final int TIME_TO_OLD_LINK_IN_SECONDS = 10;
     private static final MessageDigest MESSAGE_DIGEST;
 
-
     private final LinkRepository linkRepository;
     private final GitHubClient gitHubClient;
     private final StackOverFlowClient stackOverFlowClient;
     private final List<Handler> handlers;
-
 
     static {
         try {
@@ -47,7 +45,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     }
 
     @Override
-    public List<LinkUpdateRequest> update() throws NoSuchAlgorithmException {
+    public List<LinkUpdateRequest> update() {
         List<LinkDTO> list = linkRepository.findAllOldLinks(TIME_TO_OLD_LINK_IN_SECONDS);
         List<LinkDTO> listForUpdate = new ArrayList<>();
 
@@ -82,7 +80,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         return List.of();
     }
 
-    private String processDto(UriDTO uriDto) throws NoSuchAlgorithmException {
+    private String processDto(UriDTO uriDto) {
         String answer = "";
         if (uriDto instanceof GitHubPullRequestUriDTO) {
             answer = processGitHubUriDTO((GitHubPullRequestUriDTO) uriDto);
@@ -92,7 +90,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         return answer;
     }
 
-    private String processStackOverFlowUriDTO(StackOverFlowQuestionUriDTO uriDto) throws NoSuchAlgorithmException {
+    private String processStackOverFlowUriDTO(StackOverFlowQuestionUriDTO uriDto) {
         String string;
 
         StackOverFlowModel response =
@@ -102,7 +100,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     }
 
-    private String processGitHubUriDTO(GitHubPullRequestUriDTO uriDto) throws NoSuchAlgorithmException {
+    private String processGitHubUriDTO(GitHubPullRequestUriDTO uriDto) {
         String string;
 
         PullRequestModelResponse response =
@@ -142,7 +140,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         }
     }
 
-    private String getHashOfResponse(String string) throws NoSuchAlgorithmException {
+    private String getHashOfResponse(String string) {
         byte[] encodedHash = MESSAGE_DIGEST.digest(
             string.getBytes(StandardCharsets.UTF_8));
         return bytesToHex(encodedHash);
