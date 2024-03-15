@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,7 +32,8 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     private static final int TIME_TO_OLD_LINK_IN_SECONDS = 10;
     private static final MessageDigest MESSAGE_DIGEST;
 
-    private final LinkRepository linkRepository;
+
+    private final LinkRepository jdbcLinkRepository;
     private final GitHubClient gitHubClient;
     private final StackOverFlowClient stackOverFlowClient;
     private final List<Handler> handlers;
@@ -47,7 +49,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     @Override
     public List<LinkUpdateRequest> update() throws NoSuchAlgorithmException {
-        List<LinkDTO> list = linkRepository.findAllOldLinks(TIME_TO_OLD_LINK_IN_SECONDS);
+        List<LinkDTO> list = jdbcLinkRepository.findAllOldLinks(TIME_TO_OLD_LINK_IN_SECONDS);
         List<LinkDTO> listForUpdate = new ArrayList<>();
 
         for (LinkDTO elem : list) {
@@ -137,7 +139,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     private void updateDatabase(List<LinkDTO> list) {
         for (var elem : list) {
-            linkRepository.updateLink(elem);
+            jdbcLinkRepository.updateLink(elem);
         }
     }
 
