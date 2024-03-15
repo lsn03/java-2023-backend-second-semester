@@ -32,7 +32,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     private static final MessageDigest MESSAGE_DIGEST;
 
 
-    private final LinkRepository jdbcLinkRepository;
+    private final LinkRepository linkRepository;
     private final GitHubClient gitHubClient;
     private final StackOverFlowClient stackOverFlowClient;
     private final List<Handler> handlers;
@@ -48,7 +48,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     @Override
     public List<LinkUpdateRequest> update() throws NoSuchAlgorithmException {
-        List<LinkDTO> list = jdbcLinkRepository.findAllOldLinks(TIME_TO_OLD_LINK_IN_SECONDS);
+        List<LinkDTO> list = linkRepository.findAllOldLinks(TIME_TO_OLD_LINK_IN_SECONDS);
         List<LinkDTO> listForUpdate = new ArrayList<>();
 
         for (LinkDTO elem : list) {
@@ -138,7 +138,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     private void updateDatabase(List<LinkDTO> list) {
         for (var elem : list) {
-            jdbcLinkRepository.updateLink(elem);
+            linkRepository.updateLink(elem);
         }
     }
 
