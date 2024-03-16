@@ -9,6 +9,7 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -101,14 +102,14 @@ public class JooqLinkRepository implements LinkRepository {
     @Override
     @Transactional
     public List<LinkDTO> findAllOldLinks(Integer timeInSeconds) {
-        return dslContext.select(
+        return dslContext.selectDistinct(
                 Link.LINK.LINK_ID,
                 Link.LINK.URI,
                 Link.LINK.CREATED_AT,
                 Link.LINK.LAST_UPDATE,
-                Link.LINK.SITE_TYPE_ID,
-                LinkChat.LINK_CHAT.CHAT_ID
-            ).from(Link.LINK)
+                Link.LINK.SITE_TYPE_ID
+
+                ).from(Link.LINK)
             .leftJoin(LinkChat.LINK_CHAT)
             .on(Link.LINK.LINK_ID.eq(LinkChat.LINK_CHAT.LINK_ID))
             .where(DSL.condition(
@@ -120,19 +121,12 @@ public class JooqLinkRepository implements LinkRepository {
                 linkDTO.setSiteTypeId(recordLinkDTO.get(Link.LINK.SITE_TYPE_ID).intValue());
                 linkDTO.setLinkId(recordLinkDTO.get(Link.LINK.LINK_ID));
                 linkDTO.setUri(URI.create(recordLinkDTO.get(Link.LINK.URI)));
-                linkDTO.setCreatedAt(recordLinkDTO.get(Link.LINK.CREATED_AT).atZone(ZoneId.systemDefault())
-                    .toOffsetDateTime());
+                linkDTO.setCreatedAt(recordLinkDTO.get(Link.LINK.CREATED_AT).atOffset(ZoneOffset.UTC));
 
                 LocalDateTime lastUpdate = recordLinkDTO.get(Link.LINK.LAST_UPDATE);
                 if (lastUpdate != null) {
-                    linkDTO.setLastUpdate(lastUpdate.atZone(ZoneId.systemDefault()).toOffsetDateTime());
-                } else {
-                    linkDTO.setLastUpdate(OffsetDateTime.now());
+                    linkDTO.setLastUpdate(lastUpdate.atOffset(ZoneOffset.UTC));
                 }
-
-                Long chatId = recordLinkDTO.get(LinkChat.LINK_CHAT.CHAT_ID);
-
-                linkDTO.setTgChatId(chatId);
 
                 return linkDTO;
             });

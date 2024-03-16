@@ -9,15 +9,18 @@ import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import edu.java.service.client.GitHubClient;
 import edu.java.service.database.GitHubService;
 import edu.java.util.Utils;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GitHubProcessor implements Processor {
 
     public static final int MAX_MESSAGE_SIZE = 5;
@@ -54,12 +57,21 @@ public class GitHubProcessor implements Processor {
             }).toList();
         var commitsFromDB = gitHubService.getCommits(linkDTO.getUri());
         List<GitHubCommitDTO> listForUpdate = new ArrayList<>();
+        List<GitHubCommitDTO> listForInsertIntoDB = new ArrayList<>();
         for (var commit : commitsFromAPI) {
+
             if (!commitsFromDB.contains(commit)) {
                 listForUpdate.add(commit);
+                if (linkDTO.getLastUpdate() == null) {
+                    listForInsertIntoDB.add(commit);
+                }
             }
         }
-
+        if (!listForInsertIntoDB.isEmpty()) {
+            gitHubService.addCommits(listForInsertIntoDB);
+            linkDTO.setLastUpdate(OffsetDateTime.now());
+            return null;
+        }
         gitHubService.addCommits(listForUpdate);
 
         STRING_BUILDER.setLength(0);
@@ -72,12 +84,14 @@ public class GitHubProcessor implements Processor {
                 STRING_BUILDER.append("Пользователь ").append(commit.getAuthor())
                     .append(" оставил коммит ")
                     .append(commit.getSha(), START_SHA_INDEX, END_SHA_INDEX)
-                    .append(".... с сообщением")
+                    .append(".... с сообщением ")
                     .append(commit.getMessage())
                     .append(System.lineSeparator());
             }
         }
-
+        if (STRING_BUILDER.isEmpty()) {
+            return null;
+        }
         return new LinkUpdateRequest(
             linkDTO.getLinkId(),
             linkDTO.getUri().toString(),

@@ -2,6 +2,7 @@ package edu.java.domain.model;
 
 import edu.java.model.github.dto.PullCommitDTOResponse;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +23,7 @@ public class GitHubCommitDTO {
         GitHubCommitDTO commitDTO = new GitHubCommitDTO();
         commitDTO.setSha(pullCommitDTOResponse.getSha());
         commitDTO.setAuthor(pullCommitDTOResponse.getCommit().getCommitter().name());
-        commitDTO.setCreatedAt(pullCommitDTOResponse.getCommit().getCommitter().date());
+        commitDTO.setCreatedAt(pullCommitDTOResponse.getCommit().getCommitter().date().withOffsetSameInstant(ZoneOffset.UTC));
         commitDTO.setMessage(pullCommitDTOResponse.getCommit().getMessage());
         return commitDTO;
     }

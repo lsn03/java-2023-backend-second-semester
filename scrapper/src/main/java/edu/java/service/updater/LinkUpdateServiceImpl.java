@@ -20,23 +20,14 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class LinkUpdateServiceImpl implements LinkUpdaterService {
-    private static final int MASK = 0xff;
-    private static final int TIME_TO_OLD_LINK_IN_SECONDS = 10;
-    private static final MessageDigest MESSAGE_DIGEST;
+
+    private static final int TIME_TO_OLD_LINK_IN_SECONDS = 20;
+
 
     private final LinkRepository linkRepository;
-    private final GitHubClient gitHubClient;
-    private final StackOverFlowClient stackOverFlowClient;
+
     private final List<Handler> handlers;
     private final List<Processor> processors;
-
-    static {
-        try {
-            MESSAGE_DIGEST = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public List<LinkUpdateRequest> update() {
@@ -64,14 +55,20 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
                         .map(
                             LinkDTO::getTgChatId
                         ).toList();
-                List<LinkUpdateRequest> collection = (List<LinkUpdateRequest>) response.values();
-                for (var collectionElem : collection) {
+                var keySet = response.keySet();
+                for (var key : keySet) {
+                    var collectionElem = response.get(key);
+                    if (collectionElem == null) {
+                        break;
+                    }
                     collectionElem.setTgChatIds(tgChatIds);
+                    answer.add(collectionElem);
+
                 }
-
-                answer.add((LinkUpdateRequest) collection);
             }
-
+            if (!answer.isEmpty()) {
+                linkRepository.updateLink(elem);
+            }
         }
 
         return answer;

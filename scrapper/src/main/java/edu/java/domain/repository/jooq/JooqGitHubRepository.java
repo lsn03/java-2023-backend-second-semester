@@ -6,6 +6,7 @@ import edu.java.domain.model.GitHubCommitDTO;
 import edu.java.domain.repository.GitHubRepository;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
@@ -67,7 +68,12 @@ public class JooqGitHubRepository implements GitHubRepository {
     public List<GitHubCommitDTO> getCommits(Long linkId) {
         return dslContext.selectFrom(GithubCommit.GITHUB_COMMIT)
             .where(GithubCommit.GITHUB_COMMIT.LINK_ID.eq(linkId))
-            .fetchInto(GitHubCommitDTO.class);
+            .fetch()
+            .map(record -> {
+                GitHubCommitDTO dto = record.into(GitHubCommitDTO.class);
+                dto.setCreatedAt(record.getCreatedAt().atOffset(ZoneOffset.UTC));
+                return dto;
+            });
     }
 
     @Override
