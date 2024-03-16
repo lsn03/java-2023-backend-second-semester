@@ -4,9 +4,9 @@
 package edu.java.domain.jooq.tables;
 
 
-import edu.java.domain.jooq.tables.records.ChatRecord;
 import edu.java.domain.jooq.DefaultSchema;
 import edu.java.domain.jooq.Keys;
+import edu.java.domain.jooq.tables.records.ChatRecord;
 
 import java.util.function.Function;
 

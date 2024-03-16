@@ -27,7 +27,7 @@ public class LinkChat implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer linkId;
+    private Long linkId;
     private Long chatId;
 
     public LinkChat() {}
@@ -39,7 +39,7 @@ public class LinkChat implements Serializable {
 
     @ConstructorProperties({ "linkId", "chatId" })
     public LinkChat(
-        @Nullable Integer linkId,
+        @Nullable Long linkId,
         @Nullable Long chatId
     ) {
         this.linkId = linkId;
@@ -50,14 +50,14 @@ public class LinkChat implements Serializable {
      * Getter for <code>LINK_CHAT.LINK_ID</code>.
      */
     @Nullable
-    public Integer getLinkId() {
+    public Long getLinkId() {
         return this.linkId;
     }
 
     /**
      * Setter for <code>LINK_CHAT.LINK_ID</code>.
      */
-    public void setLinkId(@Nullable Integer linkId) {
+    public void setLinkId(@Nullable Long linkId) {
         this.linkId = linkId;
     }
 

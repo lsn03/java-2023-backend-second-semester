@@ -4,9 +4,9 @@
 package edu.java.domain.jooq.tables;
 
 
-import edu.java.domain.jooq.tables.records.LinkRecord;
 import edu.java.domain.jooq.DefaultSchema;
 import edu.java.domain.jooq.Keys;
+import edu.java.domain.jooq.tables.records.LinkRecord;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -68,17 +68,12 @@ public class Link extends TableImpl<LinkRecord> {
     /**
      * The column <code>LINK.LINK_ID</code>.
      */
-    public final TableField<LinkRecord, Integer> LINK_ID = createField(DSL.name("LINK_ID"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
+    public final TableField<LinkRecord, Long> LINK_ID = createField(DSL.name("LINK_ID"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>LINK.URI</code>.
      */
     public final TableField<LinkRecord, String> URI = createField(DSL.name("URI"), SQLDataType.VARCHAR(1000000000).nullable(false), this, "");
-
-    /**
-     * The column <code>LINK.HASH</code>.
-     */
-    public final TableField<LinkRecord, String> HASH = createField(DSL.name("HASH"), SQLDataType.VARCHAR(1000000000), this, "");
 
     /**
      * The column <code>LINK.CREATED_AT</code>.
@@ -89,6 +84,11 @@ public class Link extends TableImpl<LinkRecord> {
      * The column <code>LINK.LAST_UPDATE</code>.
      */
     public final TableField<LinkRecord, LocalDateTime> LAST_UPDATE = createField(DSL.name("LAST_UPDATE"), SQLDataType.LOCALDATETIME(6), this, "");
+
+    /**
+     * The column <code>LINK.SITE_TYPE_ID</code>.
+     */
+    public final TableField<LinkRecord, Long> SITE_TYPE_ID = createField(DSL.name("SITE_TYPE_ID"), SQLDataType.BIGINT, this, "");
 
     private Link(Name alias, Table<LinkRecord> aliased) {
         this(alias, aliased, null);
@@ -131,8 +131,8 @@ public class Link extends TableImpl<LinkRecord> {
 
     @Override
     @NotNull
-    public Identity<LinkRecord, Integer> getIdentity() {
-        return (Identity<LinkRecord, Integer>) super.getIdentity();
+    public Identity<LinkRecord, Long> getIdentity() {
+        return (Identity<LinkRecord, Long>) super.getIdentity();
     }
 
     @Override
@@ -145,6 +145,24 @@ public class Link extends TableImpl<LinkRecord> {
     @NotNull
     public List<UniqueKey<LinkRecord>> getUniqueKeys() {
         return Arrays.asList(Keys.LINK_PK2);
+    }
+
+    @Override
+    @NotNull
+    public List<ForeignKey<LinkRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.LINK_SITE_TYPE_SITE_TYPE_ID_FK);
+    }
+
+    private transient SiteType _siteType;
+
+    /**
+     * Get the implicit join path to the <code>PUBLIC.SITE_TYPE</code> table.
+     */
+    public SiteType siteType() {
+        if (_siteType == null)
+            _siteType = new SiteType(this, Keys.LINK_SITE_TYPE_SITE_TYPE_ID_FK);
+
+        return _siteType;
     }
 
     @Override
@@ -198,14 +216,14 @@ public class Link extends TableImpl<LinkRecord> {
 
     @Override
     @NotNull
-    public Row5<Integer, String, String, LocalDateTime, LocalDateTime> fieldsRow() {
+    public Row5<Long, String, LocalDateTime, LocalDateTime, Long> fieldsRow() {
         return (Row5) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function5<? super Integer, ? super String, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function5<? super Long, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super Long, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -213,7 +231,7 @@ public class Link extends TableImpl<LinkRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super Integer, ? super String, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super Long, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super Long, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

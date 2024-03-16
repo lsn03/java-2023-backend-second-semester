@@ -4,9 +4,12 @@
 package edu.java.domain.jooq;
 
 
-import edu.java.domain.jooq.tables.Link;
 import edu.java.domain.jooq.tables.Chat;
+import edu.java.domain.jooq.tables.GithubCommit;
+import edu.java.domain.jooq.tables.Link;
 import edu.java.domain.jooq.tables.LinkChat;
+import edu.java.domain.jooq.tables.SiteType;
+import edu.java.domain.jooq.tables.StackoverflowAnswer;
 
 import javax.annotation.processing.Generated;
 
@@ -30,6 +33,11 @@ public class Tables {
     public static final Chat CHAT = Chat.CHAT;
 
     /**
+     * The table <code>GITHUB_COMMIT</code>.
+     */
+    public static final GithubCommit GITHUB_COMMIT = GithubCommit.GITHUB_COMMIT;
+
+    /**
      * The table <code>LINK</code>.
      */
     public static final Link LINK = Link.LINK;
@@ -38,4 +46,14 @@ public class Tables {
      * The table <code>LINK_CHAT</code>.
      */
     public static final LinkChat LINK_CHAT = LinkChat.LINK_CHAT;
+
+    /**
+     * The table <code>SITE_TYPE</code>.
+     */
+    public static final SiteType SITE_TYPE = SiteType.SITE_TYPE;
+
+    /**
+     * The table <code>STACKOVERFLOW_ANSWER</code>.
+     */
+    public static final StackoverflowAnswer STACKOVERFLOW_ANSWER = StackoverflowAnswer.STACKOVERFLOW_ANSWER;
 }

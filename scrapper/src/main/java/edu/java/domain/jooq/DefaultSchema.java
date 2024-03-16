@@ -5,8 +5,11 @@ package edu.java.domain.jooq;
 
 
 import edu.java.domain.jooq.tables.Chat;
+import edu.java.domain.jooq.tables.GithubCommit;
 import edu.java.domain.jooq.tables.Link;
 import edu.java.domain.jooq.tables.LinkChat;
+import edu.java.domain.jooq.tables.SiteType;
+import edu.java.domain.jooq.tables.StackoverflowAnswer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,6 +48,11 @@ public class DefaultSchema extends SchemaImpl {
     public final Chat CHAT = Chat.CHAT;
 
     /**
+     * The table <code>GITHUB_COMMIT</code>.
+     */
+    public final GithubCommit GITHUB_COMMIT = GithubCommit.GITHUB_COMMIT;
+
+    /**
      * The table <code>LINK</code>.
      */
     public final Link LINK = Link.LINK;
@@ -53,6 +61,16 @@ public class DefaultSchema extends SchemaImpl {
      * The table <code>LINK_CHAT</code>.
      */
     public final LinkChat LINK_CHAT = LinkChat.LINK_CHAT;
+
+    /**
+     * The table <code>SITE_TYPE</code>.
+     */
+    public final SiteType SITE_TYPE = SiteType.SITE_TYPE;
+
+    /**
+     * The table <code>STACKOVERFLOW_ANSWER</code>.
+     */
+    public final StackoverflowAnswer STACKOVERFLOW_ANSWER = StackoverflowAnswer.STACKOVERFLOW_ANSWER;
 
     /**
      * No further instances allowed
@@ -73,8 +91,11 @@ public class DefaultSchema extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.asList(
             Chat.CHAT,
+            GithubCommit.GITHUB_COMMIT,
             Link.LINK,
-            LinkChat.LINK_CHAT
+            LinkChat.LINK_CHAT,
+            SiteType.SITE_TYPE,
+            StackoverflowAnswer.STACKOVERFLOW_ANSWER
         );
     }
 }

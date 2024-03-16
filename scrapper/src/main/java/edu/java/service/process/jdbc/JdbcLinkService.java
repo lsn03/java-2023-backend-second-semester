@@ -28,7 +28,7 @@ public class JdbcLinkService implements LinkService {
 
             return linkDTO;
         } catch (DuplicateKeyException e) {
-            Long id = jdbcLinkRepository.findUrl(linkDTO.getUri());
+            Long id = jdbcLinkRepository.findLinkIdByUrl(linkDTO.getUri());
             linkDTO.setLinkId(id);
             try {
                 jdbcLinkChatRepository.add(linkDTO);

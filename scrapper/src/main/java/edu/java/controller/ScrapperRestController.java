@@ -33,8 +33,6 @@ public class ScrapperRestController {
     private final LinkService linkService;
     private final TgChatService chatService;
 
-
-
     @PostMapping(value = TG_CHAT_ID, produces = {"application/json"})
     public ResponseEntity<?> signUpChat(@PathVariable Long id) {
 
@@ -51,7 +49,7 @@ public class ScrapperRestController {
 
     @GetMapping(value = LINKS, produces = {"application/json"})
     public ResponseEntity<?> getTrackedLinks(@RequestHeader(HEADER_TG_CHAT_ID) Long chatId) {
-        List<LinkDTO> list = (List<LinkDTO>) linkService.findAll(chatId);
+        List<LinkDTO> list = linkService.findAll(chatId);
 
         var response = new ListLinksResponse();
 

@@ -4,9 +4,9 @@
 package edu.java.domain.jooq.tables;
 
 
-import edu.java.domain.jooq.tables.records.LinkChatRecord;
 import edu.java.domain.jooq.DefaultSchema;
 import edu.java.domain.jooq.Keys;
+import edu.java.domain.jooq.tables.records.LinkChatRecord;
 
 import java.util.Arrays;
 import java.util.List;
@@ -66,7 +66,7 @@ public class LinkChat extends TableImpl<LinkChatRecord> {
     /**
      * The column <code>LINK_CHAT.LINK_ID</code>.
      */
-    public final TableField<LinkChatRecord, Integer> LINK_ID = createField(DSL.name("LINK_ID"), SQLDataType.INTEGER, this, "");
+    public final TableField<LinkChatRecord, Long> LINK_ID = createField(DSL.name("LINK_ID"), SQLDataType.BIGINT, this, "");
 
     /**
      * The column <code>LINK_CHAT.CHAT_ID</code>.
@@ -198,14 +198,14 @@ public class LinkChat extends TableImpl<LinkChatRecord> {
 
     @Override
     @NotNull
-    public Row2<Integer, Long> fieldsRow() {
+    public Row2<Long, Long> fieldsRow() {
         return (Row2) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function2<? super Integer, ? super Long, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function2<? super Long, ? super Long, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -213,7 +213,7 @@ public class LinkChat extends TableImpl<LinkChatRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super Integer, ? super Long, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super Long, ? super Long, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

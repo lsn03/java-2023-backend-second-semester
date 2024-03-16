@@ -31,49 +31,49 @@ public class Link implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer linkId;
+    private Long linkId;
     private String uri;
-    private String hash;
     private LocalDateTime createdAt;
     private LocalDateTime lastUpdate;
+    private Long siteTypeId;
 
     public Link() {}
 
     public Link(Link value) {
         this.linkId = value.linkId;
         this.uri = value.uri;
-        this.hash = value.hash;
         this.createdAt = value.createdAt;
         this.lastUpdate = value.lastUpdate;
+        this.siteTypeId = value.siteTypeId;
     }
 
-    @ConstructorProperties({ "linkId", "uri", "hash", "createdAt", "lastUpdate" })
+    @ConstructorProperties({ "linkId", "uri", "createdAt", "lastUpdate", "siteTypeId" })
     public Link(
-        @Nullable Integer linkId,
+        @Nullable Long linkId,
         @NotNull String uri,
-        @Nullable String hash,
         @Nullable LocalDateTime createdAt,
-        @Nullable LocalDateTime lastUpdate
+        @Nullable LocalDateTime lastUpdate,
+        @Nullable Long siteTypeId
     ) {
         this.linkId = linkId;
         this.uri = uri;
-        this.hash = hash;
         this.createdAt = createdAt;
         this.lastUpdate = lastUpdate;
+        this.siteTypeId = siteTypeId;
     }
 
     /**
      * Getter for <code>LINK.LINK_ID</code>.
      */
     @Nullable
-    public Integer getLinkId() {
+    public Long getLinkId() {
         return this.linkId;
     }
 
     /**
      * Setter for <code>LINK.LINK_ID</code>.
      */
-    public void setLinkId(@Nullable Integer linkId) {
+    public void setLinkId(@Nullable Long linkId) {
         this.linkId = linkId;
     }
 
@@ -92,22 +92,6 @@ public class Link implements Serializable {
      */
     public void setUri(@NotNull String uri) {
         this.uri = uri;
-    }
-
-    /**
-     * Getter for <code>LINK.HASH</code>.
-     */
-    @Size(max = 1000000000)
-    @Nullable
-    public String getHash() {
-        return this.hash;
-    }
-
-    /**
-     * Setter for <code>LINK.HASH</code>.
-     */
-    public void setHash(@Nullable String hash) {
-        this.hash = hash;
     }
 
     /**
@@ -140,6 +124,21 @@ public class Link implements Serializable {
         this.lastUpdate = lastUpdate;
     }
 
+    /**
+     * Getter for <code>LINK.SITE_TYPE_ID</code>.
+     */
+    @Nullable
+    public Long getSiteTypeId() {
+        return this.siteTypeId;
+    }
+
+    /**
+     * Setter for <code>LINK.SITE_TYPE_ID</code>.
+     */
+    public void setSiteTypeId(@Nullable Long siteTypeId) {
+        this.siteTypeId = siteTypeId;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -161,12 +160,6 @@ public class Link implements Serializable {
         }
         else if (!this.uri.equals(other.uri))
             return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
         if (this.createdAt == null) {
             if (other.createdAt != null)
                 return false;
@@ -179,6 +172,12 @@ public class Link implements Serializable {
         }
         else if (!this.lastUpdate.equals(other.lastUpdate))
             return false;
+        if (this.siteTypeId == null) {
+            if (other.siteTypeId != null)
+                return false;
+        }
+        else if (!this.siteTypeId.equals(other.siteTypeId))
+            return false;
         return true;
     }
 
@@ -188,9 +187,9 @@ public class Link implements Serializable {
         int result = 1;
         result = prime * result + ((this.linkId == null) ? 0 : this.linkId.hashCode());
         result = prime * result + ((this.uri == null) ? 0 : this.uri.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
         result = prime * result + ((this.createdAt == null) ? 0 : this.createdAt.hashCode());
         result = prime * result + ((this.lastUpdate == null) ? 0 : this.lastUpdate.hashCode());
+        result = prime * result + ((this.siteTypeId == null) ? 0 : this.siteTypeId.hashCode());
         return result;
     }
 
@@ -200,9 +199,9 @@ public class Link implements Serializable {
 
         sb.append(linkId);
         sb.append(", ").append(uri);
-        sb.append(", ").append(hash);
         sb.append(", ").append(createdAt);
         sb.append(", ").append(lastUpdate);
+        sb.append(", ").append(siteTypeId);
 
         sb.append(")");
         return sb.toString();

@@ -12,7 +12,7 @@ public interface LinkRepository {
 
     List<LinkDTO> findAllByChatId(Long tgChatId);
 
-    Long findUrl(URI uri);
+    Long findLinkIdByUrl(URI uri);
 
     @Transactional List<LinkDTO> findAll();
 

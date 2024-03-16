@@ -23,6 +23,9 @@ public class LinkUpdaterScheduler {
 
     @Scheduled(fixedDelayString = "#{@schedulerInterval}")
     public void update() {
+        if(!applicationConfig.scheduler().enable()){
+            return;
+        }
         try {
 
             List<LinkUpdateRequest> response = linkUpdaterService.update();

@@ -8,6 +8,8 @@ public final class Utils {
     public static final String GITHUB_BASE_URL = "github-base-url";
     public static final String SOF_BASE_URL = "sof-base-url";
     public static final String BOT_BASE_URL = "bot-base-url";
+    public static final int GITHUB_SITE_TYPE_ID = 1;
+    public static final int STACKOVERFLOW_SITE_TYPE_ID = 2;
 
     private Utils() {
     }
