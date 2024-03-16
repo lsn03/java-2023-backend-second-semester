@@ -5,6 +5,8 @@ import edu.java.scrapper.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 public class JooqChatRepositoryTest extends IntegrationTest {
@@ -12,6 +14,8 @@ public class JooqChatRepositoryTest extends IntegrationTest {
     private JooqChatRepository jooqChatRepository;
 
     @Test
+    @Transactional
+    @Rollback
     public void test1(){
         System.out.println(POSTGRES.getJdbcUrl());
         jooqChatRepository.add(1l);

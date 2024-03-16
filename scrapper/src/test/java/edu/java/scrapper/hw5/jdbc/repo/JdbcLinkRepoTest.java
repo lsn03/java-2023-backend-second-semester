@@ -30,6 +30,7 @@ public class JdbcLinkRepoTest extends IntegrationTest {
     public void addFirstTime() {
 
         linkDTO = new LinkDTO();
+        linkDTO.setSiteTypeId(0);
         linkDTO.setUri(URI.create("http://example.com"));
         jdbcLinkRepository.add(linkDTO);
 
