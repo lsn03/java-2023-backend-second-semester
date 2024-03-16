@@ -3,7 +3,6 @@ package edu.java.domain.repository;
 import edu.java.domain.model.LinkDTO;
 import java.net.URI;
 import java.util.List;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface LinkRepository {
     LinkDTO add(LinkDTO linkDTO);
@@ -12,9 +11,11 @@ public interface LinkRepository {
 
     List<LinkDTO> findAllByChatId(Long tgChatId);
 
+    List<LinkDTO> findAllByLinkId(Long linkId);
+
     Long findLinkIdByUrl(URI uri);
 
-    @Transactional List<LinkDTO> findAll();
+    List<LinkDTO> findAll();
 
     void updateLink(LinkDTO elem);
 

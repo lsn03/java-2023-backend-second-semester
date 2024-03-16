@@ -1,4 +1,4 @@
-package edu.java.service.process;
+package edu.java.service.database;
 
 import edu.java.domain.model.GitHubCommitDTO;
 import java.net.URI;

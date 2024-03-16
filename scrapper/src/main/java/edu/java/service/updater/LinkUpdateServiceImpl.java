@@ -2,23 +2,18 @@ package edu.java.service.updater;
 
 import edu.java.domain.model.LinkDTO;
 import edu.java.domain.repository.LinkRepository;
-import edu.java.model.GitHubPullRequestUriDTO;
-import edu.java.model.StackOverFlowQuestionUriDTO;
 import edu.java.model.UriDTO;
-import edu.java.model.github.PullRequestModelResponse;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
-import edu.java.model.stack_over_flow.StackOverFlowModel;
 import edu.java.service.client.GitHubClient;
 import edu.java.service.client.StackOverFlowClient;
 import edu.java.service.handler.Handler;
+import edu.java.service.processor.Processor;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +28,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     private final GitHubClient gitHubClient;
     private final StackOverFlowClient stackOverFlowClient;
     private final List<Handler> handlers;
+    private final List<Processor> processors;
 
     static {
         try {
@@ -45,102 +41,50 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     @Override
     public List<LinkUpdateRequest> update() {
         List<LinkDTO> list = linkRepository.findAllOldLinks(TIME_TO_OLD_LINK_IN_SECONDS);
-        List<LinkDTO> listForUpdate = new ArrayList<>();
+
+        List<LinkUpdateRequest> answer = new ArrayList<>();
+
         for (LinkDTO elem : list) {
+            Map<String, LinkUpdateRequest> response = null;
 
             URI uri = elem.getUri();
             for (var handler : handlers) {
                 if (handler.canHandle(uri)) {
                     var uriDto = handler.handle(uri);
-                    processDto(uriDto);
+                    response = processDto(elem, uriDto);
+                    if (response != null) {
+                        break;
+                    }
+                }
+            }
+            if (response != null) {
+                var tgChatIds =
+                    linkRepository.findAllByLinkId(elem.getLinkId())
+                        .stream()
+                        .map(
+                            LinkDTO::getTgChatId
+                        ).toList();
+                List<LinkUpdateRequest> collection = (List<LinkUpdateRequest>) response.values();
+                for (var collectionElem : collection) {
+                    collectionElem.setTgChatIds(tgChatIds);
                 }
 
+                answer.add((LinkUpdateRequest) collection);
             }
 
         }
-        if (!listForUpdate.isEmpty()) {
-            updateDatabase(listForUpdate);
-            return convertLinkDtoToLinkUpdateRequest(listForUpdate);
-        }
 
-        return List.of();
-    }
-
-    private String processDto(UriDTO uriDto) {
-        String answer = "";
-        if (uriDto instanceof GitHubPullRequestUriDTO) {
-            answer = processGitHubUriDTO((GitHubPullRequestUriDTO) uriDto);
-        } else if (uriDto instanceof StackOverFlowQuestionUriDTO) {
-            answer = processStackOverFlowUriDTO((StackOverFlowQuestionUriDTO) uriDto);
-        }
         return answer;
     }
 
-    private String processStackOverFlowUriDTO(StackOverFlowQuestionUriDTO uriDto) {
-        String string;
-
-        StackOverFlowModel response =
-            stackOverFlowClient.fetchQuestionData(uriDto.getQuestionId());
-        string = response.toString();
-        return getHashOfResponse(string);
-
-    }
-
-    private String processGitHubUriDTO(GitHubPullRequestUriDTO uriDto) {
-        String string;
-
-        PullRequestModelResponse response =
-            gitHubClient.fetchPullRequest(uriDto.getOwner(), uriDto.getRepo(),
-                uriDto.getPullNumber()
-            );
-        string = response.toString();
-        return getHashOfResponse(string);
-
-    }
-
-    private List<LinkUpdateRequest> convertLinkDtoToLinkUpdateRequest(List<LinkDTO> linkDTOList) {
-
-        Map<Long, Map<URI, List<LinkDTO>>> groupedByLinkIdAndUri = linkDTOList.stream()
-            .collect(Collectors.groupingBy(
-                LinkDTO::getLinkId,
-                Collectors.groupingBy(LinkDTO::getUri)
-            ));
-
-        List<LinkUpdateRequest> linkUpdateRequests = new ArrayList<>();
-
-        groupedByLinkIdAndUri.forEach((linkId, uriMap) -> uriMap.forEach((uri, dtos) -> {
-            List<Long> tgChatIds = dtos.stream()
-                .map(LinkDTO::getTgChatId)
-                .distinct()
-                .collect(Collectors.toList());
-
-            linkUpdateRequests.add(new LinkUpdateRequest(linkId, uri.toString(), "", tgChatIds));
-        }));
-
-        return linkUpdateRequests;
-    }
-
-    private void updateDatabase(List<LinkDTO> list) {
-        for (var elem : list) {
-//            linkService.updateLink(elem);
-        }
-    }
-
-    private String getHashOfResponse(String string) {
-        byte[] encodedHash = MESSAGE_DIGEST.digest(
-            string.getBytes(StandardCharsets.UTF_8));
-        return bytesToHex(encodedHash);
-    }
-
-    private static String bytesToHex(byte[] hash) {
-        StringBuilder hexString = new StringBuilder(2 * hash.length);
-        for (byte b : hash) {
-            String hex = Integer.toHexString(MASK & b);
-            if (hex.length() == 1) {
-                hexString.append('0');
+    private Map<String, LinkUpdateRequest> processDto(LinkDTO linkDTO, UriDTO uriDto) {
+        for (var processor : processors) {
+            var response = processor.processUriDTO(linkDTO, uriDto);
+            if (response != null) {
+                return response;
             }
-            hexString.append(hex);
         }
-        return hexString.toString();
+        return null;
     }
+
 }

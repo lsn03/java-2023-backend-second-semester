@@ -1,8 +1,8 @@
-package edu.java.service.process.jooq;
+package edu.java.service.database.jooq;
 
 import edu.java.domain.model.GitHubCommitDTO;
 import edu.java.domain.repository.jooq.JooqGitHubRepository;
-import edu.java.service.process.GitHubService;
+import edu.java.service.database.GitHubService;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

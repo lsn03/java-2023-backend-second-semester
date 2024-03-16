@@ -87,6 +87,11 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
+    public List<LinkDTO> findAllByLinkId(Long linkId) {
+        return null;
+    }
+
+    @Override
     @Transactional
     public List<LinkDTO> findAllByChatId(Long tgChatId) {
         return jdbcLinkChatRepository.findAllByChatId(tgChatId);
@@ -152,8 +157,6 @@ public class JdbcLinkRepository implements LinkRepository {
                 linkDTO.setLinkId(rs.getLong(LINK_ID));
                 linkDTO.setUri(java.net.URI.create(rs.getString(URI)));
                 linkDTO.setCreatedAt(localDateTimeCreatedAt.atOffset(ZoneOffset.UTC));
-
-
 
                 return linkDTO;
             }

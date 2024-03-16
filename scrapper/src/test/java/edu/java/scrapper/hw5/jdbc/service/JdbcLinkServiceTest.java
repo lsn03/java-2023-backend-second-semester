@@ -7,7 +7,7 @@ import edu.java.exception.exception.ListEmptyException;
 import edu.java.exception.exception.RepeatTrackException;
 import edu.java.exception.exception.UserDoesntExistException;
 import edu.java.scrapper.IntegrationTest;
-import edu.java.service.process.jdbc.JdbcLinkService;
+import edu.java.service.database.jdbc.JdbcLinkService;
 import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

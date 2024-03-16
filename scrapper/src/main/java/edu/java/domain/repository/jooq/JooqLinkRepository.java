@@ -67,6 +67,12 @@ public class JooqLinkRepository implements LinkRepository {
 
     @Override
     @Transactional
+    public List<LinkDTO> findAllByLinkId(Long linkId) {
+        return jooqLinkChatRepository.findAllByLinkId(linkId);
+    }
+
+    @Override
+    @Transactional
     public Long findLinkIdByUrl(URI uri) {
         return dslContext.select(Link.LINK.LINK_ID)
             .from(Link.LINK)

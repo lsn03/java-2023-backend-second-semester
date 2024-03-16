@@ -1,4 +1,4 @@
-package edu.java.service.process.jooq;
+package edu.java.service.database.jooq;
 
 import edu.java.domain.model.LinkDTO;
 import edu.java.domain.repository.jooq.JooqLinkChatRepository;
@@ -6,8 +6,8 @@ import edu.java.domain.repository.jooq.JooqLinkRepository;
 import edu.java.exception.exception.IncorrectParametersException;
 import edu.java.exception.exception.ListEmptyException;
 import edu.java.exception.exception.RepeatTrackException;
+import edu.java.service.database.LinkService;
 import edu.java.service.handler.Handler;
-import edu.java.service.process.LinkService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;

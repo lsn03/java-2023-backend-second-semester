@@ -1,8 +1,8 @@
-package edu.java.service.process.jooq;
+package edu.java.service.database.jooq;
 
 import edu.java.domain.model.StackOverFlowAnswerDTO;
 import edu.java.domain.repository.jooq.JooqStackOverFlowRepository;
-import edu.java.service.process.StackOverFlowService;
+import edu.java.service.database.StackOverFlowService;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

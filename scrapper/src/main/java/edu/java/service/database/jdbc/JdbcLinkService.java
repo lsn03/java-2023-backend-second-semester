@@ -1,4 +1,4 @@
-package edu.java.service.process.jdbc;
+package edu.java.service.database.jdbc;
 
 import edu.java.domain.model.LinkDTO;
 import edu.java.domain.repository.jdbc.JdbcLinkChatRepository;
@@ -6,7 +6,7 @@ import edu.java.domain.repository.jdbc.JdbcLinkRepository;
 import edu.java.exception.exception.ListEmptyException;
 import edu.java.exception.exception.RepeatTrackException;
 import edu.java.exception.exception.UserDoesntExistException;
-import edu.java.service.process.LinkService;
+import edu.java.service.database.LinkService;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;

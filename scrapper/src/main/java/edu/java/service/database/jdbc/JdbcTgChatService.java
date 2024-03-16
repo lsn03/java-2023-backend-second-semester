@@ -1,37 +1,36 @@
-package edu.java.service.process.jooq;
+package edu.java.service.database.jdbc;
 
 import edu.java.domain.model.ChatDTO;
-import edu.java.domain.repository.jooq.JooqChatRepository;
+import edu.java.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.exception.exception.UserAlreadyExistException;
-import edu.java.service.process.TgChatService;
+import edu.java.service.database.TgChatService;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
+import lombok.AllArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
-@Primary
-public class JooqTgChatService implements TgChatService {
-    private final JooqChatRepository jooqChatRepository;
+@AllArgsConstructor
+public class JdbcTgChatService implements TgChatService {
+    private final JdbcChatRepository jdbcChatRepository;
 
     @Override
     public void add(Long tgChatId) {
         try {
-            jooqChatRepository.add(tgChatId);
+            jdbcChatRepository.add(tgChatId);
         } catch (DuplicateKeyException e) {
             throw new UserAlreadyExistException(e.getMessage(), e.getCause());
         }
+
     }
 
     @Override
     public void remove(Long tgChatId) {
-        jooqChatRepository.remove(tgChatId);
+        jdbcChatRepository.remove(tgChatId);
     }
 
     @Override
     public List<ChatDTO> findAll() {
-        return jooqChatRepository.findAll();
+        return jdbcChatRepository.findAll();
     }
 }
