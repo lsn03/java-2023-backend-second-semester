@@ -48,33 +48,22 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     public List<LinkUpdateRequest> update() {
         List<LinkDTO> list = linkRepository.findAllOldLinks(TIME_TO_OLD_LINK_IN_SECONDS);
         List<LinkDTO> listForUpdate = new ArrayList<>();
-//        for (LinkDTO elem : list) {
-//
-//            URI uri = elem.getUri();
-//            for (var handler : handlers) {
-//                if (handler.canHandle(uri)) {
-//                    var uriDto = handler.handle(uri);
-//
-//                    String string = processDto(uriDto);
-//                    if (elem.getLastUpdate() == null || elem.getHash() == null) {
-//                        elem.setHash(string);
-//                        elem.setLastUpdate(OffsetDateTime.now());
-//                        updateDatabase(List.of(elem));
-//                    }
-//                    if (!elem.getHash().equals(string)) {
-//                        elem.setLastUpdate(OffsetDateTime.now());
-//                        elem.setHash(string);
-//                        listForUpdate.add(elem);
-//                    }
-//                }
-//
-//            }
-//
-//        }
-//        if (!listForUpdate.isEmpty()) {
-//            updateDatabase(listForUpdate);
-//            return convertLinkDtoToLinkUpdateRequest(listForUpdate);
-//        }
+        for (LinkDTO elem : list) {
+
+            URI uri = elem.getUri();
+            for (var handler : handlers) {
+                if (handler.canHandle(uri)) {
+                    var uriDto = handler.handle(uri);
+                    processDto(uriDto);
+                }
+
+            }
+
+        }
+        if (!listForUpdate.isEmpty()) {
+            updateDatabase(listForUpdate);
+            return convertLinkDtoToLinkUpdateRequest(listForUpdate);
+        }
 
         return List.of();
     }
