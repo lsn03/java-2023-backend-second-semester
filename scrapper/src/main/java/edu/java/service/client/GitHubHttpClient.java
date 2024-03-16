@@ -9,11 +9,11 @@ import java.util.List;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.reactive.function.client.WebClient;
 
-public class GitHubHttpClientService implements GitHubClient {
+public class GitHubHttpClient implements GitHubClient {
     private static final String GITHUB_TOKEN = System.getenv().get("APP_GITHUB_TOKEN");
     private final WebClient webClient;
 
-    public GitHubHttpClientService(String url) {
+    public GitHubHttpClient(String url) {
 
         webClient = WebClient.builder()
             .baseUrl(url)

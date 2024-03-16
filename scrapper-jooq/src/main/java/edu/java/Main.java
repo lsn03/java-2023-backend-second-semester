@@ -1,9 +1,6 @@
 package edu.java;
 
 import org.jooq.codegen.GenerationTool;
-import org.jooq.conf.RenderNameCase;
-import org.jooq.conf.RenderQuotedNames;
-import org.jooq.conf.Settings;
 import org.jooq.meta.jaxb.Configuration;
 import org.jooq.meta.jaxb.Database;
 import org.jooq.meta.jaxb.Generate;
@@ -13,6 +10,10 @@ import org.jooq.meta.jaxb.RegexFlag;
 import org.jooq.meta.jaxb.Target;
 
 public class Main {
+    private Main() {
+
+    }
+
     public static void main(String[] args) throws Exception {
         Database database = new Database()
             .withName("org.jooq.meta.extensions.liquibase.LiquibaseDatabase")
@@ -50,10 +51,6 @@ public class Main {
                     .withGenerate(options)
                     .withTarget(target)
             );
-
-//        Settings settings = new Settings()
-//            .withRenderQuotedNames(RenderQuotedNames.EXPLICIT_DEFAULT_UNQUOTED)
-//            .withRenderNameCase(RenderNameCase.LOWER);
 
         GenerationTool.generate(configuration);
     }

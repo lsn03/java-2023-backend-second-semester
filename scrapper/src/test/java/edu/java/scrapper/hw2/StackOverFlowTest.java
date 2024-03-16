@@ -6,7 +6,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.model.stack_over_flow.dto.AccountDTO;
 import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
 import edu.java.model.stack_over_flow.dto.QuestionHeaderDTOResponse;
-import edu.java.service.client.StackOverFlowHttpClientServiceService;
+import edu.java.service.client.StackOverFlowHttpClient;
 import edu.java.service.client.StackOverFlowClient;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -25,7 +25,7 @@ public class StackOverFlowTest {
     @Test
     public void testHeader(WireMockRuntimeInfo wireMockRuntimeInfo) {
 
-        client = new StackOverFlowHttpClientServiceService(baseUrl + wireMockRuntimeInfo.getHttpPort());
+        client = new StackOverFlowHttpClient(baseUrl + wireMockRuntimeInfo.getHttpPort());
         String url = String.format("/questions/%d?order=desc&sort=activity&site=stackoverflow", questionId);
         AccountDTO owner = new AccountDTO(1, "Maxim");
         boolean isAnswered = false;
@@ -76,7 +76,7 @@ public class StackOverFlowTest {
     @Test
     public void testAnswers(WireMockRuntimeInfo wireMockRuntimeInfo) {
 
-        client = new StackOverFlowHttpClientServiceService(baseUrl + wireMockRuntimeInfo.getHttpPort());
+        client = new StackOverFlowHttpClient(baseUrl + wireMockRuntimeInfo.getHttpPort());
         String url = String.format("/questions/%d/answers?site=stackoverflow", questionId);
         AccountDTO owner = new AccountDTO(1, "Maxim");
         boolean isAccepted = false;

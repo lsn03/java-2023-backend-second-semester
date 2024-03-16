@@ -1,9 +1,10 @@
-package edu.java.service;
+package edu.java.service.scheduler;
 
 import edu.java.configuration.ApplicationConfig;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import edu.java.model.scrapper.dto.response.ApiErrorResponse;
-import edu.java.service.process.LinkUpdaterService;
+import edu.java.service.client.BotHttpClient;
+import edu.java.service.updater.LinkUpdaterService;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class LinkUpdaterScheduler {
 
     @Scheduled(fixedDelayString = "#{@schedulerInterval}")
     public void update() {
-        if(!applicationConfig.scheduler().enable()){
+        if (!applicationConfig.scheduler().enable()) {
             return;
         }
         try {

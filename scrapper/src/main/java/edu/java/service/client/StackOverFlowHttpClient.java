@@ -7,14 +7,13 @@ import edu.java.model.stack_over_flow.wrapper.StackOverFlowAnswerResponseWrapper
 import edu.java.model.stack_over_flow.wrapper.StackOverFlowHeaderResponseWrapper;
 import java.util.List;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
-public class StackOverFlowHttpClientServiceService implements StackOverFlowClient {
+public class StackOverFlowHttpClient implements StackOverFlowClient {
     private static final String STACK_OVER_FLOW_TOKEN = System.getenv().get("APP_SOF_ACCESS_TOKEN");
 
     private final WebClient webClient;
 
-    public StackOverFlowHttpClientServiceService(String url) {
+    public StackOverFlowHttpClient(String url) {
 
         webClient = WebClient.builder()
             .baseUrl(url)
@@ -28,7 +27,7 @@ public class StackOverFlowHttpClientServiceService implements StackOverFlowClien
         var ans = fetchAnswers(questionId);
         var header = fetchHeader(questionId);
 
-        return new StackOverFlowModel(header,ans);
+        return new StackOverFlowModel(header, ans);
 
     }
 

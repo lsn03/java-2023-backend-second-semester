@@ -1,4 +1,4 @@
-package edu.java.service;
+package edu.java.service.client;
 
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import edu.java.model.scrapper.dto.response.ApiErrorResponse;

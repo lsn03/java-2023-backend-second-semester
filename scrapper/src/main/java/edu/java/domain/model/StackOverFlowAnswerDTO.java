@@ -1,10 +1,10 @@
 package edu.java.domain.model;
 
 import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
+import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.OffsetDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +18,7 @@ public class StackOverFlowAnswerDTO {
     private OffsetDateTime lastActivityDate;
     private OffsetDateTime lastEditDate;
 
-    public static StackOverFlowAnswerDTO create(QuestionAnswerDTOResponse questionAnswerDTOResponse){
+    public static StackOverFlowAnswerDTO create(QuestionAnswerDTOResponse questionAnswerDTOResponse) {
         StackOverFlowAnswerDTO stackOverFlowAnswerDTO = new StackOverFlowAnswerDTO();
 
         stackOverFlowAnswerDTO.setAnswerId((long) questionAnswerDTOResponse.getAnswerId());

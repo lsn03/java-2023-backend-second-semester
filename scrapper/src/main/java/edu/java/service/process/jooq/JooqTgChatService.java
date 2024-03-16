@@ -4,12 +4,11 @@ import edu.java.domain.model.ChatDTO;
 import edu.java.domain.repository.jooq.JooqChatRepository;
 import edu.java.exception.exception.UserAlreadyExistException;
 import edu.java.service.process.TgChatService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service

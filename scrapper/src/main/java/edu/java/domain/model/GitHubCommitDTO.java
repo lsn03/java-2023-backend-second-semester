@@ -1,10 +1,11 @@
 package edu.java.domain.model;
 
 import edu.java.model.github.dto.PullCommitDTOResponse;
+import java.time.OffsetDateTime;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.OffsetDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,5 +25,24 @@ public class GitHubCommitDTO {
         commitDTO.setCreatedAt(pullCommitDTOResponse.getCommit().getCommitter().date());
         commitDTO.setMessage(pullCommitDTOResponse.getCommit().getMessage());
         return commitDTO;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        GitHubCommitDTO commitDTO = (GitHubCommitDTO) o;
+        return Objects.equals(linkId, commitDTO.linkId) && Objects.equals(sha, commitDTO.sha)
+            && Objects.equals(author, commitDTO.author) && Objects.equals(createdAt, commitDTO.createdAt)
+            && Objects.equals(message, commitDTO.message);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(linkId, sha, author, createdAt, message);
     }
 }

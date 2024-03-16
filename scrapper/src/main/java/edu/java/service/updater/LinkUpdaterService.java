@@ -1,4 +1,4 @@
-package edu.java.service.process;
+package edu.java.service.updater;
 
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import java.security.NoSuchAlgorithmException;

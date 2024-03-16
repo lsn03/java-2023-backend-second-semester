@@ -3,12 +3,12 @@ package edu.java.domain.repository.jooq;
 import edu.java.domain.jooq.tables.Chat;
 import edu.java.domain.model.ChatDTO;
 import edu.java.domain.repository.ChatRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -37,7 +37,7 @@ public class JooqChatRepository implements ChatRepository {
     @Transactional
     public void remove(Long tgChatId) {
         dslContext.update(Chat.CHAT)
-            .set(Chat.CHAT.ACTIVE,false)
+            .set(Chat.CHAT.ACTIVE, false)
             .where(Chat.CHAT.CHAT_ID.eq(tgChatId))
             .execute();
     }

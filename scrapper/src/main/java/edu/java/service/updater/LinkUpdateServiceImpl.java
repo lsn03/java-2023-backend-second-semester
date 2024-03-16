@@ -1,4 +1,4 @@
-package edu.java.service;
+package edu.java.service.updater;
 
 import edu.java.domain.model.LinkDTO;
 import edu.java.domain.repository.LinkRepository;
@@ -11,12 +11,10 @@ import edu.java.model.stack_over_flow.StackOverFlowModel;
 import edu.java.service.client.GitHubClient;
 import edu.java.service.client.StackOverFlowClient;
 import edu.java.service.handler.Handler;
-import edu.java.service.process.LinkUpdaterService;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -124,7 +122,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     private void updateDatabase(List<LinkDTO> list) {
         for (var elem : list) {
-            linkRepository.updateLink(elem);
+//            linkService.updateLink(elem);
         }
     }
 

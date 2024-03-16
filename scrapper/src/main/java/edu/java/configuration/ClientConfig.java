@@ -1,10 +1,10 @@
 package edu.java.configuration;
 
-import edu.java.service.BotHttpClient;
-import edu.java.service.client.GitHubHttpClientService;
-import edu.java.service.client.StackOverFlowHttpClientServiceService;
+import edu.java.service.client.BotHttpClient;
 import edu.java.service.client.GitHubClient;
+import edu.java.service.client.GitHubHttpClient;
 import edu.java.service.client.StackOverFlowClient;
+import edu.java.service.client.StackOverFlowHttpClient;
 import edu.java.util.Utils;
 import lombok.AllArgsConstructor;
 import org.jooq.conf.RenderQuotedNames;
@@ -20,12 +20,12 @@ public class ClientConfig {
 
     @Bean
     public GitHubClient gitHubClient() {
-        return new GitHubHttpClientService(properties.getValue(Utils.GITHUB_BASE_URL));
+        return new GitHubHttpClient(properties.getValue(Utils.GITHUB_BASE_URL));
     }
 
     @Bean
     public StackOverFlowClient stackOverFlowClient() {
-        return new StackOverFlowHttpClientServiceService(properties.getValue(Utils.SOF_BASE_URL));
+        return new StackOverFlowHttpClient(properties.getValue(Utils.SOF_BASE_URL));
     }
 
     @Bean

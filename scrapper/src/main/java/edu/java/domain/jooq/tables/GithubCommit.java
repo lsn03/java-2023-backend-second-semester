@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Function6;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
@@ -67,7 +68,7 @@ public class GithubCommit extends TableImpl<GithubCommitRecord> {
     /**
      * The column <code>GITHUB_COMMIT.COMMIT_ID</code>.
      */
-    public final TableField<GithubCommitRecord, Long> COMMIT_ID = createField(DSL.name("COMMIT_ID"), SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<GithubCommitRecord, Long> COMMIT_ID = createField(DSL.name("COMMIT_ID"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>GITHUB_COMMIT.LINK_ID</code>.
@@ -131,6 +132,12 @@ public class GithubCommit extends TableImpl<GithubCommitRecord> {
     @Nullable
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
+    }
+
+    @Override
+    @NotNull
+    public Identity<GithubCommitRecord, Long> getIdentity() {
+        return (Identity<GithubCommitRecord, Long>) super.getIdentity();
     }
 
     @Override

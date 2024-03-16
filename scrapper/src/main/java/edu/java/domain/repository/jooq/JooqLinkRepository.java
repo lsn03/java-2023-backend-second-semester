@@ -5,18 +5,18 @@ import edu.java.domain.jooq.tables.LinkChat;
 import edu.java.domain.jooq.tables.records.LinkRecord;
 import edu.java.domain.model.LinkDTO;
 import edu.java.domain.repository.LinkRepository;
-import lombok.RequiredArgsConstructor;
-import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
+import lombok.RequiredArgsConstructor;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Repository
@@ -24,10 +24,11 @@ import java.util.Objects;
 public class JooqLinkRepository implements LinkRepository {
     private final DSLContext dslContext;
     private final JooqLinkChatRepository jooqLinkChatRepository;
+
     @Override
     @Transactional
     public LinkDTO add(LinkDTO linkDTO) {
-        LinkRecord record = dslContext.insertInto(
+        LinkRecord linkRecord = dslContext.insertInto(
                 Link.LINK,
                 Link.LINK.URI,
                 Link.LINK.CREATED_AT,
@@ -36,8 +37,8 @@ public class JooqLinkRepository implements LinkRepository {
             .values(linkDTO.getUri().toString(), LocalDateTime.now(), Long.valueOf(linkDTO.getSiteTypeId()))
             .returning(Link.LINK.LINK_ID)
             .fetchOne();
-        Objects.requireNonNull(record);
-        linkDTO.setLinkId(record.getValue(Link.LINK.LINK_ID));
+        Objects.requireNonNull(linkRecord);
+        linkDTO.setLinkId(linkRecord.getValue(Link.LINK.LINK_ID));
         return linkDTO;
 
     }
@@ -108,22 +109,22 @@ public class JooqLinkRepository implements LinkRepository {
                     "link.last_update IS NULL OR link.last_update < NOW() - INTERVAL '{0} seconds'",
                     timeInSeconds
                 )
-            ).fetch(record -> {
+            ).fetch(recordLinkDTO -> {
                 LinkDTO linkDTO = new LinkDTO();
-                linkDTO.setSiteTypeId(record.get(Link.LINK.SITE_TYPE_ID).intValue());
-                linkDTO.setLinkId(record.get(Link.LINK.LINK_ID));
-                linkDTO.setUri(URI.create(record.get(Link.LINK.URI)));
-                linkDTO.setCreatedAt(record.get(Link.LINK.CREATED_AT).atZone(ZoneId.systemDefault())
+                linkDTO.setSiteTypeId(recordLinkDTO.get(Link.LINK.SITE_TYPE_ID).intValue());
+                linkDTO.setLinkId(recordLinkDTO.get(Link.LINK.LINK_ID));
+                linkDTO.setUri(URI.create(recordLinkDTO.get(Link.LINK.URI)));
+                linkDTO.setCreatedAt(recordLinkDTO.get(Link.LINK.CREATED_AT).atZone(ZoneId.systemDefault())
                     .toOffsetDateTime());
 
-                LocalDateTime lastUpdate = record.get(Link.LINK.LAST_UPDATE);
+                LocalDateTime lastUpdate = recordLinkDTO.get(Link.LINK.LAST_UPDATE);
                 if (lastUpdate != null) {
                     linkDTO.setLastUpdate(lastUpdate.atZone(ZoneId.systemDefault()).toOffsetDateTime());
                 } else {
                     linkDTO.setLastUpdate(OffsetDateTime.now());
                 }
 
-                Long chatId = record.get(LinkChat.LINK_CHAT.CHAT_ID);
+                Long chatId = recordLinkDTO.get(LinkChat.LINK_CHAT.CHAT_ID);
 
                 linkDTO.setTgChatId(chatId);
 

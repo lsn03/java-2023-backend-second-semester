@@ -40,15 +40,14 @@ public class GithubCommitRecord extends UpdatableRecordImpl<GithubCommitRecord> 
     /**
      * Setter for <code>GITHUB_COMMIT.COMMIT_ID</code>.
      */
-    public void setCommitId(@NotNull Long value) {
+    public void setCommitId(@Nullable Long value) {
         set(0, value);
     }
 
     /**
      * Getter for <code>GITHUB_COMMIT.COMMIT_ID</code>.
      */
-    @jakarta.validation.constraints.NotNull
-    @NotNull
+    @Nullable
     public Long getCommitId() {
         return (Long) get(0);
     }
@@ -194,7 +193,7 @@ public class GithubCommitRecord extends UpdatableRecordImpl<GithubCommitRecord> 
     }
 
     @Override
-    @NotNull
+    @Nullable
     public Long component1() {
         return getCommitId();
     }
@@ -230,7 +229,7 @@ public class GithubCommitRecord extends UpdatableRecordImpl<GithubCommitRecord> 
     }
 
     @Override
-    @NotNull
+    @Nullable
     public Long value1() {
         return getCommitId();
     }
@@ -267,7 +266,7 @@ public class GithubCommitRecord extends UpdatableRecordImpl<GithubCommitRecord> 
 
     @Override
     @NotNull
-    public GithubCommitRecord value1(@NotNull Long value) {
+    public GithubCommitRecord value1(@Nullable Long value) {
         setCommitId(value);
         return this;
     }
@@ -309,7 +308,7 @@ public class GithubCommitRecord extends UpdatableRecordImpl<GithubCommitRecord> 
 
     @Override
     @NotNull
-    public GithubCommitRecord values(@NotNull Long value1, @Nullable Long value2, @Nullable String value3, @Nullable String value4, @Nullable LocalDateTime value5, @Nullable String value6) {
+    public GithubCommitRecord values(@Nullable Long value1, @Nullable Long value2, @Nullable String value3, @Nullable String value4, @Nullable LocalDateTime value5, @Nullable String value6) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -334,7 +333,7 @@ public class GithubCommitRecord extends UpdatableRecordImpl<GithubCommitRecord> 
      * Create a detached, initialised GithubCommitRecord
      */
     @ConstructorProperties({ "commitId", "linkId", "sha", "author", "createdAt", "message" })
-    public GithubCommitRecord(@NotNull Long commitId, @Nullable Long linkId, @Nullable String sha, @Nullable String author, @Nullable LocalDateTime createdAt, @Nullable String message) {
+    public GithubCommitRecord(@Nullable Long commitId, @Nullable Long linkId, @Nullable String sha, @Nullable String author, @Nullable LocalDateTime createdAt, @Nullable String message) {
         super(GithubCommit.GITHUB_COMMIT);
 
         setCommitId(commitId);

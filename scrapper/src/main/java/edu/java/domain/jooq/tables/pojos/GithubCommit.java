@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 
 import javax.annotation.processing.Generated;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -51,7 +50,7 @@ public class GithubCommit implements Serializable {
 
     @ConstructorProperties({ "commitId", "linkId", "sha", "author", "createdAt", "message" })
     public GithubCommit(
-        @NotNull Long commitId,
+        @Nullable Long commitId,
         @Nullable Long linkId,
         @Nullable String sha,
         @Nullable String author,
@@ -69,8 +68,7 @@ public class GithubCommit implements Serializable {
     /**
      * Getter for <code>GITHUB_COMMIT.COMMIT_ID</code>.
      */
-    @jakarta.validation.constraints.NotNull
-    @NotNull
+    @Nullable
     public Long getCommitId() {
         return this.commitId;
     }
@@ -78,7 +76,7 @@ public class GithubCommit implements Serializable {
     /**
      * Setter for <code>GITHUB_COMMIT.COMMIT_ID</code>.
      */
-    public void setCommitId(@NotNull Long commitId) {
+    public void setCommitId(@Nullable Long commitId) {
         this.commitId = commitId;
     }
 
