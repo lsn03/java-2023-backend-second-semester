@@ -19,12 +19,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function5;
+import org.jooq.Function4;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row5;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -85,11 +85,6 @@ public class Link extends TableImpl<LinkRecord> {
      */
     public final TableField<LinkRecord, LocalDateTime> LAST_UPDATE = createField(DSL.name("LAST_UPDATE"), SQLDataType.LOCALDATETIME(6), this, "");
 
-    /**
-     * The column <code>LINK.SITE_TYPE_ID</code>.
-     */
-    public final TableField<LinkRecord, Long> SITE_TYPE_ID = createField(DSL.name("SITE_TYPE_ID"), SQLDataType.BIGINT, this, "");
-
     private Link(Name alias, Table<LinkRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -149,24 +144,6 @@ public class Link extends TableImpl<LinkRecord> {
 
     @Override
     @NotNull
-    public List<ForeignKey<LinkRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.LINK_SITE_TYPE_SITE_TYPE_ID_FK);
-    }
-
-    private transient SiteType _siteType;
-
-    /**
-     * Get the implicit join path to the <code>PUBLIC.SITE_TYPE</code> table.
-     */
-    public SiteType siteType() {
-        if (_siteType == null)
-            _siteType = new SiteType(this, Keys.LINK_SITE_TYPE_SITE_TYPE_ID_FK);
-
-        return _siteType;
-    }
-
-    @Override
-    @NotNull
     public Link as(String alias) {
         return new Link(DSL.name(alias), this);
     }
@@ -211,19 +188,19 @@ public class Link extends TableImpl<LinkRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @NotNull
-    public Row5<Long, String, LocalDateTime, LocalDateTime, Long> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row4<Long, String, LocalDateTime, LocalDateTime> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function5<? super Long, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super Long, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function4<? super Long, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -231,7 +208,7 @@ public class Link extends TableImpl<LinkRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super Long, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super Long, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super Long, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

@@ -27,7 +27,7 @@ public class JooqLinkService implements LinkService {
 
         for (var handler : handlers) {
             if (handler.canHandle(linkDTO.getUri())) {
-                linkDTO.setSiteTypeId(handler.getId());
+
                 Long linkId = jooqLinkRepository.findLinkIdByUrl(linkDTO.getUri());
                 if (linkId == null) {
                     jooqLinkRepository.add(linkDTO);

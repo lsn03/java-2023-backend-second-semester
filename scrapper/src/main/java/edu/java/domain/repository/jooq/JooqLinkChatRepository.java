@@ -46,7 +46,7 @@ public class JooqLinkChatRepository implements LinkChatRepository {
     @Override
     @Transactional
     public List<LinkDTO> findAllByChatId(Long tgChatId) {
-        return dslContext.select(Link.LINK.LINK_ID, Link.LINK.URI, Link.LINK.SITE_TYPE_ID, LinkChat.LINK_CHAT.CHAT_ID)
+        return dslContext.select(Link.LINK.LINK_ID, Link.LINK.URI, LinkChat.LINK_CHAT.CHAT_ID)
             .from(Link.LINK)
             .innerJoin(LinkChat.LINK_CHAT).on(LinkChat.LINK_CHAT.LINK_ID.eq(Link.LINK.LINK_ID))
             .where(LinkChat.LINK_CHAT.CHAT_ID.eq(tgChatId))
@@ -55,7 +55,7 @@ public class JooqLinkChatRepository implements LinkChatRepository {
                 linkDTO.setUri(URI.create(recordLinkDTO.getValue(Link.LINK.URI)));
                 linkDTO.setTgChatId((recordLinkDTO.getValue(LinkChat.LINK_CHAT.CHAT_ID)));
                 linkDTO.setLinkId(recordLinkDTO.getValue(Link.LINK.LINK_ID));
-                linkDTO.setSiteTypeId(recordLinkDTO.getValue(Link.LINK.SITE_TYPE_ID).intValue());
+
                 return linkDTO;
             });
     }
@@ -63,7 +63,7 @@ public class JooqLinkChatRepository implements LinkChatRepository {
     @Override
     @Transactional
     public List<LinkDTO> findAllByLinkId(Long linkId) {
-        return dslContext.select(Link.LINK.LINK_ID, Link.LINK.URI, Link.LINK.SITE_TYPE_ID, LinkChat.LINK_CHAT.CHAT_ID)
+        return dslContext.select(Link.LINK.LINK_ID, Link.LINK.URI, LinkChat.LINK_CHAT.CHAT_ID)
             .from(Link.LINK)
             .innerJoin(LinkChat.LINK_CHAT).on(LinkChat.LINK_CHAT.LINK_ID.eq(Link.LINK.LINK_ID))
             .where(LinkChat.LINK_CHAT.LINK_ID.eq(linkId))
@@ -71,7 +71,7 @@ public class JooqLinkChatRepository implements LinkChatRepository {
                 LinkDTO linkDTO = new LinkDTO();
                 linkDTO.setUri(URI.create(recordLinkDTO.getValue(Link.LINK.URI)));
                 linkDTO.setTgChatId((recordLinkDTO.getValue(LinkChat.LINK_CHAT.CHAT_ID)));
-                linkDTO.setSiteTypeId(recordLinkDTO.getValue(Link.LINK.SITE_TYPE_ID).intValue());
+
                 linkDTO.setLinkId(linkId);
                 return linkDTO;
             });

@@ -32,10 +32,10 @@ public class JooqLinkRepository implements LinkRepository {
         LinkRecord linkRecord = dslContext.insertInto(
                 Link.LINK,
                 Link.LINK.URI,
-                Link.LINK.CREATED_AT,
-                Link.LINK.SITE_TYPE_ID
+                Link.LINK.CREATED_AT
+
             )
-            .values(linkDTO.getUri().toString(), LocalDateTime.now(), Long.valueOf(linkDTO.getSiteTypeId()))
+            .values(linkDTO.getUri().toString(), LocalDateTime.now())
             .returning(Link.LINK.LINK_ID)
             .fetchOne();
         Objects.requireNonNull(linkRecord);
@@ -106,10 +106,9 @@ public class JooqLinkRepository implements LinkRepository {
                 Link.LINK.LINK_ID,
                 Link.LINK.URI,
                 Link.LINK.CREATED_AT,
-                Link.LINK.LAST_UPDATE,
-                Link.LINK.SITE_TYPE_ID
+                Link.LINK.LAST_UPDATE
 
-                ).from(Link.LINK)
+            ).from(Link.LINK)
             .leftJoin(LinkChat.LINK_CHAT)
             .on(Link.LINK.LINK_ID.eq(LinkChat.LINK_CHAT.LINK_ID))
             .where(DSL.condition(
@@ -118,7 +117,7 @@ public class JooqLinkRepository implements LinkRepository {
                 )
             ).fetch(recordLinkDTO -> {
                 LinkDTO linkDTO = new LinkDTO();
-                linkDTO.setSiteTypeId(recordLinkDTO.get(Link.LINK.SITE_TYPE_ID).intValue());
+
                 linkDTO.setLinkId(recordLinkDTO.get(Link.LINK.LINK_ID));
                 linkDTO.setUri(URI.create(recordLinkDTO.get(Link.LINK.URI)));
                 linkDTO.setCreatedAt(recordLinkDTO.get(Link.LINK.CREATED_AT).atOffset(ZoneOffset.UTC));

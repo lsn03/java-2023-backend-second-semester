@@ -55,14 +55,15 @@ public class GithubCommitRecord extends UpdatableRecordImpl<GithubCommitRecord> 
     /**
      * Setter for <code>GITHUB_COMMIT.LINK_ID</code>.
      */
-    public void setLinkId(@Nullable Long value) {
+    public void setLinkId(@NotNull Long value) {
         set(1, value);
     }
 
     /**
      * Getter for <code>GITHUB_COMMIT.LINK_ID</code>.
      */
-    @Nullable
+    @jakarta.validation.constraints.NotNull
+    @NotNull
     public Long getLinkId() {
         return (Long) get(1);
     }
@@ -70,15 +71,16 @@ public class GithubCommitRecord extends UpdatableRecordImpl<GithubCommitRecord> 
     /**
      * Setter for <code>GITHUB_COMMIT.SHA</code>.
      */
-    public void setSha(@Nullable String value) {
+    public void setSha(@NotNull String value) {
         set(2, value);
     }
 
     /**
      * Getter for <code>GITHUB_COMMIT.SHA</code>.
      */
+    @jakarta.validation.constraints.NotNull
     @Size(max = 1000000000)
-    @Nullable
+    @NotNull
     public String getSha() {
         return (String) get(2);
     }
@@ -199,13 +201,13 @@ public class GithubCommitRecord extends UpdatableRecordImpl<GithubCommitRecord> 
     }
 
     @Override
-    @Nullable
+    @NotNull
     public Long component2() {
         return getLinkId();
     }
 
     @Override
-    @Nullable
+    @NotNull
     public String component3() {
         return getSha();
     }
@@ -235,13 +237,13 @@ public class GithubCommitRecord extends UpdatableRecordImpl<GithubCommitRecord> 
     }
 
     @Override
-    @Nullable
+    @NotNull
     public Long value2() {
         return getLinkId();
     }
 
     @Override
-    @Nullable
+    @NotNull
     public String value3() {
         return getSha();
     }
@@ -273,14 +275,14 @@ public class GithubCommitRecord extends UpdatableRecordImpl<GithubCommitRecord> 
 
     @Override
     @NotNull
-    public GithubCommitRecord value2(@Nullable Long value) {
+    public GithubCommitRecord value2(@NotNull Long value) {
         setLinkId(value);
         return this;
     }
 
     @Override
     @NotNull
-    public GithubCommitRecord value3(@Nullable String value) {
+    public GithubCommitRecord value3(@NotNull String value) {
         setSha(value);
         return this;
     }
@@ -308,7 +310,7 @@ public class GithubCommitRecord extends UpdatableRecordImpl<GithubCommitRecord> 
 
     @Override
     @NotNull
-    public GithubCommitRecord values(@Nullable Long value1, @Nullable Long value2, @Nullable String value3, @Nullable String value4, @Nullable LocalDateTime value5, @Nullable String value6) {
+    public GithubCommitRecord values(@Nullable Long value1, @NotNull Long value2, @NotNull String value3, @Nullable String value4, @Nullable LocalDateTime value5, @Nullable String value6) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -333,7 +335,7 @@ public class GithubCommitRecord extends UpdatableRecordImpl<GithubCommitRecord> 
      * Create a detached, initialised GithubCommitRecord
      */
     @ConstructorProperties({ "commitId", "linkId", "sha", "author", "createdAt", "message" })
-    public GithubCommitRecord(@Nullable Long commitId, @Nullable Long linkId, @Nullable String sha, @Nullable String author, @Nullable LocalDateTime createdAt, @Nullable String message) {
+    public GithubCommitRecord(@Nullable Long commitId, @NotNull Long linkId, @NotNull String sha, @Nullable String author, @Nullable LocalDateTime createdAt, @Nullable String message) {
         super(GithubCommit.GITHUB_COMMIT);
 
         setCommitId(commitId);

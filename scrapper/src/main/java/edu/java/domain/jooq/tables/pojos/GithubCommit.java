@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 import javax.annotation.processing.Generated;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -51,8 +52,8 @@ public class GithubCommit implements Serializable {
     @ConstructorProperties({ "commitId", "linkId", "sha", "author", "createdAt", "message" })
     public GithubCommit(
         @Nullable Long commitId,
-        @Nullable Long linkId,
-        @Nullable String sha,
+        @NotNull Long linkId,
+        @NotNull String sha,
         @Nullable String author,
         @Nullable LocalDateTime createdAt,
         @Nullable String message
@@ -83,7 +84,8 @@ public class GithubCommit implements Serializable {
     /**
      * Getter for <code>GITHUB_COMMIT.LINK_ID</code>.
      */
-    @Nullable
+    @jakarta.validation.constraints.NotNull
+    @NotNull
     public Long getLinkId() {
         return this.linkId;
     }
@@ -91,15 +93,16 @@ public class GithubCommit implements Serializable {
     /**
      * Setter for <code>GITHUB_COMMIT.LINK_ID</code>.
      */
-    public void setLinkId(@Nullable Long linkId) {
+    public void setLinkId(@NotNull Long linkId) {
         this.linkId = linkId;
     }
 
     /**
      * Getter for <code>GITHUB_COMMIT.SHA</code>.
      */
+    @jakarta.validation.constraints.NotNull
     @Size(max = 1000000000)
-    @Nullable
+    @NotNull
     public String getSha() {
         return this.sha;
     }
@@ -107,7 +110,7 @@ public class GithubCommit implements Serializable {
     /**
      * Setter for <code>GITHUB_COMMIT.SHA</code>.
      */
-    public void setSha(@Nullable String sha) {
+    public void setSha(@NotNull String sha) {
         this.sha = sha;
     }
 

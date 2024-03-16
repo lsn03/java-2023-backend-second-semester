@@ -73,12 +73,12 @@ public class GithubCommit extends TableImpl<GithubCommitRecord> {
     /**
      * The column <code>GITHUB_COMMIT.LINK_ID</code>.
      */
-    public final TableField<GithubCommitRecord, Long> LINK_ID = createField(DSL.name("LINK_ID"), SQLDataType.BIGINT, this, "");
+    public final TableField<GithubCommitRecord, Long> LINK_ID = createField(DSL.name("LINK_ID"), SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * The column <code>GITHUB_COMMIT.SHA</code>.
      */
-    public final TableField<GithubCommitRecord, String> SHA = createField(DSL.name("SHA"), SQLDataType.VARCHAR(1000000000), this, "");
+    public final TableField<GithubCommitRecord, String> SHA = createField(DSL.name("SHA"), SQLDataType.VARCHAR(1000000000).nullable(false), this, "");
 
     /**
      * The column <code>GITHUB_COMMIT.AUTHOR</code>.

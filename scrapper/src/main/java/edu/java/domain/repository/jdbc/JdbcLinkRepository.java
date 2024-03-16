@@ -106,7 +106,7 @@ public class JdbcLinkRepository implements LinkRepository {
                 java.net.URI.create(rs.getString(URI)),
                 null,
                 rs.getLong(LINK_ID),
-                rs.getInt("site_type_id"),
+
                 null,
                 null
             )
