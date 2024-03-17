@@ -29,12 +29,11 @@ public class StackOverFlowAnswerDTO {
             .withOffsetSameInstant(ZoneOffset.UTC));
         stackOverFlowAnswerDTO.setLastActivityDate(questionAnswerDTOResponse.getLastActivityDate()
             .withOffsetSameInstant(ZoneOffset.UTC));
-        var lastEdit =  questionAnswerDTOResponse.getLastEditDate();
-        if(lastEdit!=null){
+        var lastEdit = questionAnswerDTOResponse.getLastEditDate();
+        if (lastEdit != null) {
             stackOverFlowAnswerDTO.setLastEditDate(lastEdit.withOffsetSameInstant(
                 ZoneOffset.UTC));
         }
-
 
         return stackOverFlowAnswerDTO;
     }

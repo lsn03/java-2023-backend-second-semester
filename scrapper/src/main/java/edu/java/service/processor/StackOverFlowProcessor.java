@@ -1,6 +1,5 @@
 package edu.java.service.processor;
 
-import edu.java.domain.model.GitHubCommitDTO;
 import edu.java.domain.model.LinkDTO;
 import edu.java.domain.model.StackOverFlowAnswerDTO;
 import edu.java.model.StackOverFlowQuestionUriDTO;
