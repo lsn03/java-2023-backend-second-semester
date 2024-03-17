@@ -17,15 +17,16 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 public class ClientConfig {
     private final ClientProperties properties;
+    private final ApplicationConfig config;
 
     @Bean
     public GitHubClient gitHubClient() {
-        return new GitHubHttpClient(properties.getValue(Utils.GITHUB_BASE_URL));
+        return new GitHubHttpClient(properties.getValue(Utils.GITHUB_BASE_URL), config.gitHubApiProperties().token());
     }
 
     @Bean
     public StackOverFlowClient stackOverFlowClient() {
-        return new StackOverFlowHttpClient(properties.getValue(Utils.SOF_BASE_URL));
+        return new StackOverFlowHttpClient(properties.getValue(Utils.SOF_BASE_URL), config);
     }
 
     @Bean

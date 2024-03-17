@@ -10,16 +10,17 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.reactive.function.client.WebClient;
 
 public class GitHubHttpClient implements GitHubClient {
-    private static final String GITHUB_TOKEN = System.getenv().get("APP_GITHUB_TOKEN");
+    private final String githubToken;
     private final WebClient webClient;
 
-    public GitHubHttpClient(String url) {
+    public GitHubHttpClient(String url, String githubToken) {
+        this.githubToken = githubToken;
 
         webClient = WebClient.builder()
             .baseUrl(url)
             .defaultHeader("User-Agent", "lsn03")
             .defaultHeader("Accept", "application/vnd.github+json")
-            .defaultHeader("Authorization", "token " + GITHUB_TOKEN)
+            .defaultHeader("Authorization", "token " + githubToken)
             .build();
     }
 

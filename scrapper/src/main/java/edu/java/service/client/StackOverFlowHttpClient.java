@@ -1,5 +1,6 @@
 package edu.java.service.client;
 
+import edu.java.configuration.ApplicationConfig;
 import edu.java.model.stack_over_flow.StackOverFlowModel;
 import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
 import edu.java.model.stack_over_flow.dto.QuestionHeaderDTOResponse;
@@ -9,12 +10,13 @@ import java.util.List;
 import org.springframework.web.reactive.function.client.WebClient;
 
 public class StackOverFlowHttpClient implements StackOverFlowClient {
-    private static final String STACK_OVER_FLOW_TOKEN = System.getenv().get("APP_SOF_ACCESS_TOKEN");
-    private static final String KEY = System.getenv().get("SOF_KEY");
+    private final String stackOverFlowToken;
+    private final String key;
     private final WebClient webClient;
 
-    public StackOverFlowHttpClient(String url) {
-
+    public StackOverFlowHttpClient(String url, ApplicationConfig config) {
+        this.key = config.stackOverFlowApiProperties().key();
+        this.stackOverFlowToken = config.stackOverFlowApiProperties().token();
         webClient = WebClient.builder()
             .baseUrl(url)
             .defaultHeader("User-Agent", "lsn03SOF")
@@ -37,8 +39,8 @@ public class StackOverFlowHttpClient implements StackOverFlowClient {
             .uri(
                 "/questions/{questionId}/answers?site=stackoverflow&access_token={token}&key={key}",
                 questionId,
-                STACK_OVER_FLOW_TOKEN,
-                KEY
+                stackOverFlowToken,
+                key
             )
             .retrieve()
             .bodyToMono(StackOverFlowAnswerResponseWrapper.class)
@@ -52,8 +54,8 @@ public class StackOverFlowHttpClient implements StackOverFlowClient {
             .uri(
                 "/questions/{questionId}?order=desc&sort=activity&site=stackoverflow&access_token={token}&key={key}",
                 questionId,
-                STACK_OVER_FLOW_TOKEN,
-                KEY
+                stackOverFlowToken,
+                key
             )
             .retrieve()
             .bodyToMono(StackOverFlowHeaderResponseWrapper.class)
