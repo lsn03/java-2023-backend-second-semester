@@ -23,12 +23,14 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class GitHubProcessor implements Processor {
 
-    public static final int MAX_MESSAGE_SIZE = 5;
-    public static final int END_SHA_INDEX = 7;
-    public static final int START_SHA_INDEX = 0;
+    private static final int MAX_MESSAGE_SIZE = 5;
+    private static final int END_SHA_INDEX = 7;
+    private static final int START_SHA_INDEX = 0;
+    private final static StringBuilder STRING_BUILDER = new StringBuilder();
+
     private final GitHubClient gitHubClient;
     private final GitHubService gitHubService;
-    private final static StringBuilder STRING_BUILDER = new StringBuilder();
+
 
     public Map<String, LinkUpdateRequest> processUriDTO(LinkDTO linkDTO, UriDTO uriDto) {
         if (!(uriDto instanceof GitHubPullRequestUriDTO)) {
