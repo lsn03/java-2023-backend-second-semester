@@ -53,7 +53,7 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
 
-    public Long findUrl(URI uri) {
+    public Long findLinkIdByUrl(URI uri) {
 
         try {
             Long id;
@@ -72,7 +72,7 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     @Transactional
     public Integer remove(LinkDTO linkDTO) {
-        Long linkId = findUrl(linkDTO.getUri());
+        Long linkId = findLinkIdByUrl(linkDTO.getUri());
         linkDTO.setLinkId(linkId);
         int response = 0;
         List<LinkDTO> list = jdbcLinkChatRepository.findAllByLinkId(linkDTO.getLinkId());
@@ -87,6 +87,11 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
+    public List<LinkDTO> findAllByLinkId(Long linkId) {
+        return null;
+    }
+
+    @Override
     @Transactional
     public List<LinkDTO> findAllByChatId(Long tgChatId) {
         return jdbcLinkChatRepository.findAllByChatId(tgChatId);
@@ -96,12 +101,12 @@ public class JdbcLinkRepository implements LinkRepository {
     @Transactional
     public List<LinkDTO> findAll() {
         return jdbcTemplate.query(
-            "select link_id, uri, hash, created_at, last_update from link",
+            "select link_id, uri, created_at, last_update from link",
             (rs, rowNum) -> new LinkDTO(
                 java.net.URI.create(rs.getString(URI)),
                 null,
                 rs.getLong(LINK_ID),
-                rs.getString(HASH),
+
                 null,
                 null
             )
@@ -112,10 +117,10 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public void updateLink(LinkDTO linkDTO) {
         jdbcTemplate.update(
-            "update link set uri = ?, last_update = now(), hash = ? where link_id = ? ",
+            "update link set uri = ?, last_update = now() where link_id = ? ",
             new Object[] {
                 linkDTO.getUri().toString(),
-                linkDTO.getHash(),
+
                 linkDTO.getLinkId(),
             }
         );
@@ -152,8 +157,6 @@ public class JdbcLinkRepository implements LinkRepository {
                 linkDTO.setLinkId(rs.getLong(LINK_ID));
                 linkDTO.setUri(java.net.URI.create(rs.getString(URI)));
                 linkDTO.setCreatedAt(localDateTimeCreatedAt.atOffset(ZoneOffset.UTC));
-
-                linkDTO.setHash(rs.getString(HASH));
 
                 return linkDTO;
             }

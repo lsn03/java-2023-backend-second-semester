@@ -3,10 +3,11 @@ package edu.java.scrapper.hw2;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import edu.java.configuration.ApplicationConfig;
 import edu.java.model.stack_over_flow.dto.AccountDTO;
 import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
 import edu.java.model.stack_over_flow.dto.QuestionHeaderDTOResponse;
-import edu.java.service.StackOverFlowService;
+import edu.java.service.client.StackOverFlowHttpClient;
 import edu.java.service.client.StackOverFlowClient;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -16,23 +17,34 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WireMockTest
 public class StackOverFlowTest {
+    public static final String TOKEN = "token";
+    public static final String KEY = "key";
     String baseUrl = "http://localhost:";
     StackOverFlowClient client;
     int questionId = 1;
     private OffsetDateTime time = OffsetDateTime.of(2015, 12, 26, 12, 10, 15, 0, ZoneOffset.UTC);
     String title = "Lorem";
+    ApplicationConfig config = new ApplicationConfig(
+        null,
+        null,
+        new ApplicationConfig.StackOverFlowApiProperties(TOKEN, KEY)
+    );
 
     @Test
     public void testHeader(WireMockRuntimeInfo wireMockRuntimeInfo) {
+        int port = wireMockRuntimeInfo.getHttpPort();
 
-        client = new StackOverFlowService(baseUrl + wireMockRuntimeInfo.getHttpPort());
-        String url = String.format("/questions/%d?order=desc&sort=activity&site=stackoverflow", questionId);
+        String url = String.format("/questions/%d?order=desc&sort=activity&site=stackoverflow&access_token=%s&key=%s",
+            questionId,
+            TOKEN,
+            KEY
+        );
         AccountDTO owner = new AccountDTO(1, "Maxim");
         boolean isAnswered = false;
         String link = "sof.link";
         long lastEdit = 1451131815;
         QuestionHeaderDTOResponse
-            dto = new QuestionHeaderDTOResponse(owner, isAnswered, lastEdit, title, questionId, link);
+            expected = new QuestionHeaderDTOResponse(owner, isAnswered, lastEdit, title, questionId, link);
 
         WireMock.stubFor(
             WireMock.get(url)
@@ -68,16 +80,21 @@ public class StackOverFlowTest {
                     ).withStatus(200)
                 )
         );
-
-        var response = client.fetchHeader(questionId).block();
-        assertEquals(dto, response);
+        client = new StackOverFlowHttpClient(baseUrl + port, config);
+        var response = client.fetchHeader(questionId);
+        assertEquals(expected, response);
     }
 
     @Test
     public void testAnswers(WireMockRuntimeInfo wireMockRuntimeInfo) {
 
-        client = new StackOverFlowService(baseUrl + wireMockRuntimeInfo.getHttpPort());
-        String url = String.format("/questions/%d/answers?site=stackoverflow", questionId);
+        client = new StackOverFlowHttpClient(baseUrl + wireMockRuntimeInfo.getHttpPort(), config);
+        String url = String.format(
+            "/questions/%s/answers?site=stackoverflow&access_token=%s&key=%s",
+            questionId,
+            TOKEN,
+            KEY
+        );
         AccountDTO owner = new AccountDTO(1, "Maxim");
         boolean isAccepted = false;
         long creationDate = 1451131815;
@@ -120,7 +137,7 @@ public class StackOverFlowTest {
                 )
         );
 
-        var response = client.fetchAnswers(questionId).block();
+        var response = client.fetchAnswers(questionId);
 
         assertEquals(list, response);
     }

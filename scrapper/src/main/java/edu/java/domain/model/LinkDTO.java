@@ -13,7 +13,6 @@ public class LinkDTO {
     private URI uri;
     private Long tgChatId;
     private Long linkId;
-    private String hash;
     private OffsetDateTime createdAt;
     private OffsetDateTime lastUpdate;
 }

@@ -1,8 +1,14 @@
 app:
   scheduler:
     enable: true
-    interval: 10s
-    force-check-delay: 10s
+    interval: 20s
+    force-check-delay: 300s
+  git-hub-api-properties:
+    token: ${APP_GITHUB_TOKEN:token}
+  stack-over-flow-api-properties:
+    key: ${SOF_KEY:key}
+    token: ${APP_SOF_ACCESS_TOKEN:token}
+
 
 spring:
   liquibase:
@@ -14,6 +20,9 @@ spring:
     password: postgres
     username: postgres
     driver-class-name: org.postgresql.Driver
+  devtools:
+    restart:
+      enabled: false
 
 springdoc:
   swagger-ui:
