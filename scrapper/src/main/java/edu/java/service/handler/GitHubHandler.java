@@ -3,7 +3,6 @@ package edu.java.service.handler;
 import edu.java.exception.exception.IncorrectParametersException;
 import edu.java.model.GitHubPullRequestUriDTO;
 import edu.java.model.UriDTO;
-import edu.java.util.Utils;
 import java.net.URI;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
