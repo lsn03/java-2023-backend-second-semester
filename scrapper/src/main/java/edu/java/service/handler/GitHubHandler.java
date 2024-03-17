@@ -18,11 +18,6 @@ public class GitHubHandler implements Handler {
     private static final int GROUP_OWNER = 1;
 
     @Override
-    public int getId() {
-        return Utils.GITHUB_SITE_TYPE_ID;
-    }
-
-    @Override
     public boolean canHandle(URI uri) {
         Matcher matcher = GITHUB_PULL_REQUEST_PATTERN.matcher(uri.toString());
         return matcher.matches();

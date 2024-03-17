@@ -33,7 +33,7 @@ public class JooqLinkRepository implements LinkRepository {
                 Link.LINK.CREATED_AT
 
             )
-            .values(linkDTO.getUri().toString(), LocalDateTime.now())
+            .values(linkDTO.getUri().toString(), linkDTO.getCreatedAt().toLocalDateTime())
             .returning(Link.LINK.LINK_ID)
             .fetchOne();
         Objects.requireNonNull(linkRecord);
