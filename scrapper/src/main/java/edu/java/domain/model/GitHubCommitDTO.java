@@ -23,7 +23,8 @@ public class GitHubCommitDTO {
         GitHubCommitDTO commitDTO = new GitHubCommitDTO();
         commitDTO.setSha(pullCommitDTOResponse.getSha());
         commitDTO.setAuthor(pullCommitDTOResponse.getCommit().getCommitter().name());
-        commitDTO.setCreatedAt(pullCommitDTOResponse.getCommit().getCommitter().date().withOffsetSameInstant(ZoneOffset.UTC));
+        commitDTO.setCreatedAt(pullCommitDTOResponse.getCommit().getCommitter().date()
+            .withOffsetSameInstant(ZoneOffset.UTC));
         commitDTO.setMessage(pullCommitDTOResponse.getCommit().getMessage());
         return commitDTO;
     }

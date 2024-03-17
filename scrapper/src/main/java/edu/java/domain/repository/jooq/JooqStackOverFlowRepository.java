@@ -6,6 +6,7 @@ import edu.java.domain.model.StackOverFlowAnswerDTO;
 import edu.java.domain.repository.StackOverFlowRepository;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -43,6 +44,7 @@ public class JooqStackOverFlowRepository implements StackOverFlowRepository {
         );
 
         for (var answer : stackOverFlowAnswerDTOList) {
+            var last = answer.getLastEditDate();
             step.values(
                 answer.getLinkId(),
                 answer.getAnswerId(),
@@ -50,7 +52,7 @@ public class JooqStackOverFlowRepository implements StackOverFlowRepository {
                 answer.getIsAccepted(),
                 answer.getCreationDate().toLocalDateTime(),
                 answer.getLastActivityDate().toLocalDateTime(),
-                answer.getLastEditDate().toLocalDateTime()
+                last == null ? null : last.toLocalDateTime()
             );
         }
         return step.execute();
@@ -71,7 +73,19 @@ public class JooqStackOverFlowRepository implements StackOverFlowRepository {
     public List<StackOverFlowAnswerDTO> getAnswers(Long linkId) {
         return dslContext.selectFrom(StackoverflowAnswer.STACKOVERFLOW_ANSWER)
             .where(StackoverflowAnswer.STACKOVERFLOW_ANSWER.LINK_ID.eq(linkId))
-            .fetchInto(StackOverFlowAnswerDTO.class);
+            .fetch()
+            .map(
+                stackoverflowAnswerRecord -> {
+                    StackOverFlowAnswerDTO dto = stackoverflowAnswerRecord.into(StackOverFlowAnswerDTO.class);
+                    var last = stackoverflowAnswerRecord.getLastEditDate();
+                    if (last != null) {
+                        dto.setLastEditDate(last.atOffset(ZoneOffset.UTC));
+                    }
+                    dto.setCreationDate(stackoverflowAnswerRecord.getCreationDate().atOffset(ZoneOffset.UTC));
+                    dto.setLastActivityDate(stackoverflowAnswerRecord.getLastActivityDate().atOffset(ZoneOffset.UTC));
+                    return dto;
+                }
+            );
     }
 
     @Override

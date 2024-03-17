@@ -1,37 +1,35 @@
 package edu.java.service.updater;
 
+import edu.java.configuration.ApplicationConfig;
 import edu.java.domain.model.LinkDTO;
 import edu.java.domain.repository.LinkRepository;
 import edu.java.model.UriDTO;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
-import edu.java.service.client.GitHubClient;
-import edu.java.service.client.StackOverFlowClient;
 import edu.java.service.handler.Handler;
 import edu.java.service.processor.Processor;
 import java.net.URI;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
-    private static final int TIME_TO_OLD_LINK_IN_SECONDS = 20;
-
-
     private final LinkRepository linkRepository;
-
+    private final ApplicationConfig applicationConfig;
     private final List<Handler> handlers;
     private final List<Processor> processors;
+    private int oldLinksInSeconds;
 
     @Override
     public List<LinkUpdateRequest> update() {
-        List<LinkDTO> list = linkRepository.findAllOldLinks(TIME_TO_OLD_LINK_IN_SECONDS);
+        List<LinkDTO> list = linkRepository.findAllOldLinks(oldLinksInSeconds);
 
         List<LinkUpdateRequest> answer = new ArrayList<>();
 
@@ -82,6 +80,11 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
             }
         }
         return null;
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    private void setTime() {
+        oldLinksInSeconds = (int) applicationConfig.scheduler().forceCheckDelay().toSeconds();
     }
 
 }

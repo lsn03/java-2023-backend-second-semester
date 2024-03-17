@@ -1,5 +1,6 @@
 package edu.java.service.processor;
 
+import edu.java.domain.model.GitHubCommitDTO;
 import edu.java.domain.model.LinkDTO;
 import edu.java.domain.model.StackOverFlowAnswerDTO;
 import edu.java.model.StackOverFlowQuestionUriDTO;
@@ -9,6 +10,7 @@ import edu.java.model.stack_over_flow.StackOverFlowModel;
 import edu.java.service.client.StackOverFlowClient;
 import edu.java.service.database.StackOverFlowService;
 import edu.java.util.Utils;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,11 +50,20 @@ public class StackOverFlowProcessor implements Processor {
         ).toList();
         var answersFromDB = stackOverFlowService.getAnswers(linkDTO.getLinkId());
         List<StackOverFlowAnswerDTO> listForUpdate = new ArrayList<>();
+        List<StackOverFlowAnswerDTO> listForInsertIntoDB = new ArrayList<>();
 
         for (var answer : answerFromAPI) {
             if (!answersFromDB.contains(answer)) {
                 listForUpdate.add(answer);
+                if (linkDTO.getLastUpdate() == null) {
+                    listForInsertIntoDB.add(answer);
+                }
             }
+        }
+        if (!listForInsertIntoDB.isEmpty()) {
+            stackOverFlowService.addAnswers(listForInsertIntoDB);
+            linkDTO.setLastUpdate(OffsetDateTime.now());
+            return null;
         }
         stackOverFlowService.addAnswers(listForUpdate);
 
@@ -66,6 +77,9 @@ public class StackOverFlowProcessor implements Processor {
                 STRING_BUILDER.append("Пользователь ").append(answer.getUserName()).append(" оставил ответ ")
                     .append(answer.getAnswerId()).append(System.lineSeparator());
             }
+        }
+        if (STRING_BUILDER.isEmpty()) {
+            return null;
         }
         return new LinkUpdateRequest(
             linkDTO.getLinkId(),

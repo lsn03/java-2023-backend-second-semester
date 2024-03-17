@@ -101,7 +101,7 @@ public class JdbcLinkRepository implements LinkRepository {
     @Transactional
     public List<LinkDTO> findAll() {
         return jdbcTemplate.query(
-            "select link_id, uri, created_at, last_update,site_type_id from link",
+            "select link_id, uri, created_at, last_update from link",
             (rs, rowNum) -> new LinkDTO(
                 java.net.URI.create(rs.getString(URI)),
                 null,

@@ -2,6 +2,7 @@ package edu.java.domain.model;
 
 import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,9 +25,16 @@ public class StackOverFlowAnswerDTO {
         stackOverFlowAnswerDTO.setAnswerId((long) questionAnswerDTOResponse.getAnswerId());
         stackOverFlowAnswerDTO.setUserName(questionAnswerDTOResponse.getOwner().getName());
         stackOverFlowAnswerDTO.setIsAccepted(questionAnswerDTOResponse.isAccepted());
-        stackOverFlowAnswerDTO.setCreationDate(questionAnswerDTOResponse.getCreationDate());
-        stackOverFlowAnswerDTO.setLastActivityDate(questionAnswerDTOResponse.getLastActivityDate());
-        stackOverFlowAnswerDTO.setLastEditDate(questionAnswerDTOResponse.getLastEditDate());
+        stackOverFlowAnswerDTO.setCreationDate(questionAnswerDTOResponse.getCreationDate()
+            .withOffsetSameInstant(ZoneOffset.UTC));
+        stackOverFlowAnswerDTO.setLastActivityDate(questionAnswerDTOResponse.getLastActivityDate()
+            .withOffsetSameInstant(ZoneOffset.UTC));
+        var lastEdit =  questionAnswerDTOResponse.getLastEditDate();
+        if(lastEdit!=null){
+            stackOverFlowAnswerDTO.setLastEditDate(lastEdit.withOffsetSameInstant(
+                ZoneOffset.UTC));
+        }
+
 
         return stackOverFlowAnswerDTO;
     }

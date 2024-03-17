@@ -10,14 +10,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 public class StackOverFlowHttpClient implements StackOverFlowClient {
     private static final String STACK_OVER_FLOW_TOKEN = System.getenv().get("APP_SOF_ACCESS_TOKEN");
-
+    private static final String KEY = System.getenv().get("SOF_KEY");
     private final WebClient webClient;
 
     public StackOverFlowHttpClient(String url) {
 
         webClient = WebClient.builder()
             .baseUrl(url)
-            .defaultHeader("User-Agent", "lsn03")
+            .defaultHeader("User-Agent", "lsn03SOF")
             .defaultHeader("Accept", "application/json")
             .build();
     }
@@ -34,7 +34,12 @@ public class StackOverFlowHttpClient implements StackOverFlowClient {
     @Override
     public List<QuestionAnswerDTOResponse> fetchAnswers(int questionId) {
         return webClient.get()
-            .uri("/questions/{questionId}/answers?site=stackoverflow", questionId)
+            .uri(
+                "/questions/{questionId}/answers?site=stackoverflow&access_token={token}&key={key}",
+                questionId,
+                STACK_OVER_FLOW_TOKEN,
+                KEY
+            )
             .retrieve()
             .bodyToMono(StackOverFlowAnswerResponseWrapper.class)
             .map(StackOverFlowAnswerResponseWrapper::getQuestionAnswerDTOList)
@@ -44,7 +49,12 @@ public class StackOverFlowHttpClient implements StackOverFlowClient {
     @Override
     public QuestionHeaderDTOResponse fetchHeader(int questionId) {
         return webClient.get()
-            .uri("/questions/{questionId}?order=desc&sort=activity&site=stackoverflow", questionId)
+            .uri(
+                "/questions/{questionId}?order=desc&sort=activity&site=stackoverflow&access_token={token}&key={key}",
+                questionId,
+                STACK_OVER_FLOW_TOKEN,
+                KEY
+            )
             .retrieve()
             .bodyToMono(StackOverFlowHeaderResponseWrapper.class)
             .map(stackOverFlowHeaderResponseWrapper -> stackOverFlowHeaderResponseWrapper.getList().get(0))

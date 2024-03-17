@@ -69,9 +69,9 @@ public class JooqGitHubRepository implements GitHubRepository {
         return dslContext.selectFrom(GithubCommit.GITHUB_COMMIT)
             .where(GithubCommit.GITHUB_COMMIT.LINK_ID.eq(linkId))
             .fetch()
-            .map(record -> {
-                GitHubCommitDTO dto = record.into(GitHubCommitDTO.class);
-                dto.setCreatedAt(record.getCreatedAt().atOffset(ZoneOffset.UTC));
+            .map(githubCommitRecord -> {
+                GitHubCommitDTO dto = githubCommitRecord.into(GitHubCommitDTO.class);
+                dto.setCreatedAt(githubCommitRecord.getCreatedAt().atOffset(ZoneOffset.UTC));
                 return dto;
             });
     }
