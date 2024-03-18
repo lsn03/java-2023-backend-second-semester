@@ -31,7 +31,6 @@ public class GitHubProcessor implements Processor {
     private final GitHubClient gitHubClient;
     private final GitHubService gitHubService;
 
-
     public Map<String, LinkUpdateRequest> processUriDTO(LinkDTO linkDTO, UriDTO uriDto) {
         if (!(uriDto instanceof GitHubPullRequestUriDTO)) {
             return null;

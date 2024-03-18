@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
-    private final LinkRepository linkRepository;
+    private final LinkRepository jdbcLinkRepository;
     private final ApplicationConfig applicationConfig;
     private final List<Handler> handlers;
     private final List<Processor> processors;
@@ -28,7 +28,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     @Override
     public List<LinkUpdateRequest> update() {
-        List<LinkDTO> list = linkRepository.findAllOldLinks(oldLinksInSeconds);
+        List<LinkDTO> list = jdbcLinkRepository.findAllOldLinks(oldLinksInSeconds);
 
         List<LinkUpdateRequest> answer = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
             }
             if (response != null) {
                 var tgChatIds =
-                    linkRepository.findAllByLinkId(elem.getLinkId())
+                    jdbcLinkRepository.findAllByLinkId(elem.getLinkId())
                         .stream()
                         .map(
                             LinkDTO::getTgChatId
@@ -64,7 +64,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
                 }
             }
             if (!answer.isEmpty()) {
-                linkRepository.updateLink(elem);
+                jdbcLinkRepository.updateLink(elem);
             }
         }
 

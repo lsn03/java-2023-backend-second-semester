@@ -6,13 +6,11 @@ import edu.java.exception.exception.UserAlreadyExistException;
 import edu.java.service.database.TgChatService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-@Primary
 public class JooqTgChatService implements TgChatService {
     private final JooqChatRepository jooqChatRepository;
 

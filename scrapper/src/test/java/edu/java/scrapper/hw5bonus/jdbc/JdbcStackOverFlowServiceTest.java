@@ -1,12 +1,12 @@
-package edu.java.scrapper.hw5bonus.jooq;
+package edu.java.scrapper.hw5bonus.jdbc;
 
 import edu.java.domain.model.LinkDTO;
 import edu.java.domain.model.StackOverFlowAnswerDTO;
 import edu.java.exception.exception.RecordAlreadyExistException;
 import edu.java.scrapper.IntegrationTest;
-import edu.java.service.database.jooq.JooqLinkService;
-import edu.java.service.database.jooq.JooqStackOverFlowService;
-import edu.java.service.database.jooq.JooqTgChatService;
+import edu.java.service.database.jdbc.JdbcLinkService;
+import edu.java.service.database.jdbc.JdbcStackOverFlowService;
+import edu.java.service.database.jdbc.JdbcTgChatService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,13 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-public class JooqStackOverFlowServiceTest extends IntegrationTest {
+public class JdbcStackOverFlowServiceTest extends IntegrationTest {
     @Autowired
-    private JooqStackOverFlowService jooqStackOverFlowService;
+    private JdbcStackOverFlowService jdbcStackOverFlowService;
     @Autowired
-    private JooqLinkService jooqLinkService;
+    private JdbcLinkService jdbcLinkService;
     @Autowired
-    private JooqTgChatService jooqTgChatService;
+    private JdbcTgChatService jdbcTgChatService;
 
     private static final long ANSWER_ID = 1l;
     private static final long TG_CHAT_ID = 1l;
@@ -44,9 +44,9 @@ public class JooqStackOverFlowServiceTest extends IntegrationTest {
         prepareFill();
         List<StackOverFlowAnswerDTO> listForAdd = List.of(elem);
 
-        int cnt = jooqStackOverFlowService.addAnswers(listForAdd);
+        int cnt = jdbcStackOverFlowService.addAnswers(listForAdd);
         assertEquals(1, cnt);
-        var response = jooqStackOverFlowService.getAnswers(uri);
+        var response = jdbcStackOverFlowService.getAnswers(uri);
         assertEquals(listForAdd.getFirst().getAnswerId(), response.getFirst().getAnswerId());
 
     }
@@ -58,8 +58,8 @@ public class JooqStackOverFlowServiceTest extends IntegrationTest {
         prepareFill();
         List<StackOverFlowAnswerDTO> listForAdd = List.of(elem);
 
-        jooqStackOverFlowService.addAnswers(listForAdd);
-        assertThrows(RecordAlreadyExistException.class, () -> jooqStackOverFlowService.addAnswers(listForAdd));
+        jdbcStackOverFlowService.addAnswers(listForAdd);
+        assertThrows(RecordAlreadyExistException.class, () -> jdbcStackOverFlowService.addAnswers(listForAdd));
 
     }
 
@@ -70,15 +70,15 @@ public class JooqStackOverFlowServiceTest extends IntegrationTest {
         prepareFill();
         List<StackOverFlowAnswerDTO> listForAdd = List.of(elem);
 
-        int cnt = jooqStackOverFlowService.addAnswers(listForAdd);
+        int cnt = jdbcStackOverFlowService.addAnswers(listForAdd);
 
-        int deleted = jooqStackOverFlowService.deleteAnswers(listForAdd);
+        int deleted = jdbcStackOverFlowService.deleteAnswers(listForAdd);
         assertEquals(cnt, deleted);
 
     }
 
     private void prepareFill() {
-        jooqTgChatService.add(TG_CHAT_ID);
+        jdbcTgChatService.add(TG_CHAT_ID);
         linkDTO = new LinkDTO(
             uri,
             TG_CHAT_ID,
@@ -87,7 +87,7 @@ public class JooqStackOverFlowServiceTest extends IntegrationTest {
             time
         );
 
-        jooqLinkService.add(linkDTO);
+        jdbcLinkService.add(linkDTO);
         elem = new StackOverFlowAnswerDTO(
             linkDTO.getLinkId(),
             ANSWER_ID,

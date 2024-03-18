@@ -6,16 +6,17 @@ import edu.java.domain.repository.jooq.JooqLinkRepository;
 import edu.java.exception.exception.IncorrectParametersException;
 import edu.java.exception.exception.ListEmptyException;
 import edu.java.exception.exception.RepeatTrackException;
+import edu.java.exception.exception.UserDoesntExistException;
 import edu.java.service.database.LinkService;
 import edu.java.service.handler.Handler;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Primary
 @RequiredArgsConstructor
 public class JooqLinkService implements LinkService {
     private final JooqLinkRepository jooqLinkRepository;
@@ -23,6 +24,7 @@ public class JooqLinkService implements LinkService {
     private final List<Handler> handlers;
 
     @Override
+    @Transactional
     public LinkDTO add(LinkDTO linkDTO) {
 
         for (var handler : handlers) {
@@ -41,6 +43,11 @@ public class JooqLinkService implements LinkService {
                         throw new RepeatTrackException(e);
                     }
                     throw new RuntimeException(e);
+                } catch (DataIntegrityViolationException e) {
+                    if (e.getMessage().contains("is not present in")) {
+                        throw new UserDoesntExistException(e);
+                    }
+                    throw new RuntimeException(e);
                 }
                 return linkDTO;
             }
@@ -50,6 +57,7 @@ public class JooqLinkService implements LinkService {
     }
 
     @Override
+    @Transactional
     public Integer remove(LinkDTO linkDTO) {
         Long linkId = jooqLinkRepository.findLinkIdByUrl(linkDTO.getUri());
         linkDTO.setLinkId(linkId);
@@ -58,6 +66,7 @@ public class JooqLinkService implements LinkService {
     }
 
     @Override
+    @Transactional
     public List<LinkDTO> findAll(Long tgChatId) {
         List<LinkDTO> response = jooqLinkRepository.findAllByChatId(tgChatId);
         if (response.isEmpty()) {

@@ -13,13 +13,12 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Repository
-@Primary
+
 public class JooqLinkRepository implements LinkRepository {
     private final DSLContext dslContext;
     private final JooqLinkChatRepository jooqLinkChatRepository;
@@ -105,12 +104,9 @@ public class JooqLinkRepository implements LinkRepository {
                 Link.LINK.URI,
                 Link.LINK.CREATED_AT,
                 Link.LINK.LAST_UPDATE
-
             ).from(Link.LINK)
-            .leftJoin(LinkChat.LINK_CHAT)
-            .on(Link.LINK.LINK_ID.eq(LinkChat.LINK_CHAT.LINK_ID))
             .where(DSL.condition(
-                    "link.last_update IS NULL OR link.last_update < NOW() - INTERVAL '{0} seconds'",
+                    "last_update IS NULL OR last_update < NOW() - INTERVAL '{0} seconds'",
                     timeInSeconds
                 )
             ).fetch(recordLinkDTO -> {

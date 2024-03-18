@@ -1,54 +1,57 @@
 package edu.java.scrapper.hw5bonus.jooq;
 
+import edu.java.domain.model.GitHubCommitDTO;
 import edu.java.domain.model.LinkDTO;
-import edu.java.domain.model.StackOverFlowAnswerDTO;
 import edu.java.exception.exception.RecordAlreadyExistException;
 import edu.java.scrapper.IntegrationTest;
+import edu.java.service.database.jooq.JooqGitHubService;
 import edu.java.service.database.jooq.JooqLinkService;
-import edu.java.service.database.jooq.JooqStackOverFlowService;
 import edu.java.service.database.jooq.JooqTgChatService;
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-public class JooqStackOverFlowServiceTest extends IntegrationTest {
+public class JooqGitHubServiceTest extends IntegrationTest {
     @Autowired
-    private JooqStackOverFlowService jooqStackOverFlowService;
+    private JooqGitHubService jooqGitHubService;
     @Autowired
     private JooqLinkService jooqLinkService;
     @Autowired
     private JooqTgChatService jooqTgChatService;
 
-    private static final long ANSWER_ID = 1l;
+
     private static final long TG_CHAT_ID = 1l;
     OffsetDateTime time = OffsetDateTime.of(2015, 1, 1, 1, 1, 1, 0, ZoneOffset.UTC);
     URI uri = URI.create(
-        "https://stackoverflow.com/questions/4006772/cannot-delete-indents-nor-past-insertion-point/"
+        "https://github.com/lsn03/java-2023-backend-second-semester/pull/5"
     );
+    GitHubCommitDTO elem;
     LinkDTO linkDTO;
-    StackOverFlowAnswerDTO elem;
 
     @Test
     @Transactional
     @Rollback
     public void testAddSuccess() {
         prepareFill();
-        List<StackOverFlowAnswerDTO> listForAdd = List.of(elem);
-
-        int cnt = jooqStackOverFlowService.addAnswers(listForAdd);
+        List<GitHubCommitDTO> listForAdd = List.of(
+            elem
+        );
+        int cnt = jooqGitHubService.addCommits(listForAdd);
         assertEquals(1, cnt);
-        var response = jooqStackOverFlowService.getAnswers(uri);
-        assertEquals(listForAdd.getFirst().getAnswerId(), response.getFirst().getAnswerId());
-
+        var response = jooqGitHubService.getCommits(uri);
+        assertFalse(response.isEmpty());
+        assertEquals(1, response.size());
+        assertEquals(listForAdd.getFirst().getSha(), response.getFirst().getSha());
     }
 
     @Test
@@ -56,25 +59,23 @@ public class JooqStackOverFlowServiceTest extends IntegrationTest {
     @Rollback
     public void testAddException() {
         prepareFill();
-        List<StackOverFlowAnswerDTO> listForAdd = List.of(elem);
-
-        jooqStackOverFlowService.addAnswers(listForAdd);
-        assertThrows(RecordAlreadyExistException.class, () -> jooqStackOverFlowService.addAnswers(listForAdd));
-
+        List<GitHubCommitDTO> listForAdd = List.of(elem);
+        jooqGitHubService.addCommits(listForAdd);
+        assertThrows(RecordAlreadyExistException.class, () -> jooqGitHubService.addCommits(listForAdd));
     }
 
     @Test
     @Transactional
     @Rollback
-    public void testRemoveSuccess() {
+    public void testRemove() {
         prepareFill();
-        List<StackOverFlowAnswerDTO> listForAdd = List.of(elem);
+        List<GitHubCommitDTO> listForAdd = List.of(
+            elem
+        );
+        int cnt = jooqGitHubService.addCommits(listForAdd);
 
-        int cnt = jooqStackOverFlowService.addAnswers(listForAdd);
-
-        int deleted = jooqStackOverFlowService.deleteAnswers(listForAdd);
+        int deleted = jooqGitHubService.deleteCommits(listForAdd);
         assertEquals(cnt, deleted);
-
     }
 
     private void prepareFill() {
@@ -86,16 +87,14 @@ public class JooqStackOverFlowServiceTest extends IntegrationTest {
             time,
             time
         );
-
         jooqLinkService.add(linkDTO);
-        elem = new StackOverFlowAnswerDTO(
+        elem = new GitHubCommitDTO(
+            1l,
             linkDTO.getLinkId(),
-            ANSWER_ID,
-            "jon",
-            false,
+            "shashasha",
+            "author",
             time,
-            time,
-            time
+            "message"
         );
     }
 }

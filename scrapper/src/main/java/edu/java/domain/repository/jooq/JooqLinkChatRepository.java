@@ -9,11 +9,9 @@ import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Primary
 @Repository
 @RequiredArgsConstructor
 public class JooqLinkChatRepository implements LinkChatRepository {
