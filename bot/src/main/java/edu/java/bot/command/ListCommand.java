@@ -3,6 +3,10 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.exception.IncorrectParametersException;
+import edu.java.bot.exception.ListEmptyException;
+import edu.java.bot.exception.RepeatTrackException;
+import edu.java.bot.model.dto.response.LinkResponse;
 import edu.java.bot.storage.Storage;
 import java.util.List;
 import org.slf4j.Logger;
@@ -42,12 +46,25 @@ public class ListCommand implements Command {
         if (!storage.isUserAuth(chatId)) {
             return new SendMessage(chatId, CommandUtils.USER_NOT_REGISTERED);
         }
-        var list = storage.getUserTracks(chatId);
-        if (!list.isEmpty()) {
-            return processGetList(list, chatId);
-        } else {
-            return new SendMessage(chatId, CommandUtils.NOTHING_TO_TRACK);
+        List<LinkResponse> list = null;
+        SendMessage message = null;
+        try {
+            list = storage.getUserTracks(chatId);
+        } catch (IncorrectParametersException e) {
+
+            if (e.getMessage().contains(RepeatTrackException.class.getSimpleName())) {
+                message = new SendMessage(chatId, CommandUtils.URL_ALREADY_EXIST);
+            } else if (e.getMessage().contains(ListEmptyException.class.getSimpleName())) {
+                message = new SendMessage(chatId, CommandUtils.NOTHING_TO_TRACK);
+            }
+            return message;
         }
+        if (!list.isEmpty()) {
+            message = processGetList(list, chatId);
+        } else {
+            message = new SendMessage(chatId, CommandUtils.NOTHING_TO_TRACK);
+        }
+        return message;
 
     }
 
@@ -61,11 +78,11 @@ public class ListCommand implements Command {
         return Command.super.toApiCommand();
     }
 
-    private SendMessage processGetList(List<String> list, Long chatId) {
+    private SendMessage processGetList(List<LinkResponse> list, Long chatId) {
         st.setLength(0);
         st.append("Отслеживаемые ссылки:").append(System.lineSeparator());
         for (int i = 0; i < list.size(); i++) {
-            st.append(i + 1).append(". ").append(list.get(i));
+            st.append(i + 1).append(". ").append(list.get(i).getUrl());
             if (i < list.size() - 1) {
                 st.append(System.lineSeparator());
             }

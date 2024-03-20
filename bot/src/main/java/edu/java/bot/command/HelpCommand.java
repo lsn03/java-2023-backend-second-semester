@@ -66,15 +66,23 @@ public class HelpCommand implements Command {
     private void initOutputMessage() {
         stringBuilder.append("Бот позволяет отслеживать обновления сайтов.").append(LINE_SEPARATOR);
         stringBuilder.append("Поддерживаются сайты: StackOverFlow, Github.").append(LINE_SEPARATOR);
-        stringBuilder.append("Примеры корректных ссылок:").append(LINE_SEPARATOR);
-        stringBuilder.append("1. https://github.com/lsn03").append(LINE_SEPARATOR);
-        stringBuilder.append("2. https://stackoverflow.com/questions/6402162/how-to-enable-intellij-hot-code-swap")
+        stringBuilder.append("Github: отслеживание новых коммитов в Pull Request").append(LINE_SEPARATOR);
+        stringBuilder.append("Формат: https://github.com/{owner}/{repo}/pull/{pull_number}").append(LINE_SEPARATOR);
+        stringBuilder.append("Примеры корректной ссылки:").append(LINE_SEPARATOR);
+        stringBuilder.append("1. https://github.com/lsn03/java-2023-backend-second-semester/pull/1")
             .append(LINE_SEPARATOR);
+        stringBuilder.append("StackOverFlow: отслеживание новых ответов в вопросе").append(LINE_SEPARATOR);
+        stringBuilder.append("Формат: https://stackoverflow.com/questions/{question_id}/*").append(LINE_SEPARATOR);
+        stringBuilder.append("Примеры корректной ссылки:").append(LINE_SEPARATOR);
+        stringBuilder.append("1. https://stackoverflow.com/questions/6402162/how-to-enable-intellij-hot-code-swap")
+            .append(LINE_SEPARATOR);
+
         stringBuilder.append("Примеры некорректных ссылок:").append(LINE_SEPARATOR);
         stringBuilder.append("1. github.com/lsn03").append(LINE_SEPARATOR);
         stringBuilder.append("2. stackoverflow.com/questions/6402162/how-to-enable-intellij-hot-code-swap")
             .append(LINE_SEPARATOR);
-        stringBuilder.append("3. vk.com").append(LINE_SEPARATOR);
+        stringBuilder.append("3. https://github.com/lsn03").append(LINE_SEPARATOR);
+        stringBuilder.append("4. vk.com").append(LINE_SEPARATOR);
         stringBuilder.append("Поддерживаемые команды:").append(LINE_SEPARATOR);
 
         for (int i = 0; i < commandList.size(); i++) {

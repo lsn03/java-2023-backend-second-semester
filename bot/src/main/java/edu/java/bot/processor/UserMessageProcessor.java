@@ -35,6 +35,7 @@ public class UserMessageProcessor {
         String text = update.message().text();
 
         UserState state = storage.getUserState(chatId);
+
         Command command = commands.getOrDefault(text, unknownCommand);
         if (command instanceof CancelCommand) {
             return command.handle(update);

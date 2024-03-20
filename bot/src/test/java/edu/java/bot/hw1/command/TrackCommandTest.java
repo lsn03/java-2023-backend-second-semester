@@ -7,8 +7,10 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.command.CommandUtils;
 import edu.java.bot.command.TrackCommand;
 import edu.java.bot.exception.UnsupportedSiteException;
+import edu.java.bot.model.dto.response.ApiErrorResponse;
 import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,7 +85,7 @@ public class TrackCommandTest {
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
         when(update.message().text()).thenReturn(site);
-        when(storage.addUrl(id, site)).thenReturn(true);
+        when(storage.addUrl(id, site)).thenReturn(Optional.empty());
 
         SendMessage response = trackCommand.handle(update);
         assertNotNull(response);
@@ -97,7 +99,7 @@ public class TrackCommandTest {
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
         when(update.message().text()).thenReturn(site);
-        when(storage.addUrl(id, site)).thenReturn(false);
+        when(storage.addUrl(id, site)).thenReturn(Optional.of(new ApiErrorResponse()));
 
         SendMessage response = trackCommand.handle(update);
         assertNotNull(response);
@@ -117,7 +119,7 @@ public class TrackCommandTest {
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
         when(update.message().text()).thenReturn(site);
-        lenient().when(storage.addUrl(id, site)).thenReturn(true);
+        lenient().when(storage.addUrl(id, site)).thenReturn(Optional.empty());
 
         SendMessage response = trackCommand.handle(update);
         assertNotNull(response);
