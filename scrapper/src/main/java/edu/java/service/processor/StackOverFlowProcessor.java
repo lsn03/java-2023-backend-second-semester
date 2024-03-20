@@ -2,31 +2,31 @@ package edu.java.service.processor;
 
 import edu.java.domain.model.LinkDTO;
 import edu.java.domain.model.StackOverFlowAnswerDTO;
+import edu.java.domain.repository.LinkRepository;
 import edu.java.model.StackOverFlowQuestionUriDTO;
 import edu.java.model.UriDTO;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import edu.java.model.stack_over_flow.StackOverFlowModel;
 import edu.java.service.client.StackOverFlowClient;
 import edu.java.service.database.StackOverFlowService;
-import edu.java.util.Utils;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class StackOverFlowProcessor implements Processor {
-    public static final int MAX_MESSAGE_SIZE = 5;
-    private final StackOverFlowClient stackOverFlowClient;
-    private final StackOverFlowService stackOverFlowService;
+    private static final int MAX_MESSAGE_SIZE = 5;
     private final static StringBuilder STRING_BUILDER = new StringBuilder();
 
+    private final StackOverFlowClient stackOverFlowClient;
+    private final StackOverFlowService stackOverFlowService;
+    private final LinkRepository jooqLinkRepository;
+
     @Override
-    public Map<String, LinkUpdateRequest> processUriDTO(LinkDTO linkDTO, UriDTO uriDto) {
+    public List<LinkUpdateRequest> processUriDTO(LinkDTO linkDTO, UriDTO uriDto) {
         if (!(uriDto instanceof StackOverFlowQuestionUriDTO)) {
             return null;
         }
@@ -34,9 +34,10 @@ public class StackOverFlowProcessor implements Processor {
         StackOverFlowQuestionUriDTO uriDto1 = (StackOverFlowQuestionUriDTO) uriDto;
         StackOverFlowModel response =
             stackOverFlowClient.fetchQuestionData(uriDto1.getQuestionId());
-        Map<String, LinkUpdateRequest> map = new HashMap<>();
-        map.put(Utils.SOF_ANSWER, processAnswer(linkDTO, response));
-        return map;
+
+        List<LinkUpdateRequest> list = new ArrayList<>();
+        list.add(processAnswer(linkDTO, response));
+        return list;
     }
 
     private LinkUpdateRequest processAnswer(LinkDTO linkDTO, StackOverFlowModel response) {
@@ -47,23 +48,23 @@ public class StackOverFlowProcessor implements Processor {
                 return answerDTO;
             }
         ).toList();
+
+        if (linkDTO.getLastUpdate() == null) {
+            stackOverFlowService.addAnswers(answerFromAPI);
+            linkDTO.setLastUpdate(OffsetDateTime.now());
+            jooqLinkRepository.updateLink(linkDTO);
+            return null;
+        }
+
         var answersFromDB = stackOverFlowService.getAnswers(linkDTO.getLinkId());
         List<StackOverFlowAnswerDTO> listForUpdate = new ArrayList<>();
-        List<StackOverFlowAnswerDTO> listForInsertIntoDB = new ArrayList<>();
 
         for (var answer : answerFromAPI) {
             if (!answersFromDB.contains(answer)) {
                 listForUpdate.add(answer);
-                if (linkDTO.getLastUpdate() == null) {
-                    listForInsertIntoDB.add(answer);
-                }
             }
         }
-        if (!listForInsertIntoDB.isEmpty()) {
-            stackOverFlowService.addAnswers(listForInsertIntoDB);
-            linkDTO.setLastUpdate(OffsetDateTime.now());
-            return null;
-        }
+
         stackOverFlowService.addAnswers(listForUpdate);
 
         STRING_BUILDER.setLength(0);

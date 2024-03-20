@@ -34,6 +34,7 @@ public class JooqLinkService implements LinkService {
                 if (linkId == null) {
                     jooqLinkRepository.add(linkDTO);
                     linkId = linkDTO.getLinkId();
+
                 }
                 linkDTO.setLinkId(linkId);
                 try {

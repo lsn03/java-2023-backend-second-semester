@@ -2,34 +2,29 @@ package edu.java.scrapper.hw5bonus.processor;
 
 import edu.java.domain.model.GitHubCommitDTO;
 import edu.java.domain.model.LinkDTO;
+import edu.java.domain.repository.LinkRepository;
 import edu.java.model.GitHubPullRequestUriDTO;
 import edu.java.model.github.PullRequestModelResponse;
 import edu.java.model.github.dto.PullCommitDTOResponse;
 import edu.java.model.github.dto.info.UserInfoDTO;
-import edu.java.scrapper.IntegrationTest;
 import edu.java.service.client.GitHubClient;
 import edu.java.service.database.GitHubService;
-import edu.java.service.database.jooq.JooqLinkService;
-import edu.java.service.database.jooq.JooqTgChatService;
 import edu.java.service.processor.GitHubProcessor;
-import edu.java.util.Utils;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +32,8 @@ public class GithubProcessorTest {
     public static final long TG_CHAT_ID = 1l;
     @Mock
     GitHubService gitHubService;
-
+    @Mock
+    LinkRepository linkRepository;
     @Mock
     GitHubClient gitHubClient;
 
@@ -81,12 +77,11 @@ public class GithubProcessorTest {
         when(gitHubService.addCommits(anyList())).thenReturn(1);
         when(gitHubService.getCommits(any(URI.class))).thenReturn(listFromDb);
         when(gitHubClient.fetchPullRequest(anyString(), anyString(), anyInt())).thenReturn(mockResponse);
+        lenient().doNothing().when(linkRepository).updateLink(any(LinkDTO.class));
+        GitHubProcessor gitHubProcessor = new GitHubProcessor(gitHubClient, gitHubService, linkRepository);
 
-        GitHubProcessor gitHubProcessor = new GitHubProcessor(gitHubClient, gitHubService);
+        var responseList = gitHubProcessor.processUriDTO(linkDTO, new GitHubPullRequestUriDTO("", "", 0));
 
-        var response = gitHubProcessor.processUriDTO(linkDTO, new GitHubPullRequestUriDTO("", "", 0));
-        var list = response.get(Utils.GH_COMMIT);
-
-        assertTrue(list.getDescription().contains("Пользователь"));
+        assertTrue(responseList.getFirst().getDescription().contains("Пользователь"));
     }
 }

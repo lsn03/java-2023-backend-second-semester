@@ -3,6 +3,7 @@ package edu.java.domain.model;
 import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,5 +37,22 @@ public class StackOverFlowAnswerDTO {
         }
 
         return stackOverFlowAnswerDTO;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        StackOverFlowAnswerDTO answerDTO = (StackOverFlowAnswerDTO) o;
+        return Objects.equals(linkId, answerDTO.linkId) && Objects.equals(answerId, answerDTO.answerId)
+            && Objects.equals(userName, answerDTO.userName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(linkId, answerId, userName);
     }
 }

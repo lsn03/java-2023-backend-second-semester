@@ -10,7 +10,6 @@ import edu.java.service.processor.Processor;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -33,7 +32,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         List<LinkUpdateRequest> answer = new ArrayList<>();
 
         for (LinkDTO elem : list) {
-            Map<String, LinkUpdateRequest> response = null;
+            List<LinkUpdateRequest> response = null;
 
             URI uri = elem.getUri();
             for (var handler : handlers) {
@@ -52,16 +51,14 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
                         .map(
                             LinkDTO::getTgChatId
                         ).toList();
-                var keySet = response.keySet();
-                for (var key : keySet) {
-                    var collectionElem = response.get(key);
-                    if (collectionElem == null) {
-                        break;
-                    }
-                    collectionElem.setTgChatIds(tgChatIds);
-                    answer.add(collectionElem);
 
+                for (var responseElem : response) {
+                    if (responseElem != null) {
+                        responseElem.setTgChatIds(tgChatIds);
+                        answer.add(responseElem);
+                    }
                 }
+
             }
             if (!answer.isEmpty()) {
                 jdbcLinkRepository.updateLink(elem);
@@ -71,14 +68,14 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         return answer;
     }
 
-    private Map<String, LinkUpdateRequest> processDto(LinkDTO linkDTO, UriDTO uriDto) {
+    private List<LinkUpdateRequest> processDto(LinkDTO linkDTO, UriDTO uriDto) {
         for (var processor : processors) {
             var response = processor.processUriDTO(linkDTO, uriDto);
             if (response != null) {
                 return response;
             }
         }
-        return null;
+        return List.of();
     }
 
     @EventListener(ApplicationReadyEvent.class)

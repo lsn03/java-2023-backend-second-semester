@@ -1,32 +1,36 @@
 package edu.java.scrapper.hw5bonus.processor;
 
-import edu.java.domain.model.GitHubCommitDTO;
 import edu.java.domain.model.LinkDTO;
 import edu.java.domain.model.StackOverFlowAnswerDTO;
+import edu.java.domain.repository.LinkRepository;
 import edu.java.model.StackOverFlowQuestionUriDTO;
 import edu.java.model.stack_over_flow.StackOverFlowModel;
 import edu.java.model.stack_over_flow.dto.AccountDTO;
 import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
-import edu.java.scrapper.IntegrationTest;
 import edu.java.service.client.StackOverFlowClient;
 import edu.java.service.database.StackOverFlowService;
 import edu.java.service.processor.StackOverFlowProcessor;
-import edu.java.util.Utils;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
-import org.mockito.junit.jupiter.MockitoExtension;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class StackOverFlowProcessorTest{
+public class StackOverFlowProcessorTest {
     @Mock
     StackOverFlowClient stackOverFlowClient;
+    @Mock
+    LinkRepository linkRepository;
     @Mock
     StackOverFlowService stackOverFlowService;
     OffsetDateTime time = OffsetDateTime.of(2015, 1, 1, 1, 1, 1, 0, ZoneOffset.UTC);
@@ -48,6 +52,8 @@ public class StackOverFlowProcessorTest{
         when(stackOverFlowClient.fetchQuestionData(1)).thenReturn(dataFromApi);
         when(stackOverFlowService.addAnswers(anyList())).thenReturn(1);
         when(stackOverFlowService.getAnswers(anyLong())).thenReturn(listFromDb);
+        lenient().doNothing().when(linkRepository).updateLink(any(LinkDTO.class));
+
         dataFromApi.setQuestionAnswerList(listFromApi);
 
         linkDTO = new LinkDTO();
@@ -57,10 +63,10 @@ public class StackOverFlowProcessorTest{
         linkDTO.setCreatedAt(time);
 
         StackOverFlowProcessor stackOverFlowProcessor =
-            new StackOverFlowProcessor(stackOverFlowClient, stackOverFlowService);
-        var response = stackOverFlowProcessor.processUriDTO(linkDTO, new StackOverFlowQuestionUriDTO(1));
-        var elem = response.get(Utils.SOF_ANSWER);
-        assertTrue(elem.getDescription().contains("Пользователь"));
+            new StackOverFlowProcessor(stackOverFlowClient, stackOverFlowService, linkRepository);
+        var responseList = stackOverFlowProcessor.processUriDTO(linkDTO, new StackOverFlowQuestionUriDTO(1));
+
+        assertTrue(responseList.getFirst().getDescription().contains("Пользователь"));
 
     }
 
