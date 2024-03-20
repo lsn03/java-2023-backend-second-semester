@@ -36,9 +36,7 @@ public class LinkUpdaterScheduler {
                     log.error("{} error while Sending update {}", ans, elem);
                 }
             }
-
         }
-
     }
 
 }

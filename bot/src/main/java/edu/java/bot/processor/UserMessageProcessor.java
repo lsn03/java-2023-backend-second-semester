@@ -31,6 +31,9 @@ public class UserMessageProcessor {
     }
 
     public SendMessage process(Update update) {
+        if (update.message() == null) {
+            return null;
+        }
         Long chatId = update.message().chat().id();
         String text = update.message().text();
 
