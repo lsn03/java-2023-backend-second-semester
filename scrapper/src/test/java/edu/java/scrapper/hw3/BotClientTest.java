@@ -8,7 +8,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import edu.java.model.scrapper.dto.response.ApiErrorResponse;
-import edu.java.service.BotHttpClient;
+import edu.java.service.client.BotHttpClient;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;

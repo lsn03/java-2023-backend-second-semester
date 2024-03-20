@@ -2,7 +2,7 @@ package edu.java.scrapper.hw5.jdbc.service;
 
 import edu.java.exception.exception.UserAlreadyExistException;
 import edu.java.scrapper.IntegrationTest;
-import edu.java.service.process.jdbc.JdbcTgChatService;
+import edu.java.service.database.jdbc.JdbcTgChatService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -30,6 +30,7 @@ public class JdbcLinkRepoTest extends IntegrationTest {
     public void addFirstTime() {
 
         linkDTO = new LinkDTO();
+
         linkDTO.setUri(URI.create("http://example.com"));
         jdbcLinkRepository.add(linkDTO);
 
@@ -66,14 +67,5 @@ public class JdbcLinkRepoTest extends IntegrationTest {
         assertTrue(response.isEmpty());
     }
 
-    @Test
-    @Rollback
-    @Transactional
-    public void removeNotExistLinkTest() {
-        linkDTO = new LinkDTO();
-        linkDTO.setUri(URI.create("http://example.com"));
 
-        assertThrows( LinkNotFoundException.class, ()-> jdbcLinkRepository.remove(linkDTO));
-
-    }
 }

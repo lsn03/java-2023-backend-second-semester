@@ -7,7 +7,8 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
-public record ApplicationConfig(Scheduler scheduler) {
+public record ApplicationConfig(Scheduler scheduler, GitHubApiProperties gitHubApiProperties,
+                                StackOverFlowApiProperties stackOverFlowApiProperties) {
     @Bean
     public long schedulerInterval() {
         return scheduler.interval.toMillis();
@@ -16,5 +17,10 @@ public record ApplicationConfig(Scheduler scheduler) {
     public record Scheduler(boolean enable, Duration interval, Duration forceCheckDelay) {
     }
 
+    public record GitHubApiProperties(String token) {
+    }
+
+    public record StackOverFlowApiProperties(String token, String key) {
+    }
 }
 

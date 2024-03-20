@@ -1,8 +1,8 @@
 package edu.java.scrapper.hw5.handler;
 
+import edu.java.exception.exception.IncorrectParametersException;
 import edu.java.model.GitHubPullRequestUriDTO;
-import edu.java.scrapper.IntegrationTest;
-import edu.java.service.parser.GitHubHandler;
+import edu.java.service.handler.GitHubHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import java.net.URI;
@@ -55,6 +55,6 @@ public class GitHubHandlerTest {
         "https://vklads.com/owner2/blabla/pull/10"
     })
     public void testHandleException(URI uri) {
-        assertThrows(IllegalArgumentException.class,() ->gitHubHandler.handle(uri) );
+        assertThrows(IncorrectParametersException.class,() ->gitHubHandler.handle(uri) );
     }
 }

@@ -30,8 +30,8 @@ services:
       - --url=jdbc:postgresql://postgresql:5432/scrapper
       - --username=postgres
       - --password=postgres
-      #      - --log-level=debug
-      #      - clearCheckSums
+#      - --log-level=debug
+#      - clearCheckSums
       - update
     volumes:
       - ./migrations:/liquibase/changelog
