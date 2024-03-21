@@ -16,9 +16,9 @@ spring:
   application:
     name: scrapper
   datasource:
-    url: jdbc:postgresql://localhost:5432/scrapper
-    password: postgres
-    username: postgres
+    url: jdbc:postgresql://${DATASOURCE_DATABASE_HOSTNAME:localhost}:${DATASOURCE_DATABASE_PORT:5432}/scrapper
+    username: ${DATASOURCE_DATABASE_USERNAME:postgres}
+    password: ${DATASOURCE_DATABASE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   devtools:
     restart:
@@ -29,7 +29,7 @@ springdoc:
     path: /swagger-ui
 
 server:
-  port: 8080
+  port: ${SCRAPPER_PORT:8080}
 logging:
   config: classpath:log4j2-plain.xml
 client:
