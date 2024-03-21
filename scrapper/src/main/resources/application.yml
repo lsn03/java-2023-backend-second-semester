@@ -1,7 +1,7 @@
 app:
   scheduler:
-    enable: false
-    interval: 20s
+    enable: true
+    interval: 60s
     force-check-delay: 300s
   git-hub-api-properties:
     token: ${APP_GITHUB_TOKEN:token}
