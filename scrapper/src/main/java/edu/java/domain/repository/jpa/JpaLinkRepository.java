@@ -26,7 +26,7 @@ public class JpaLinkRepository implements LinkRepository {
         if (entity.isPresent()) {
             throw new RepeatTrackException();
         }
-        var inserted = MapperLinkDTOLinkEntity.linkDTOToLinkEntity(linkDTO);
+        var inserted = MapperLinkDTOLinkEntity.dtoToEntity(linkDTO);
         jpaLinkRepository.save(inserted);
 
         linkDTO.setLinkId(inserted.getLinkId());
@@ -67,12 +67,12 @@ public class JpaLinkRepository implements LinkRepository {
     @Override
     public List<LinkDTO> findAll() {
         var entityList = jpaLinkRepository.findAll();
-        return entityList.stream().map(MapperLinkDTOLinkEntity::linkEntityToLinkDTO).toList();
+        return entityList.stream().map(MapperLinkDTOLinkEntity::entityToDto).toList();
     }
 
     @Override
     public void updateLink(LinkDTO elem) {
-        var entity = MapperLinkDTOLinkEntity.linkDTOToLinkEntity(elem);
+        var entity = MapperLinkDTOLinkEntity.dtoToEntity(elem);
         entity.setLastUpdate(LocalDateTime.now());
         jpaLinkRepository.save(entity);
     }
@@ -88,6 +88,6 @@ public class JpaLinkRepository implements LinkRepository {
             setParameter("time", differenceTime)
             .getResultList();
 
-        return entityList.stream().map(MapperLinkDTOLinkEntity::linkEntityToLinkDTO).toList();
+        return entityList.stream().map(MapperLinkDTOLinkEntity::entityToDto).toList();
     }
 }

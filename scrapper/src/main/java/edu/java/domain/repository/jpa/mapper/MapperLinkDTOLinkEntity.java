@@ -8,13 +8,13 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class MapperLinkDTOLinkEntity {
-    public static LinkDTO linkEntityToLinkDTO(LinkEntity linkEntity) {
-        var created = linkEntity.getCreatedAt();
-        var update = linkEntity.getLastUpdate();
+    public static LinkDTO entityToDto(LinkEntity entity) {
+        var created = entity.getCreatedAt();
+        var update = entity.getLastUpdate();
 
         LinkDTO linkDTO = new LinkDTO();
-        linkDTO.setUri(URI.create(linkEntity.getUri()));
-        linkDTO.setLinkId(linkEntity.getLinkId());
+        linkDTO.setUri(URI.create(entity.getUri()));
+        linkDTO.setLinkId(entity.getLinkId());
         if (created != null) {
             linkDTO.setCreatedAt(created.atOffset(ZoneOffset.UTC));
         }
@@ -25,13 +25,13 @@ public class MapperLinkDTOLinkEntity {
         return linkDTO;
     }
 
-    public static LinkEntity linkDTOToLinkEntity(LinkDTO linkDTO) {
-        var created = linkDTO.getCreatedAt();
-        var update = linkDTO.getLastUpdate();
+    public static LinkEntity dtoToEntity(LinkDTO dto) {
+        var created = dto.getCreatedAt();
+        var update = dto.getLastUpdate();
 
         LinkEntity linkEntity = new LinkEntity();
-        linkEntity.setUri(linkDTO.getUri().toString());
-        linkEntity.setLinkId(linkDTO.getLinkId());
+        linkEntity.setUri(dto.getUri().toString());
+        linkEntity.setLinkId(dto.getLinkId());
 
         if (created != null) {
             linkEntity.setCreatedAt(created.toLocalDateTime());

@@ -70,7 +70,7 @@ public class JpaLinkChatRepository implements LinkChatRepository {
                 where lc.chat.id = :chatId
                 """, LinkEntity.class).setParameter("chatId", tgChatId)
             .getResultList().stream().map(linkEntity -> {
-                var linkDTO = MapperLinkDTOLinkEntity.linkEntityToLinkDTO(linkEntity);
+                var linkDTO = MapperLinkDTOLinkEntity.entityToDto(linkEntity);
                 linkDTO.setTgChatId(tgChatId);
                 return linkDTO;
             }).toList();
@@ -84,7 +84,7 @@ public class JpaLinkChatRepository implements LinkChatRepository {
                     lc.link.id = le.id where lc.link.id = :linkId
                 """, LinkEntity.class)
             .setParameter("linkId", linkId)
-            .getResultList().stream().map(MapperLinkDTOLinkEntity::linkEntityToLinkDTO).toList();
+            .getResultList().stream().map(MapperLinkDTOLinkEntity::entityToDto).toList();
 
     }
 }

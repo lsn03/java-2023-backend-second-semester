@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class JooqLinkService implements LinkService {
     private final JooqLinkRepository jooqLinkRepository;
     private final JooqLinkChatRepository jooqLinkChatRepository;
+
     private final List<Handler> handlers;
 
     @Override

@@ -46,7 +46,7 @@ public class JpaChatRepository implements ChatRepository {
     public List<ChatDTO> findAll() {
 
         List<ChatEntity> entityList = jpaChatRepository.findAll();
-        return entityList.stream().map(MapperChatDTOChatEntity::chatEntitytoChatDTO).toList();
+        return entityList.stream().map(MapperChatDTOChatEntity::entityToDto).toList();
 
     }
 }

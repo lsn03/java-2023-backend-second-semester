@@ -7,12 +7,12 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class MapperChatDTOChatEntity {
-    public static ChatDTO chatEntitytoChatDTO(ChatEntity chatEntity) {
-        return new ChatDTO(chatEntity.getChatId(), chatEntity.getActive());
+    public static ChatDTO entityToDto(ChatEntity entity) {
+        return new ChatDTO(entity.getChatId(), entity.getActive());
     }
 
-    public static ChatEntity chatDTOtoChatEntity(ChatDTO chatDTO) {
-        return new ChatEntity(chatDTO.getChatId(), chatDTO.isActive(), Set.of());
+    public static ChatEntity dtoToEntity(ChatDTO dto) {
+        return new ChatEntity(dto.getChatId(), dto.isActive(), Set.of());
 
     }
 }
