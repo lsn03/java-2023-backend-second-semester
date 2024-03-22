@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-@Primary
+
 public class JdbcTgChatService implements TgChatService {
     private final JdbcChatRepository jdbcChatRepository;
 
