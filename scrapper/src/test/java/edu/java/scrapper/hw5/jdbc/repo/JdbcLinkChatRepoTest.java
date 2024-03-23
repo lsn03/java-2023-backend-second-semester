@@ -1,30 +1,36 @@
 package edu.java.scrapper.hw5.jdbc.repo;
 
+import edu.java.configuration.access.JdbcAccessConfiguration;
 import edu.java.domain.model.LinkDTO;
-import edu.java.domain.repository.jdbc.JdbcChatRepository;
-import edu.java.domain.repository.jdbc.JdbcLinkChatRepository;
-import edu.java.domain.repository.jdbc.JdbcLinkRepository;
+import edu.java.domain.repository.ChatRepository;
+import edu.java.domain.repository.LinkChatRepository;
+import edu.java.domain.repository.LinkRepository;
 import edu.java.scrapper.IntegrationTest;
+import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import java.net.URI;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@ActiveProfiles("jdbc")
 public class JdbcLinkChatRepoTest extends IntegrationTest {
 
+//    @Autowired
+//    private JdbcAccessConfiguration jdbcAccessConfiguration;
+
     @Autowired
-    private JdbcLinkChatRepository jdbcLinkChatRepository;
+    private LinkChatRepository jdbcLinkChatRepository;
     @Autowired
-    private JdbcChatRepository jdbcChatRepository;
+    private ChatRepository jdbcChatRepository;
     @Autowired
-    private JdbcLinkRepository jdbcLinkRepository;
+    private LinkRepository jdbcLinkRepository;
     long chatId = 1l;
     LinkDTO linkDTO;
 

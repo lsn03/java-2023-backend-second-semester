@@ -1,5 +1,5 @@
 app:
-  database-access-type: jooq
+  database-access-type: jpa
   scheduler:
     enable: false
     interval: 10s

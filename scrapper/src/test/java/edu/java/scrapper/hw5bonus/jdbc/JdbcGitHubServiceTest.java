@@ -4,6 +4,9 @@ import edu.java.domain.model.GitHubCommitDTO;
 import edu.java.domain.model.LinkDTO;
 import edu.java.exception.exception.RecordAlreadyExistException;
 import edu.java.scrapper.IntegrationTest;
+import edu.java.service.database.GitHubService;
+import edu.java.service.database.LinkService;
+import edu.java.service.database.TgChatService;
 import edu.java.service.database.jdbc.JdbcGitHubService;
 import edu.java.service.database.jdbc.JdbcLinkService;
 import edu.java.service.database.jdbc.JdbcTgChatService;
@@ -15,20 +18,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@ActiveProfiles("jdbc")
 public class JdbcGitHubServiceTest extends IntegrationTest {
 
     @Autowired
-    private JdbcGitHubService jdbcGitHubService;
+    private GitHubService jdbcGitHubService;
     @Autowired
-    private JdbcLinkService jdbcLinkService;
+    private LinkService jdbcLinkService;
     @Autowired
-    private JdbcTgChatService jdbcTgChatService;
+    private TgChatService jdbcTgChatService;
 
     private static final long TG_CHAT_ID = 1l;
     OffsetDateTime time = OffsetDateTime.of(2015, 1, 1, 1, 1, 1, 0, ZoneOffset.UTC);
