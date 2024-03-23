@@ -6,9 +6,13 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.command.CommandUtils;
 import edu.java.bot.command.UnTrackCommand;
+import edu.java.bot.exception.LinkNotFoundException;
+import edu.java.bot.exception.ListEmptyException;
 import edu.java.bot.exception.UnsupportedSiteException;
+import edu.java.bot.model.dto.response.ApiErrorResponse;
 import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +40,9 @@ public class UnTrackCommandTest {
     private Chat chat;
     @Mock
     private Storage storage;
+    @Mock
+    ApiErrorResponse apiErrorResponse;
+
     private UnTrackCommand unTrackCommand;
     private String expectedString;
 
@@ -83,7 +90,7 @@ public class UnTrackCommandTest {
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_UN_TRACK);
         when(update.message().text()).thenReturn(site);
-        when(storage.removeUrl(id, site)).thenReturn(true);
+        when(storage.removeUrl(id, site)).thenReturn(Optional.empty());
 
         SendMessage response = unTrackCommand.handle(update);
         assertNotNull(response);
@@ -97,7 +104,8 @@ public class UnTrackCommandTest {
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_UN_TRACK);
         when(update.message().text()).thenReturn(site);
-        when(storage.removeUrl(id, site)).thenReturn(false);
+        when(storage.removeUrl(id, site)).thenReturn(Optional.of(apiErrorResponse));
+        when(apiErrorResponse.getExceptionName()).thenReturn(LinkNotFoundException.class.getSimpleName());
 
         SendMessage response = unTrackCommand.handle(update);
         assertNotNull(response);
@@ -117,7 +125,7 @@ public class UnTrackCommandTest {
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_UN_TRACK);
         when(update.message().text()).thenReturn(site);
-        lenient().when(storage.removeUrl(id, site)).thenReturn(true);
+        lenient().when(storage.removeUrl(id, site)).thenReturn(Optional.empty());
 
         SendMessage response = unTrackCommand.handle(update);
         assertNotNull(response);

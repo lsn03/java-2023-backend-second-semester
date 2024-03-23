@@ -13,12 +13,9 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
-@Repository
-
 public class JooqLinkRepository implements LinkRepository {
     private final DSLContext dslContext;
     private final JooqLinkChatRepository jooqLinkChatRepository;

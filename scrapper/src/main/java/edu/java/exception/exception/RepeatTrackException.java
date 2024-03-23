@@ -12,4 +12,8 @@ public class RepeatTrackException extends RuntimeException {
     public RepeatTrackException(Throwable cause) {
         super(cause);
     }
+
+    public RepeatTrackException() {
+
+    }
 }

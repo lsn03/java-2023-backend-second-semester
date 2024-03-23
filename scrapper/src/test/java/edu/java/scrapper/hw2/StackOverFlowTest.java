@@ -7,8 +7,8 @@ import edu.java.configuration.ApplicationConfig;
 import edu.java.model.stack_over_flow.dto.AccountDTO;
 import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
 import edu.java.model.stack_over_flow.dto.QuestionHeaderDTOResponse;
-import edu.java.service.client.StackOverFlowHttpClient;
 import edu.java.service.client.StackOverFlowClient;
+import edu.java.service.client.StackOverFlowHttpClient;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -26,7 +26,7 @@ public class StackOverFlowTest {
     String title = "Lorem";
     ApplicationConfig config = new ApplicationConfig(
         null,
-        null,
+        null, null,
         new ApplicationConfig.StackOverFlowApiProperties(TOKEN, KEY)
     );
 
@@ -34,7 +34,8 @@ public class StackOverFlowTest {
     public void testHeader(WireMockRuntimeInfo wireMockRuntimeInfo) {
         int port = wireMockRuntimeInfo.getHttpPort();
 
-        String url = String.format("/questions/%d?order=desc&sort=activity&site=stackoverflow&access_token=%s&key=%s",
+        String url = String.format(
+            "/questions/%d?order=desc&sort=activity&site=stackoverflow&access_token=%s&key=%s",
             questionId,
             TOKEN,
             KEY

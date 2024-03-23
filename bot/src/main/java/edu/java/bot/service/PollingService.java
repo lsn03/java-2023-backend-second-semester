@@ -28,7 +28,10 @@ public class PollingService {
         bot.setUpdatesListener(updates -> {
             for (Update update : updates) {
                 var message = userMessageProcessor.process(update);
-                bot.myExecute(message);
+                if (message != null) {
+                    bot.myExecute(message);
+                }
+
             }
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });

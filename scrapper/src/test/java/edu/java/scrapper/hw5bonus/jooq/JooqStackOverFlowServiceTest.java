@@ -4,6 +4,9 @@ import edu.java.domain.model.LinkDTO;
 import edu.java.domain.model.StackOverFlowAnswerDTO;
 import edu.java.exception.exception.RecordAlreadyExistException;
 import edu.java.scrapper.IntegrationTest;
+import edu.java.service.database.LinkService;
+import edu.java.service.database.StackOverFlowService;
+import edu.java.service.database.TgChatService;
 import edu.java.service.database.jooq.JooqLinkService;
 import edu.java.service.database.jooq.JooqStackOverFlowService;
 import edu.java.service.database.jooq.JooqTgChatService;
@@ -11,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -20,14 +24,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@ActiveProfiles("jooq")
 public class JooqStackOverFlowServiceTest extends IntegrationTest {
     @Autowired
-    private JooqStackOverFlowService jooqStackOverFlowService;
+    private StackOverFlowService jooqStackOverFlowService;
     @Autowired
-    private JooqLinkService jooqLinkService;
-    @Autowired
-    private JooqTgChatService jooqTgChatService;
+    private LinkService jooqLinkService;
 
+    @Autowired
+    private TgChatService jooqTgChatService;
     private static final long ANSWER_ID = 1l;
     private static final long TG_CHAT_ID = 1l;
     OffsetDateTime time = OffsetDateTime.of(2015, 1, 1, 1, 1, 1, 0, ZoneOffset.UTC);

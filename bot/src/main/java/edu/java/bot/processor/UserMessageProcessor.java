@@ -31,10 +31,14 @@ public class UserMessageProcessor {
     }
 
     public SendMessage process(Update update) {
+        if (update.message() == null) {
+            return null;
+        }
         Long chatId = update.message().chat().id();
         String text = update.message().text();
 
         UserState state = storage.getUserState(chatId);
+
         Command command = commands.getOrDefault(text, unknownCommand);
         if (command instanceof CancelCommand) {
             return command.handle(update);

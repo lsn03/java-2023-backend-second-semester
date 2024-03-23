@@ -7,10 +7,8 @@ import edu.java.service.database.TgChatService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
-@Service
 public class JooqTgChatService implements TgChatService {
     private final JooqChatRepository jooqChatRepository;
 

@@ -55,12 +55,12 @@ public class GitHubProcessor implements Processor {
                 commit.setLinkId(linkDTO.getLinkId());
                 return commit;
             }).toList();
-        log.info(commitsFromAPI.toString());
+
         if (linkDTO.getLastUpdate() == null) {
-            log.info(linkDTO.toString());
             gitHubService.addCommits(commitsFromAPI);
             linkDTO.setLastUpdate(OffsetDateTime.now());
             jooqLinkRepository.updateLink(linkDTO);
+            log.info("last_update is null, add {} commits for link_id {}", commitsFromAPI.size(), linkDTO.getLinkId());
             return null;
         }
 
@@ -94,6 +94,7 @@ public class GitHubProcessor implements Processor {
         if (STRING_BUILDER.isEmpty()) {
             return null;
         }
+        log.info("generate LinkUpdateRequest for link_id {}", linkDTO.getLinkId());
         return new LinkUpdateRequest(
             linkDTO.getLinkId(),
             linkDTO.getUri().toString(),

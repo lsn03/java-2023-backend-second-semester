@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
-    private final LinkRepository jdbcLinkRepository;
+    private final LinkRepository jpaLinkRepository;
     private final ApplicationConfig applicationConfig;
     private final List<Handler> handlers;
     private final List<Processor> processors;
@@ -27,7 +27,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     @Override
     public List<LinkUpdateRequest> update() {
-        List<LinkDTO> list = jdbcLinkRepository.findAllOldLinks(oldLinksInSeconds);
+        List<LinkDTO> list = jpaLinkRepository.findAllOldLinks(oldLinksInSeconds);
 
         List<LinkUpdateRequest> answer = new ArrayList<>();
 
@@ -39,29 +39,28 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
                 if (handler.canHandle(uri)) {
                     var uriDto = handler.handle(uri);
                     response = processDto(elem, uriDto);
-                    if (response != null) {
+                    if (response.isEmpty()) {
                         break;
                     }
                 }
             }
-            if (response != null) {
-                var tgChatIds =
-                    jdbcLinkRepository.findAllByLinkId(elem.getLinkId())
-                        .stream()
-                        .map(
-                            LinkDTO::getTgChatId
-                        ).toList();
 
-                for (var responseElem : response) {
-                    if (responseElem != null) {
-                        responseElem.setTgChatIds(tgChatIds);
-                        answer.add(responseElem);
-                    }
+            var tgChatIds =
+                jpaLinkRepository.findAllByLinkId(elem.getLinkId())
+                    .stream()
+                    .map(
+                        LinkDTO::getTgChatId
+                    ).toList();
+
+            for (var responseElem : response) {
+                if (responseElem != null) {
+                    responseElem.setTgChatIds(tgChatIds);
+                    answer.add(responseElem);
                 }
-
             }
+
             if (!answer.isEmpty()) {
-                jdbcLinkRepository.updateLink(elem);
+                jpaLinkRepository.updateLink(elem);
             }
         }
 

@@ -14,10 +14,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Repository
 @AllArgsConstructor
 public class JdbcLinkRepository implements LinkRepository {
     private static final String LINK_ID = "link_id";
@@ -35,7 +33,7 @@ public class JdbcLinkRepository implements LinkRepository {
             connection -> {
                 PreparedStatement ps = connection.prepareStatement(
                     "insert into link (uri,created_at)  values (?,?)",
-                    new String[]{LINK_ID}
+                    new String[] {LINK_ID}
                 );
                 ps.setString(1, String.valueOf(linkDTO.getUri()));
                 ps.setObject(

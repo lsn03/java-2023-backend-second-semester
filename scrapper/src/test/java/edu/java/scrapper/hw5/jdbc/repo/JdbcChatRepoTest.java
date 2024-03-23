@@ -1,6 +1,7 @@
 package edu.java.scrapper.hw5.jdbc.repo;
 
 import edu.java.domain.model.ChatDTO;
+import edu.java.domain.repository.ChatRepository;
 import edu.java.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.scrapper.IntegrationTest;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,9 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@ActiveProfiles("jdbc")
 public class JdbcChatRepoTest extends IntegrationTest {
     @Autowired
-    private JdbcChatRepository jdbcChatRepository;
+    private ChatRepository jdbcChatRepository;
 
     @Test
     @Rollback
