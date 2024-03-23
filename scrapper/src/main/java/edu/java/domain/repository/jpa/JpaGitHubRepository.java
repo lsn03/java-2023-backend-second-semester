@@ -7,11 +7,9 @@ import jakarta.persistence.EntityManager;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
-@Repository
 public class JpaGitHubRepository implements GitHubRepository {
     private final EntityManager entityManager;
     private final JpaGitHubRepositoryInterface jpaGitHubRepository;
@@ -43,7 +41,7 @@ public class JpaGitHubRepository implements GitHubRepository {
     @Override
     @Transactional
     public List<GitHubCommitDTO> getCommits(Long linkId) {
-        return jpaGitHubRepository.findAllByLinkEntity_LinkId(linkId).stream()
+        return jpaGitHubRepository.findAllByLinkEntityLinkId(linkId).stream()
             .map(MapperGitHubCommitDTOGitHubCommitEntity::entityToDto).toList();
     }
 

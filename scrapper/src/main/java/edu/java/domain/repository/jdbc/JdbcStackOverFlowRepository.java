@@ -12,10 +12,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
-@Repository
 public class JdbcStackOverFlowRepository implements StackOverFlowRepository {
     private static final int INS_LINK_ID_INDEX = 1;
     private static final int INS_ANSWER_ID_INDEX = 2;

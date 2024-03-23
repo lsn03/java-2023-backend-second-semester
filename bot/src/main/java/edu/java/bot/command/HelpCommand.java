@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class HelpCommand implements Command {
 
     private static final String LINE_SEPARATOR = System.lineSeparator();
+    public static final String CORRECT_LINK_EXAMPLE = "Примеры корректной ссылки:";
 
     private final StringBuilder stringBuilder;
     private final List<Command> commandList;
@@ -68,12 +69,12 @@ public class HelpCommand implements Command {
         stringBuilder.append("Поддерживаются сайты: StackOverFlow, Github.").append(LINE_SEPARATOR);
         stringBuilder.append("Github: отслеживание новых коммитов в Pull Request").append(LINE_SEPARATOR);
         stringBuilder.append("Формат: https://github.com/{owner}/{repo}/pull/{pull_number}").append(LINE_SEPARATOR);
-        stringBuilder.append("Примеры корректной ссылки:").append(LINE_SEPARATOR);
+        stringBuilder.append(CORRECT_LINK_EXAMPLE).append(LINE_SEPARATOR);
         stringBuilder.append("1. https://github.com/lsn03/java-2023-backend-second-semester/pull/1")
             .append(LINE_SEPARATOR);
         stringBuilder.append("StackOverFlow: отслеживание новых ответов в вопросе").append(LINE_SEPARATOR);
         stringBuilder.append("Формат: https://stackoverflow.com/questions/{question_id}/*").append(LINE_SEPARATOR);
-        stringBuilder.append("Примеры корректной ссылки:").append(LINE_SEPARATOR);
+        stringBuilder.append(CORRECT_LINK_EXAMPLE).append(LINE_SEPARATOR);
         stringBuilder.append("1. https://stackoverflow.com/questions/6402162/how-to-enable-intellij-hot-code-swap")
             .append(LINE_SEPARATOR);
 

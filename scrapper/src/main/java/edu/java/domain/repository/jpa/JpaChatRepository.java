@@ -8,10 +8,8 @@ import edu.java.exception.exception.UserAlreadyExistException;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
-@Repository
 public class JpaChatRepository implements ChatRepository {
     private final JpaChatRepositoryInterface jpaChatRepository;
 

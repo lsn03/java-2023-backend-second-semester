@@ -13,10 +13,8 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.InsertValuesStep5;
 import org.jooq.impl.DSL;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Repository
 @RequiredArgsConstructor
 public class JooqGitHubRepository implements GitHubRepository {
     private final DSLContext dslContext;

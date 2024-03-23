@@ -8,12 +8,9 @@ import jakarta.persistence.EntityExistsException;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
-@Service
-@Primary
+
 public class JpaStackOverFlowService implements StackOverFlowService {
     private final JpaStackOverFlowRepository stackOverFlowRepository;
 

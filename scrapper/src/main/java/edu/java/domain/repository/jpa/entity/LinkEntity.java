@@ -8,14 +8,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Table(name = "link")
@@ -36,7 +35,7 @@ public class LinkEntity {
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
 
-    @OneToMany(mappedBy = "link",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "link", fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<LinkChatEntity> linkChats;
 

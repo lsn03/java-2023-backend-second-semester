@@ -12,11 +12,11 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
-@Repository
 @RequiredArgsConstructor
 public class JpaLinkChatRepository implements LinkChatRepository {
+    public static final String CHAT_ID = "chatId";
+    public static final String LINK_ID = "linkId";
     private final JpaLinkChatRepositoryInterface jpaLinkChatRepository;
     private final EntityManager entityManager;
     private final JpaLinkRepositoryInterface jpaLinkRepository;
@@ -49,8 +49,8 @@ public class JpaLinkChatRepository implements LinkChatRepository {
                 delete from LinkChatEntity lce
                 where lce.link.linkId = :linkId and lce.chat.id = : chatId
                 """)
-            .setParameter("linkId", linkDTO.getLinkId())
-            .setParameter("chatId", linkDTO.getTgChatId())
+            .setParameter(LINK_ID, linkDTO.getLinkId())
+            .setParameter(CHAT_ID, linkDTO.getTgChatId())
             .executeUpdate();
     }
 
@@ -67,7 +67,7 @@ public class JpaLinkChatRepository implements LinkChatRepository {
                 inner join LinkChatEntity lc
                     on lc.link.linkId = le.linkId
                 where lc.chat.id = :chatId
-                """, LinkEntity.class).setParameter("chatId", tgChatId)
+                """, LinkEntity.class).setParameter(CHAT_ID, tgChatId)
             .getResultList().stream().map(linkEntity -> {
                 var linkDTO = MapperLinkDTOLinkEntity.entityToDto(linkEntity);
                 linkDTO.setTgChatId(tgChatId);
@@ -77,16 +77,14 @@ public class JpaLinkChatRepository implements LinkChatRepository {
 
     @Override
     public List<LinkDTO> findAllByLinkId(Long linkId) {
-        var list =  entityManager.createQuery("""
+        var list = entityManager.createQuery("""
                 select le
                 from LinkEntity le inner join LinkChatEntity lc on
                     lc.link.id = le.id where lc.link.id = :linkId
                 """, LinkEntity.class)
-            .setParameter("linkId", linkId)
+            .setParameter(LINK_ID, linkId)
             .getResultList();
-        return list.stream().map(linkEntity ->{
-            return MapperLinkDTOLinkEntity.entityToDto(linkEntity);
-        }).toList();
+        return list.stream().map(MapperLinkDTOLinkEntity::entityToDto).toList();
 
     }
 }

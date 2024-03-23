@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class LinkParserService {
     private List<ResourceHandler> handlers;
+    private String template = "WebSite %s is not supported.";
 
     @Autowired
     public LinkParserService(List<ResourceHandler> handlers) {
@@ -23,7 +24,7 @@ public class LinkParserService {
             uri = URI.create(url);
         } catch (IllegalArgumentException e) {
             if (e.getCause() instanceof URISyntaxException) {
-                throw new UnsupportedSiteException("WebSite " + url + " is not supported.");
+                throw new UnsupportedSiteException(String.format(template, url));
             }
         }
         for (ResourceHandler handler : handlers) {
@@ -31,7 +32,7 @@ public class LinkParserService {
                 return;
             }
         }
-        throw new UnsupportedSiteException("WebSite " + url + " is not supported.");
+        throw new UnsupportedSiteException(String.format(template, url));
 
     }
 }

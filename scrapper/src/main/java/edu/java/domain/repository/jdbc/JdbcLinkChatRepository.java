@@ -5,10 +5,8 @@ import edu.java.domain.repository.LinkChatRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Repository
 @AllArgsConstructor
 public class JdbcLinkChatRepository implements LinkChatRepository {
     private static final String URI = "uri";

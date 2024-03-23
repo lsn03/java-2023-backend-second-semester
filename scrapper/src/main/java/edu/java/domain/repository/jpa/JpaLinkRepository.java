@@ -12,11 +12,9 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
-@Repository
 public class JpaLinkRepository implements LinkRepository {
     private final JpaLinkRepositoryInterface jpaLinkRepository;
     private final EntityManager entityManager;
@@ -91,8 +89,8 @@ public class JpaLinkRepository implements LinkRepository {
                 select le
                 from LinkEntity le
                 where le.lastUpdate is null  or le.lastUpdate < :time
-                """, LinkEntity.class).
-            setParameter("time", differenceTime)
+                """, LinkEntity.class)
+            .setParameter("time", differenceTime)
             .getResultList();
 
         return entityList.stream().map(MapperLinkDTOLinkEntity::entityToDto).toList();
