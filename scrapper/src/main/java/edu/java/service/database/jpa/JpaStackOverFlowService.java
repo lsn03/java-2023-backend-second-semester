@@ -8,6 +8,7 @@ import jakarta.persistence.EntityExistsException;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
 
 @RequiredArgsConstructor
 
@@ -18,7 +19,7 @@ public class JpaStackOverFlowService implements StackOverFlowService {
     public Integer addAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
         try {
             return stackOverFlowRepository.addAnswers(stackOverFlowAnswerDTOList);
-        } catch (EntityExistsException e) {
+        } catch (EntityExistsException | ConstraintViolationException e) {
             throw new RecordAlreadyExistException(e);
         }
     }

@@ -22,7 +22,7 @@ public class MapperLinkDTOLinkEntity {
         if (update != null) {
             linkDTO.setLastUpdate(update.atOffset(ZoneOffset.UTC));
         }
-        if(linkChats!=null && !linkChats.isEmpty()){
+        if (linkChats != null && !linkChats.isEmpty()) {
             linkDTO.setTgChatId(linkChats.stream().findFirst().get().getChat().getChatId());
         }
 

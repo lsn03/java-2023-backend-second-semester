@@ -4,6 +4,7 @@ import edu.java.domain.model.LinkDTO;
 import edu.java.domain.repository.LinkRepository;
 import edu.java.domain.repository.jpa.entity.LinkEntity;
 import edu.java.domain.repository.jpa.mapper.MapperLinkDTOLinkEntity;
+import edu.java.exception.exception.RepeatTrackException;
 import jakarta.persistence.EntityManager;
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -25,7 +27,11 @@ public class JpaLinkRepository implements LinkRepository {
 
         linkDTO.setCreatedAt(LocalDateTime.now().atOffset(ZoneOffset.UTC));
         var inserted = MapperLinkDTOLinkEntity.dtoToEntity(linkDTO);
-        jpaLinkRepository.save(inserted);
+        try {
+            jpaLinkRepository.save(inserted);
+        } catch (DataIntegrityViolationException e) {
+            throw new RepeatTrackException(e);
+        }
 
         linkDTO.setLinkId(inserted.getLinkId());
         return linkDTO;

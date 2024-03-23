@@ -3,10 +3,13 @@ package edu.java.domain.repository.jpa;
 import edu.java.domain.model.GitHubCommitDTO;
 import edu.java.domain.repository.GitHubRepository;
 import edu.java.domain.repository.jpa.mapper.MapperGitHubCommitDTOGitHubCommitEntity;
+import edu.java.exception.exception.RecordAlreadyExistException;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -20,9 +23,20 @@ public class JpaGitHubRepository implements GitHubRepository {
         int cnt = 0;
         for (var commitDto : gitHubCommitList) {
             var entity = MapperGitHubCommitDTOGitHubCommitEntity.dtoToEntity(commitDto);
-            entityManager.persist(entity);
+            try {
+                entityManager.persist(entity);
+            } catch (EntityExistsException e) {
+                throw new RecordAlreadyExistException(e);
+            } catch (ConstraintViolationException e) {
+                if (e.getMessage().contains("duplicate key value ")) {
+                    throw new RecordAlreadyExistException(e);
+                } else {
+                    throw new RuntimeException(e);
+                }
+            }
             cnt++;
         }
+
         return cnt;
     }
 
@@ -31,10 +45,13 @@ public class JpaGitHubRepository implements GitHubRepository {
     public Integer deleteCommits(List<GitHubCommitDTO> gitHubCommitList) {
         int cnt = 0;
         for (var commit : gitHubCommitList) {
-            var entity = MapperGitHubCommitDTOGitHubCommitEntity.dtoToEntity(commit);
+            var entity = jpaGitHubRepository.findByLinkEntityLinkIdAndSha(commit.getLinkId(), commit.getSha());
+
             entityManager.remove(entity);
+
             cnt++;
         }
+
         return cnt;
     }
 

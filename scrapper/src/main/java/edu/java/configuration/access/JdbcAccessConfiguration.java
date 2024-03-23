@@ -61,20 +61,24 @@ public class JdbcAccessConfiguration {
     public TgChatService jdbcTgChatService() {
         return new JdbcTgChatService((JdbcChatRepository) jdbcChatRepository());
     }
+
     @Bean
-    public GitHubRepository jdbcGitHubRepository (){
+    public GitHubRepository jdbcGitHubRepository() {
         return new JdbcGitHubRepository(jdbcTemplate);
     }
+
     @Bean
-    public StackOverFlowRepository jdbcStackOverFlowRepository(){
+    public StackOverFlowRepository jdbcStackOverFlowRepository() {
         return new JdbcStackOverFlowRepository(jdbcTemplate);
     }
+
     @Bean
-    public GitHubService jdbcGitHubService(){
+    public GitHubService jdbcGitHubService() {
         return new JdbcGitHubService((JdbcGitHubRepository) jdbcGitHubRepository());
     }
+
     @Bean
-    public StackOverFlowService jdbcStackOverFlowService(){
+    public StackOverFlowService jdbcStackOverFlowService() {
         return new JdbcStackOverFlowService((JdbcStackOverFlowRepository) jdbcStackOverFlowRepository());
     }
 }
