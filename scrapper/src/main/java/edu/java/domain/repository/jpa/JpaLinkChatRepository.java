@@ -77,13 +77,16 @@ public class JpaLinkChatRepository implements LinkChatRepository {
 
     @Override
     public List<LinkDTO> findAllByLinkId(Long linkId) {
-        return entityManager.createQuery("""
+        var list =  entityManager.createQuery("""
                 select le
                 from LinkEntity le inner join LinkChatEntity lc on
                     lc.link.id = le.id where lc.link.id = :linkId
                 """, LinkEntity.class)
             .setParameter("linkId", linkId)
-            .getResultList().stream().map(MapperLinkDTOLinkEntity::entityToDto).toList();
+            .getResultList();
+        return list.stream().map(linkEntity ->{
+            return MapperLinkDTOLinkEntity.entityToDto(linkEntity);
+        }).toList();
 
     }
 }

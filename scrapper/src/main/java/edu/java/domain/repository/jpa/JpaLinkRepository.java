@@ -8,6 +8,7 @@ import edu.java.exception.exception.RepeatTrackException;
 import jakarta.persistence.EntityManager;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -78,6 +79,7 @@ public class JpaLinkRepository implements LinkRepository {
     @Override
     @Transactional
     public void updateLink(LinkDTO elem) {
+        elem.setLastUpdate(OffsetDateTime.now());
         var entity = MapperLinkDTOLinkEntity.dtoToEntity(elem);
         jpaLinkRepository.save(entity);
     }

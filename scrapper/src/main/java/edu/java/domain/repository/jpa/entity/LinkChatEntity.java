@@ -1,6 +1,7 @@
 package edu.java.domain.repository.jpa.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
@@ -25,7 +26,7 @@ public class LinkChatEntity {
     private LinkEntity link;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "chat_id", referencedColumnName = "chat_id")
     private ChatEntity chat;
 }

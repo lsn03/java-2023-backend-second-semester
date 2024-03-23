@@ -2,6 +2,7 @@ package edu.java.domain.repository.jpa.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,6 +13,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -34,7 +36,8 @@ public class LinkEntity {
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
 
-    @OneToMany(mappedBy = "link")
+    @OneToMany(mappedBy = "link",fetch = FetchType.EAGER)
+    @ToString.Exclude
     private Set<LinkChatEntity> linkChats;
 
 }

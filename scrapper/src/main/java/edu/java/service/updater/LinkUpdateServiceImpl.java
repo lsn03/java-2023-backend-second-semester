@@ -39,27 +39,26 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
                 if (handler.canHandle(uri)) {
                     var uriDto = handler.handle(uri);
                     response = processDto(elem, uriDto);
-                    if (response != null) {
+                    if (response.isEmpty()) {
                         break;
                     }
                 }
             }
-            if (response != null) {
-                var tgChatIds =
-                    jpaLinkRepository.findAllByLinkId(elem.getLinkId())
-                        .stream()
-                        .map(
-                            LinkDTO::getTgChatId
-                        ).toList();
 
-                for (var responseElem : response) {
-                    if (responseElem != null) {
-                        responseElem.setTgChatIds(tgChatIds);
-                        answer.add(responseElem);
-                    }
+            var tgChatIds =
+                jpaLinkRepository.findAllByLinkId(elem.getLinkId())
+                    .stream()
+                    .map(
+                        LinkDTO::getTgChatId
+                    ).toList();
+
+            for (var responseElem : response) {
+                if (responseElem != null) {
+                    responseElem.setTgChatIds(tgChatIds);
+                    answer.add(responseElem);
                 }
-
             }
+
             if (!answer.isEmpty()) {
                 jpaLinkRepository.updateLink(elem);
             }

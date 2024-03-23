@@ -13,6 +13,7 @@ public class MapperLinkDTOLinkEntity {
         var update = entity.getLastUpdate();
 
         LinkDTO linkDTO = new LinkDTO();
+        linkDTO.setTgChatId(entity.getLinkChats().stream().findFirst().get().getChat().getChatId());
         linkDTO.setUri(URI.create(entity.getUri()));
         linkDTO.setLinkId(entity.getLinkId());
         if (created != null) {

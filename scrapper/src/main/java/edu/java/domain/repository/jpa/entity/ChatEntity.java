@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import java.util.Set;
 
 @Entity
@@ -21,5 +22,6 @@ public class ChatEntity {
     private Long chatId;
     private Boolean active;
     @OneToMany(mappedBy = "chat")
+    @ToString.Exclude
     private Set<LinkChatEntity> linkChats;
 }
