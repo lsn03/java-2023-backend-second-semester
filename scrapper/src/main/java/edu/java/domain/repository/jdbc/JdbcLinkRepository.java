@@ -4,6 +4,7 @@ import edu.java.domain.model.LinkDTO;
 import edu.java.domain.repository.LinkRepository;
 import java.net.URI;
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -145,9 +146,9 @@ public class JdbcLinkRepository implements LinkRepository {
                 linkDTO.setUri(URI.create(rs.getString(URI_FIELD)));
                 linkDTO.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime().atOffset(ZoneOffset.UTC));
 
-                LocalDateTime lastUpdate = rs.getTimestamp("last_update").toLocalDateTime();
+                Timestamp lastUpdate = rs.getTimestamp("last_update");
                 if (lastUpdate != null) {
-                    linkDTO.setLastUpdate(lastUpdate.atOffset(ZoneOffset.UTC));
+                    linkDTO.setLastUpdate(lastUpdate.toLocalDateTime().atOffset(ZoneOffset.UTC));
                 }
 
                 return linkDTO;
