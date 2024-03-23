@@ -24,6 +24,11 @@ spring:
   devtools:
     restart:
       enabled: false
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+
 
 springdoc:
   swagger-ui:

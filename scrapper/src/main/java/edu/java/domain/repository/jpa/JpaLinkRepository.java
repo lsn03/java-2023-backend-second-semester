@@ -4,7 +4,6 @@ import edu.java.domain.model.LinkDTO;
 import edu.java.domain.repository.LinkRepository;
 import edu.java.domain.repository.jpa.entity.LinkEntity;
 import edu.java.domain.repository.jpa.mapper.MapperLinkDTOLinkEntity;
-import edu.java.exception.exception.RepeatTrackException;
 import jakarta.persistence.EntityManager;
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -23,11 +22,7 @@ public class JpaLinkRepository implements LinkRepository {
     @Override
     @Transactional
     public LinkDTO add(LinkDTO linkDTO) {
-        var entity =
-            jpaLinkRepository.findLinkEntityByUri(linkDTO.getUri().toString());
-        if (entity.isPresent()) {
-            throw new RepeatTrackException();
-        }
+
         linkDTO.setCreatedAt(LocalDateTime.now().atOffset(ZoneOffset.UTC));
         var inserted = MapperLinkDTOLinkEntity.dtoToEntity(linkDTO);
         jpaLinkRepository.save(inserted);
@@ -39,17 +34,17 @@ public class JpaLinkRepository implements LinkRepository {
     @Override
     @Transactional
     public Integer remove(LinkDTO linkDTO) {
-        var countLinkChat = entityManager.createQuery(
-                "select count(lc) from LinkChatEntity lc where lc.link.id = :linkId", Long.class)
-            .setParameter("linkId", linkDTO.getLinkId())
-            .getSingleResult();
-        if (countLinkChat > 0) {
-            return 0;
-        }
+        Long linkId = findLinkIdByUrl(linkDTO.getUri());
+        linkDTO.setLinkId(linkId);
+        var response = jpaLinkChatRepository.findAllByLinkId(linkId);
 
-        return entityManager.createQuery("delete from LinkEntity le where le.uri = :uri")
-            .setParameter("uri", linkDTO.getUri().toString())
-            .executeUpdate();
+        if (response.isEmpty()) {
+            return entityManager.createQuery("delete from LinkEntity le where le.linkId = :linkId")
+                .setParameter("linkId", linkId)
+                .executeUpdate();
+        }
+        return 0;
+
     }
 
     @Override

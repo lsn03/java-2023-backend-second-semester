@@ -22,8 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("jdbc")
 public class JdbcLinkChatRepoTest extends IntegrationTest {
 
-//    @Autowired
-//    private JdbcAccessConfiguration jdbcAccessConfiguration;
 
     @Autowired
     private LinkChatRepository jdbcLinkChatRepository;

@@ -11,9 +11,9 @@ public class MapperLinkDTOLinkEntity {
     public static LinkDTO entityToDto(LinkEntity entity) {
         var created = entity.getCreatedAt();
         var update = entity.getLastUpdate();
-
+        var linkChats = entity.getLinkChats();
         LinkDTO linkDTO = new LinkDTO();
-        linkDTO.setTgChatId(entity.getLinkChats().stream().findFirst().get().getChat().getChatId());
+
         linkDTO.setUri(URI.create(entity.getUri()));
         linkDTO.setLinkId(entity.getLinkId());
         if (created != null) {
@@ -21,6 +21,9 @@ public class MapperLinkDTOLinkEntity {
         }
         if (update != null) {
             linkDTO.setLastUpdate(update.atOffset(ZoneOffset.UTC));
+        }
+        if(linkChats!=null && !linkChats.isEmpty()){
+            linkDTO.setTgChatId(linkChats.stream().findFirst().get().getChat().getChatId());
         }
 
         return linkDTO;
