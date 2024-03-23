@@ -8,9 +8,11 @@ import edu.java.exception.exception.RepeatTrackException;
 import jakarta.persistence.EntityManager;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Repository
@@ -20,12 +22,14 @@ public class JpaLinkRepository implements LinkRepository {
     private final JpaLinkChatRepository jpaLinkChatRepository;
 
     @Override
+    @Transactional
     public LinkDTO add(LinkDTO linkDTO) {
         var entity =
             jpaLinkRepository.findLinkEntityByUri(linkDTO.getUri().toString());
         if (entity.isPresent()) {
             throw new RepeatTrackException();
         }
+        linkDTO.setCreatedAt(LocalDateTime.now().atOffset(ZoneOffset.UTC));
         var inserted = MapperLinkDTOLinkEntity.dtoToEntity(linkDTO);
         jpaLinkRepository.save(inserted);
 
@@ -34,6 +38,7 @@ public class JpaLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional
     public Integer remove(LinkDTO linkDTO) {
         var countLinkChat = entityManager.createQuery(
                 "select count(lc) from LinkChatEntity lc where lc.link.id = :linkId", Long.class)
@@ -71,9 +76,9 @@ public class JpaLinkRepository implements LinkRepository {
     }
 
     @Override
+    @Transactional
     public void updateLink(LinkDTO elem) {
         var entity = MapperLinkDTOLinkEntity.dtoToEntity(elem);
-        entity.setLastUpdate(LocalDateTime.now());
         jpaLinkRepository.save(entity);
     }
 
@@ -81,7 +86,7 @@ public class JpaLinkRepository implements LinkRepository {
     public List<LinkDTO> findAllOldLinks(Integer timeInSeconds) {
         LocalDateTime differenceTime = LocalDateTime.now().minusSeconds(timeInSeconds);
         var entityList = entityManager.createQuery("""
-                select le.linkId,le.uri,le.createdAt,le.lastUpdate
+                select le
                 from LinkEntity le
                 where le.lastUpdate is null  or le.lastUpdate < :time
                 """, LinkEntity.class).

@@ -1,48 +1,45 @@
-package edu.java.service.database.jooq;
+package edu.java.service.database.jpa;
 
 import edu.java.domain.model.StackOverFlowAnswerDTO;
-import edu.java.domain.repository.jooq.JooqStackOverFlowRepository;
+import edu.java.domain.repository.jpa.JpaStackOverFlowRepository;
 import edu.java.exception.exception.RecordAlreadyExistException;
 import edu.java.service.database.StackOverFlowService;
+import jakarta.persistence.EntityExistsException;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
-
-public class JooqStackOverFlowService implements StackOverFlowService {
-    private final JooqStackOverFlowRepository jooqStackOverFlowRepository;
+@Service
+@Primary
+public class JpaStackOverFlowService implements StackOverFlowService {
+    private final JpaStackOverFlowRepository stackOverFlowRepository;
 
     @Override
-    @Transactional
     public Integer addAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
         try {
-            return jooqStackOverFlowRepository.addAnswers(stackOverFlowAnswerDTOList);
-        } catch (DuplicateKeyException e) {
+            return stackOverFlowRepository.addAnswers(stackOverFlowAnswerDTOList);
+        } catch (EntityExistsException e) {
             throw new RecordAlreadyExistException(e);
         }
     }
 
     @Override
-    @Transactional
     public Integer deleteAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
-        return jooqStackOverFlowRepository.deleteAnswers(stackOverFlowAnswerDTOList);
+
+        return stackOverFlowRepository.deleteAnswers(stackOverFlowAnswerDTOList);
+
     }
 
     @Override
-    @Transactional
     public List<StackOverFlowAnswerDTO> getAnswers(Long linkId) {
-        return jooqStackOverFlowRepository.getAnswers(linkId);
+        return stackOverFlowRepository.getAnswers(linkId);
     }
 
     @Override
-    @Transactional
     public List<StackOverFlowAnswerDTO> getAnswers(URI uri) {
-        return jooqStackOverFlowRepository.getAnswers(uri);
+        return stackOverFlowRepository.getAnswers(uri);
     }
 }

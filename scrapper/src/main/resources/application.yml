@@ -1,8 +1,8 @@
 app:
   scheduler:
     enable: true
-    interval: 40s
-    force-check-delay: 40s
+    interval: 10s
+    force-check-delay: 10s
   git-hub-api-properties:
     token: ${APP_GITHUB_TOKEN:token}
   stack-over-flow-api-properties:

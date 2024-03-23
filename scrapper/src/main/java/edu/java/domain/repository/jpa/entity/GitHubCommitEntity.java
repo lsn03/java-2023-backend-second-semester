@@ -27,8 +27,7 @@ public class GitHubCommitEntity {
     @Column(name = "commit_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commitId;
-    @Column(name = "link_id")
-    private Long linkId;
+
     @Column(nullable = false)
     private String sha;
     private String author;

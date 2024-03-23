@@ -31,14 +31,14 @@ public class JpaLinkChatRepository implements LinkChatRepository {
         }
         Optional<LinkEntity> linkEntity = jpaLinkRepository.findById(linkDTO.getLinkId());
         Optional<ChatEntity> chatEntity = jpaChatRepository.findById(linkDTO.getTgChatId());
-        if(linkEntity.isPresent()&& chatEntity.isPresent()){
+        if (linkEntity.isPresent() && chatEntity.isPresent()) {
 
             LinkChatEntity linkChatEntity = new LinkChatEntity();
             linkChatEntity.setChat(chatEntity.get());
             linkChatEntity.setLink(linkEntity.get());
             jpaLinkChatRepository.save(linkChatEntity);
-        }else {
-            throw new UserDoesntExistException("User with id "+linkDTO.getTgChatId()+" is not exist");
+        } else {
+            throw new UserDoesntExistException("User with id " + linkDTO.getTgChatId() + " is not exist");
         }
     }
 
@@ -62,7 +62,6 @@ public class JpaLinkChatRepository implements LinkChatRepository {
     @Override
     public List<LinkDTO> findAllByChatId(Long tgChatId) {
         return entityManager.createQuery("""
-
                 select le
                 from LinkEntity le
                 inner join LinkChatEntity lc
@@ -79,7 +78,7 @@ public class JpaLinkChatRepository implements LinkChatRepository {
     @Override
     public List<LinkDTO> findAllByLinkId(Long linkId) {
         return entityManager.createQuery("""
-                select le.linkId, le.uri, lc.chat.id
+                select le
                 from LinkEntity le inner join LinkChatEntity lc on
                     lc.link.id = le.id where lc.link.id = :linkId
                 """, LinkEntity.class)

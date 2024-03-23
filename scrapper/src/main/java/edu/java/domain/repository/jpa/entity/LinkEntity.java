@@ -36,4 +36,5 @@ public class LinkEntity {
 
     @OneToMany(mappedBy = "link")
     private Set<LinkChatEntity> linkChats;
+
 }
