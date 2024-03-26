@@ -1,6 +1,8 @@
 package edu.java.scrapper.hw4;
 
 import java.util.List;
+
+import edu.java.scrapper.IntegrationTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -6,11 +6,15 @@ import liquibase.Liquibase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import liquibase.resource.DirectoryResourceAccessor;
+import liquibase.resource.ResourceAccessor;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -30,12 +34,15 @@ public abstract class IntegrationTest {
     }
 
     private static void runMigrations(JdbcDatabaseContainer<?> c) {
+        var path = new File(".").toPath().toAbsolutePath().getParent().getParent().resolve("migrations");
+
         String migrationFile = "master.xml";
         try (Connection conn = DriverManager.getConnection(c.getJdbcUrl(), c.getUsername(), c.getPassword())) {
+            ResourceAccessor resourceAccessor = new DirectoryResourceAccessor(path);
             Liquibase liquibase =
-                new liquibase.Liquibase(migrationFile, new ClassLoaderResourceAccessor(), new JdbcConnection(conn));
+                new liquibase.Liquibase(migrationFile, resourceAccessor, new JdbcConnection(conn));
             liquibase.update(new Contexts(), new LabelExpression());
-        } catch (SQLException | LiquibaseException e) {
+        } catch (SQLException | LiquibaseException | FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
