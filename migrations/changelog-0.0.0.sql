@@ -9,12 +9,12 @@ create table chat
     chat_id bigint not null
         constraint chat_pk
             primary key,
-    active  boolean default false
+    active  boolean default true
 );
 
 create table link
 (
-    link_id integer not null
+    link_id serial not null
         constraint link_pk
             primary key,
     uri     text    not null
@@ -29,4 +29,3 @@ create table link_chat
         constraint link_to_user_user_user_id_fk
             references chat
 );
-
