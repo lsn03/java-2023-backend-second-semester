@@ -1,15 +1,17 @@
 package edu.java.bot.service.client;
 
+import edu.java.bot.configuration.ApplicationConfig;
+import edu.java.bot.exception.ApiErrorException;
 import edu.java.bot.model.dto.request.AddLinkRequest;
 import edu.java.bot.model.dto.request.RemoveLinkRequest;
 import edu.java.bot.model.dto.response.ApiErrorResponse;
 import edu.java.bot.model.dto.response.LinkResponse;
 import edu.java.bot.model.dto.response.ListLinksResponse;
-import edu.java.bot.model.dto.response.MyResponse;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
 public class ScrapperHttpClient {
 
@@ -18,69 +20,91 @@ public class ScrapperHttpClient {
     private static final String TG_CHAT = "/tg-chat/%d";
 
     private final WebClient client;
+    private final Retry retry;
 
-    public ScrapperHttpClient(String baseUrl) {
-        client = WebClient.builder().baseUrl(baseUrl).build();
+    public ScrapperHttpClient(ApplicationConfig config) {
+        client = WebClient.builder().baseUrl(config.scrapperBaseUrl()).build();
+        this.retry = config.retry().getRetrySpec();
     }
 
-    public ApiErrorResponse makeChat(Long id) {
+    public ApiErrorResponse makeChat(Long id) throws ApiErrorException {
 
         return client.post()
             .uri(String.format(TG_CHAT, id))
-            .exchangeToMono(clientResponse -> {
-                if (clientResponse.statusCode().isError()) {
-                    return (clientResponse.bodyToMono(ApiErrorResponse.class));
-                } else {
-                    return Mono.empty();
-                }
-            }).block();
+            .retrieve()
+            .onStatus(
+                HttpStatusCode::isError,
+                clientResponse -> (clientResponse.bodyToMono(ApiErrorResponse.class).map(ApiErrorException::new)
+                    .flatMap(Mono::error))
+            )
+            .bodyToMono(ApiErrorResponse.class)
+            .retryWhen(retry)
+            .block();
 
     }
 
-    public ApiErrorResponse deleteChat(Long id) {
+    public ApiErrorResponse deleteChat(Long id) throws ApiErrorException{
 
         return client.delete()
             .uri(String.format(TG_CHAT, id))
-            .exchangeToMono(clientResponse -> {
-                if (clientResponse.statusCode().isError()) {
-                    return (clientResponse.bodyToMono(ApiErrorResponse.class));
-                } else {
-                    return Mono.empty();
-                }
-            }).block();
+            .retrieve()
+            .onStatus(
+                HttpStatusCode::isError,
+                clientResponse -> (clientResponse.bodyToMono(ApiErrorResponse.class).map(ApiErrorException::new)
+                    .flatMap(Mono::error))
+            )
+            .bodyToMono(ApiErrorResponse.class)
+            .retryWhen(retry)
+            .block();
     }
 
-    public MyResponse getLinks(Long id) {
+    public ListLinksResponse getLinks(Long id) throws ApiErrorException{
         return client.get()
             .uri(LINK)
             .header(HEADER_TG_CHAT_ID, id.toString())
-            .exchangeToMono(clientResponse -> processLink(clientResponse, ListLinksResponse.class)).block();
+            .retrieve()
+            .onStatus(
+                HttpStatusCode::isError,
+                clientResponse -> (clientResponse.bodyToMono(ApiErrorResponse.class).map(ApiErrorException::new)
+                    .flatMap(Mono::error))
+            )
+            .bodyToMono(ListLinksResponse.class)
+            .retryWhen(retry)
+            .block();
+
     }
 
-    public MyResponse trackLink(AddLinkRequest addLinkRequest, Long id) {
+    public LinkResponse trackLink(AddLinkRequest addLinkRequest, Long id) throws ApiErrorException{
         return client.post()
             .uri(LINK)
             .header(HEADER_TG_CHAT_ID, id.toString())
             .bodyValue(addLinkRequest)
-            .exchangeToMono(clientResponse -> processLink(clientResponse, LinkResponse.class)).block();
+            .retrieve()
+            .onStatus(
+                HttpStatusCode::isError,
+                clientResponse -> (clientResponse.bodyToMono(ApiErrorResponse.class).map(ApiErrorException::new)
+                    .flatMap(Mono::error))
+            )
+            .bodyToMono(LinkResponse.class)
+            .retryWhen(retry)
+            .block();
+
     }
 
-    public MyResponse unTrackLink(RemoveLinkRequest removeLinkRequest, Long id) {
+    public LinkResponse unTrackLink(RemoveLinkRequest removeLinkRequest, Long id) throws ApiErrorException{
         return client.method(HttpMethod.DELETE)
             .uri(LINK)
             .header(HEADER_TG_CHAT_ID, id.toString())
             .bodyValue(removeLinkRequest)
-            .exchangeToMono(clientResponse -> processLink(clientResponse, LinkResponse.class)).block();
+            .retrieve()
+            .onStatus(
+                HttpStatusCode::isError,
+                clientResponse -> (clientResponse.bodyToMono(ApiErrorResponse.class).map(ApiErrorException::new)
+                    .flatMap(Mono::error))
+            )
+            .bodyToMono(LinkResponse.class)
+            .retryWhen(retry)
+            .block();
     }
 
-    private static Mono<MyResponse> processLink(
-        ClientResponse clientResponse,
-        Class<? extends MyResponse> responseClass
-    ) {
-        if (clientResponse.statusCode().is2xxSuccessful()) {
-            return clientResponse.bodyToMono(responseClass);
-        } else {
-            return clientResponse.bodyToMono(ApiErrorResponse.class);
-        }
-    }
 }

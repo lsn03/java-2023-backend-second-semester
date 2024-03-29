@@ -25,7 +25,7 @@ public class StackOverFlowTest {
     private OffsetDateTime time = OffsetDateTime.of(2015, 12, 26, 12, 10, 15, 0, ZoneOffset.UTC);
     String title = "Lorem";
     ApplicationConfig config = new ApplicationConfig(
-        null,
+        null, null,
         null, null,
         new ApplicationConfig.StackOverFlowApiProperties(TOKEN, KEY)
     );

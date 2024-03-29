@@ -1,7 +1,9 @@
 package edu.java.bot.storage;
 
+import edu.java.bot.exception.ApiErrorException;
 import edu.java.bot.exception.IncorrectParametersException;
 import edu.java.bot.exception.ListEmptyException;
+import edu.java.bot.exception.UserAlreadyExistException;
 import edu.java.bot.model.dto.request.AddLinkRequest;
 import edu.java.bot.model.dto.request.RemoveLinkRequest;
 import edu.java.bot.model.dto.response.ApiErrorResponse;
@@ -17,10 +19,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class InMemoryStorage implements Storage {
     private final Set<Long> users;
     private final Map<Long, UserState> userStateMap;
@@ -41,8 +45,18 @@ public class InMemoryStorage implements Storage {
         if (!isUserAuth(userId)) {
             setUserState(userId, UserState.DEFAULT);
 
-            scrapperHttpClient.makeChat(userId);
-            users.add(userId);
+            try {
+                scrapperHttpClient.makeChat(userId);
+            } catch (ApiErrorException e) {
+                if (!e.getErrorResponse().getExceptionName().equals(UserAlreadyExistException.class.getSimpleName())) {
+                    throw new RuntimeException(e);
+                }
+                users.add(userId);
+            }catch (Exception e){
+                log.error("{} {}", e.getMessage(),e.getStackTrace());
+                throw new RuntimeException(e);
+            }
+
         }
 
     }
@@ -55,10 +69,12 @@ public class InMemoryStorage implements Storage {
     @Override
     public Optional<ApiErrorResponse> addUrl(Long userId, String url) {
         parserService.process(url);
-        MyResponse response = scrapperHttpClient.trackLink(new AddLinkRequest(url), userId);
+        try {
+            scrapperHttpClient.trackLink(new AddLinkRequest(url), userId);
+        } catch (ApiErrorException e) {
+            return Optional.of(e.getErrorResponse());
+        }catch (Exception e){
 
-        if (response instanceof ApiErrorResponse) {
-            return Optional.of((ApiErrorResponse) response);
         }
 
         return Optional.empty();
@@ -68,24 +84,28 @@ public class InMemoryStorage implements Storage {
     @Override
     public Optional<ApiErrorResponse> removeUrl(Long userId, String url) {
 
-        MyResponse urls = scrapperHttpClient.unTrackLink(new RemoveLinkRequest(url), userId);
-        if (urls instanceof LinkResponse) {
-            return Optional.empty();
+        try {
+            scrapperHttpClient.unTrackLink(new RemoveLinkRequest(url), userId);
+        } catch (ApiErrorException e) {
+            return Optional.of(e.getErrorResponse());
         }
 
-        ApiErrorResponse response = (ApiErrorResponse) urls;
-        return Optional.of(response);
+        return Optional.empty();
+
     }
 
     @Override
     public List<LinkResponse> getUserTracks(Long userId) {
-        MyResponse urls = scrapperHttpClient.getLinks(userId);
-        if (urls instanceof ListLinksResponse urls2) {
-            return urls2.getLists();
-        }
-        ApiErrorResponse response = (ApiErrorResponse) urls;
-        if (!response.getExceptionName().equals(ListEmptyException.class.getSimpleName())) {
-            throw new IncorrectParametersException(response.getExceptionMessage());
+        MyResponse urls;
+        try {
+            urls = scrapperHttpClient.getLinks(userId);
+            if (urls instanceof ListLinksResponse urls2) {
+                return urls2.getLists();
+            }
+        } catch (ApiErrorException e) {
+            if (!e.getErrorResponse().getExceptionName().equals(ListEmptyException.class.getSimpleName())) {
+                throw new IncorrectParametersException(e.getErrorResponse().getExceptionMessage());
+            }
         }
         return List.of();
     }
