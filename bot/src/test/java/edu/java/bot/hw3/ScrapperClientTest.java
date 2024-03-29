@@ -309,4 +309,34 @@ public class ScrapperClientTest {
 
     }
 
+    @Test
+    public void tooManyRequest(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
+        int port = wireMockRuntimeInfo.getHttpPort();
+        String baseUrlWithPort = baseUrl + port;
+        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
+        client = new ScrapperHttpClient(config);
+
+
+        apiErrorResponse = new ApiErrorResponse();
+        apiErrorResponse.setCode("429");
+        json = ow.writeValueAsString(apiErrorResponse);
+        WireMock.stubFor(
+            WireMock.get(LINKS)
+                .willReturn(WireMock.aResponse()
+                    .withHeader(HEADER_TG_CHAT_ID, String.valueOf(chatId))
+                    .withHeader(CONTENT_TYPE, APPLICATION_JSON)
+                    .withBody(json)
+                    .withStatus(429)
+                )
+        );
+
+        try {
+            client.getLinks(chatId);
+        } catch (ApiErrorException e) {
+            assertEquals(apiErrorResponse, e.getErrorResponse());
+        }
+
+
+    }
+
 }
