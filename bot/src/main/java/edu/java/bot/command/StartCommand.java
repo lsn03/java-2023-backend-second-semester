@@ -5,16 +5,12 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.storage.Storage;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class StartCommand implements Command {
-
-
 
     private final Storage storage;
 
@@ -55,7 +51,7 @@ public class StartCommand implements Command {
                 return new SendMessage(chatId, CommandUtils.USER_REGISTERED_SUCCESS);
             } catch (Exception e) {
                 log.error(e.getMessage());
-                return new SendMessage(chatId,"Произошла внутренняя ошибка сервиса, попробуйте позже");
+                return new SendMessage(chatId, "Произошла внутренняя ошибка сервиса, попробуйте позже");
             }
 
         }

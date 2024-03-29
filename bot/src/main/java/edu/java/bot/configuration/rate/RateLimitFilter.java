@@ -25,12 +25,12 @@ public class RateLimitFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
         String ip = request.getRemoteAddr();
-        var bucketReq = buckets.computeIfAbsent(ip,s -> bucket);
+        var bucketReq = buckets.computeIfAbsent(ip, s -> bucket);
         ConsumptionProbe probe = bucketReq.tryConsumeAndReturnRemaining(1);
-        if(probe.isConsumed()){
-            filterChain.doFilter(request,response);
-        }else{
-           response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+        if (probe.isConsumed()) {
+            filterChain.doFilter(request, response);
+        } else {
+            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
             throw new IncorrectParametersException(HttpStatus.TOO_MANY_REQUESTS.name());
         }
     }

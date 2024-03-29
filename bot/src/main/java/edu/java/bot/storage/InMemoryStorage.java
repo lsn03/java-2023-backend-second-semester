@@ -52,8 +52,8 @@ public class InMemoryStorage implements Storage {
                     throw new RuntimeException(e);
                 }
                 users.add(userId);
-            }catch (Exception e){
-                log.error("{} {}", e.getMessage(),e.getStackTrace());
+            } catch (Exception e) {
+                log.error("{} {}", e.getMessage(), e.getStackTrace());
                 throw new RuntimeException(e);
             }
 
@@ -73,7 +73,7 @@ public class InMemoryStorage implements Storage {
             scrapperHttpClient.trackLink(new AddLinkRequest(url), userId);
         } catch (ApiErrorException e) {
             return Optional.of(e.getErrorResponse());
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 

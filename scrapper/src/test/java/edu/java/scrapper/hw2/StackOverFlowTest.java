@@ -26,6 +26,7 @@ public class StackOverFlowTest {
     String title = "Lorem";
     ApplicationConfig config = new ApplicationConfig(
         null,
+        null,
         null, null,
         new ApplicationConfig.StackOverFlowApiProperties(TOKEN, KEY)
     );

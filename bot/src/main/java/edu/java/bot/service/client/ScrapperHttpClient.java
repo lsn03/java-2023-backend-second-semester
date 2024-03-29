@@ -43,7 +43,7 @@ public class ScrapperHttpClient {
 
     }
 
-    public ApiErrorResponse deleteChat(Long id) throws ApiErrorException{
+    public ApiErrorResponse deleteChat(Long id) throws ApiErrorException {
 
         return client.delete()
             .uri(String.format(TG_CHAT, id))
@@ -58,7 +58,7 @@ public class ScrapperHttpClient {
             .block();
     }
 
-    public ListLinksResponse getLinks(Long id) throws ApiErrorException{
+    public ListLinksResponse getLinks(Long id) throws ApiErrorException {
         return client.get()
             .uri(LINK)
             .header(HEADER_TG_CHAT_ID, id.toString())
@@ -74,7 +74,7 @@ public class ScrapperHttpClient {
 
     }
 
-    public LinkResponse trackLink(AddLinkRequest addLinkRequest, Long id) throws ApiErrorException{
+    public LinkResponse trackLink(AddLinkRequest addLinkRequest, Long id) throws ApiErrorException {
         return client.post()
             .uri(LINK)
             .header(HEADER_TG_CHAT_ID, id.toString())
@@ -91,7 +91,7 @@ public class ScrapperHttpClient {
 
     }
 
-    public LinkResponse unTrackLink(RemoveLinkRequest removeLinkRequest, Long id) throws ApiErrorException{
+    public LinkResponse unTrackLink(RemoveLinkRequest removeLinkRequest, Long id) throws ApiErrorException {
         return client.method(HttpMethod.DELETE)
             .uri(LINK)
             .header(HEADER_TG_CHAT_ID, id.toString())
