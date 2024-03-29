@@ -9,7 +9,10 @@ app:
     max-delay: 5000 # ms
     start-delay: 5000 # ms
 #    status-codes: [ 409, 404, 200 ]
-    status-codes: [ 503 ]
+    status-codes: [429, 500,501, 502,503]
+  rate:
+    count: 20
+    seconds: 60
 
 spring:
   application:

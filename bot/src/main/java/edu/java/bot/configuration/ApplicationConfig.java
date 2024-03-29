@@ -1,7 +1,13 @@
 package edu.java.bot.configuration;
 
+import edu.java.bot.configuration.rate.BucketProperties;
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Refill;
 import jakarta.validation.constraints.NotEmpty;
+import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
@@ -9,8 +15,17 @@ import org.springframework.validation.annotation.Validated;
 public record ApplicationConfig(
     @NotEmpty
     String telegramToken,
+    BucketProperties rate,
     RetryConfig retry,
     String scrapperBaseUrl
 ) {
-
+    @Bean
+    public Bucket getBucket() {
+        return Bucket.builder()
+            .addLimit(Bandwidth.classic(
+                rate.count(),
+                Refill.intervally(rate.count(), Duration.ofSeconds(rate.seconds()))
+            ))
+            .build();
+    }
 }
