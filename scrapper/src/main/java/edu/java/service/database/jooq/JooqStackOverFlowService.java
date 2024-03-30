@@ -31,13 +31,11 @@ public class JooqStackOverFlowService implements StackOverFlowService {
     }
 
     @Override
-    @Transactional
     public List<StackOverFlowAnswerDTO> getAnswers(Long linkId) {
         return jooqStackOverFlowRepository.getAnswers(linkId);
     }
 
     @Override
-    @Transactional
     public List<StackOverFlowAnswerDTO> getAnswers(URI uri) {
         return jooqStackOverFlowRepository.getAnswers(uri);
     }

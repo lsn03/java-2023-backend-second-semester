@@ -9,6 +9,7 @@ import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 
@@ -16,6 +17,7 @@ public class JpaStackOverFlowService implements StackOverFlowService {
     private final JpaStackOverFlowRepository stackOverFlowRepository;
 
     @Override
+    @Transactional
     public Integer addAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
         try {
             return stackOverFlowRepository.addAnswers(stackOverFlowAnswerDTOList);
@@ -25,6 +27,7 @@ public class JpaStackOverFlowService implements StackOverFlowService {
     }
 
     @Override
+    @Transactional
     public Integer deleteAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
 
         return stackOverFlowRepository.deleteAnswers(stackOverFlowAnswerDTOList);

@@ -31,13 +31,11 @@ public class JdbcStackOverFlowService implements StackOverFlowService {
     }
 
     @Override
-    @Transactional
     public List<StackOverFlowAnswerDTO> getAnswers(Long linkId) {
         return jdbcStackOverFlowRepository.getAnswers(linkId);
     }
 
     @Override
-    @Transactional
     public List<StackOverFlowAnswerDTO> getAnswers(URI uri) {
         return jdbcStackOverFlowRepository.getAnswers(uri);
     }

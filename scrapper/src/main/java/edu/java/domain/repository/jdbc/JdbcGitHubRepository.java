@@ -11,7 +11,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class JdbcGitHubRepository implements GitHubRepository {
@@ -27,16 +26,23 @@ public class JdbcGitHubRepository implements GitHubRepository {
     private static final int SEL_INDEX_AUTHOR = 4;
     private static final int SEL_INDEX_CREATED_AT = 5;
     private static final int SEL_INDEX_MESSAGE = 6;
+    private static final String GET_COMMITS_BY_URI = """
+        select  commit_id, github_commit.link_id, sha, author, github_commit.created_at, message
+        from github_commit  inner join public.link l on l.link_id = github_commit.link_id
+        where l.uri = ?
+        """;
+    private static final String GET_COMMITS_BY_LINK_ID =
+        "select commit_id, link_id, sha, author, created_at, message from github_commit where link_id = ?";
+    private static final String DELETE_BY_LINK_ID_SHA = "delete from github_commit where link_id = ? and sha = ?";
+    private static final String ADD_COMMIT =
+        "insert into github_commit (link_id, sha, author, created_at, message) values (?, ?, ?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    @Transactional
     public Integer addCommits(List<GitHubCommitDTO> gitHubCommitList) {
 
-        String sql = "insert into github_commit (link_id, sha, author, created_at, message) values (?, ?, ?, ?, ?)";
-
-        int[][] updateCounts = jdbcTemplate.batchUpdate(sql, gitHubCommitList, gitHubCommitList.size(),
+        int[][] updateCounts = jdbcTemplate.batchUpdate(ADD_COMMIT, gitHubCommitList, gitHubCommitList.size(),
             (ps, commit) -> {
                 ps.setLong(INS_INDEX_LINK_ID, commit.getLinkId());
                 ps.setString(INS_INDEX_SHA, commit.getSha());
@@ -50,40 +56,32 @@ public class JdbcGitHubRepository implements GitHubRepository {
     }
 
     @Override
-    @Transactional
     public Integer deleteCommits(List<GitHubCommitDTO> gitHubCommitList) {
 
-        String sql = "delete from github_commit where link_id = ? and sha = ?";
-
-        int[][] updateCounts = jdbcTemplate.batchUpdate(sql, gitHubCommitList, gitHubCommitList.size(),
-            (ps, commit) -> {
-                ps.setLong(1, commit.getLinkId());
-                ps.setString(2, commit.getSha());
-            }
-        );
+        int[][] updateCounts =
+            jdbcTemplate.batchUpdate(DELETE_BY_LINK_ID_SHA, gitHubCommitList, gitHubCommitList.size(),
+                (ps, commit) -> {
+                    ps.setLong(1, commit.getLinkId());
+                    ps.setString(2, commit.getSha());
+                }
+            );
 
         return getSum(updateCounts);
     }
 
     @Override
-    @Transactional
     public List<GitHubCommitDTO> getCommits(Long linkId) {
         return jdbcTemplate.query(
-            "select commit_id, link_id, sha, author, created_at, message from github_commit where link_id = ?",
+            GET_COMMITS_BY_LINK_ID,
             (rs, rowNum) -> getGitHubCommitDTO(rs), linkId
         );
     }
 
     @Override
-    @Transactional
     public List<GitHubCommitDTO> getCommits(URI uri) {
 
         return jdbcTemplate.query(
-            """
-                select  commit_id, github_commit.link_id, sha, author, github_commit.created_at, message
-                from github_commit  inner join public.link l on l.link_id = github_commit.link_id
-                where l.uri = ?
-                """,
+            GET_COMMITS_BY_URI,
             (rs, rowNum) -> {
                 return getGitHubCommitDTO(rs);
             },

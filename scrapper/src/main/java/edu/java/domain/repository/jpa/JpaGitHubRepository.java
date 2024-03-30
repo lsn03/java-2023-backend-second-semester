@@ -10,7 +10,6 @@ import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class JpaGitHubRepository implements GitHubRepository {
@@ -18,7 +17,6 @@ public class JpaGitHubRepository implements GitHubRepository {
     private final JpaGitHubRepositoryInterface jpaGitHubRepository;
 
     @Override
-    @Transactional
     public Integer addCommits(List<GitHubCommitDTO> gitHubCommitList) {
         int cnt = 0;
         for (var commitDto : gitHubCommitList) {
@@ -41,7 +39,6 @@ public class JpaGitHubRepository implements GitHubRepository {
     }
 
     @Override
-    @Transactional
     public Integer deleteCommits(List<GitHubCommitDTO> gitHubCommitList) {
         int cnt = 0;
         for (var commit : gitHubCommitList) {
@@ -56,14 +53,12 @@ public class JpaGitHubRepository implements GitHubRepository {
     }
 
     @Override
-    @Transactional
     public List<GitHubCommitDTO> getCommits(Long linkId) {
         return jpaGitHubRepository.findAllByLinkEntityLinkId(linkId).stream()
             .map(MapperGitHubCommitDTOGitHubCommitEntity::entityToDto).toList();
     }
 
     @Override
-    @Transactional
     public List<GitHubCommitDTO> getCommits(URI uri) {
         return jpaGitHubRepository.findAllByLinkEntityUri(uri.toString()).stream()
             .map(MapperGitHubCommitDTOGitHubCommitEntity::entityToDto).toList();

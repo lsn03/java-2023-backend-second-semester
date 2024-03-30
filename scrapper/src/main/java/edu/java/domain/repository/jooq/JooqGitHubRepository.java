@@ -13,7 +13,6 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.InsertValuesStep5;
 import org.jooq.impl.DSL;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class JooqGitHubRepository implements GitHubRepository {
@@ -21,7 +20,6 @@ public class JooqGitHubRepository implements GitHubRepository {
     private final JooqLinkRepository jooqLinkRepository;
 
     @Override
-    @Transactional
     public Integer addCommits(List<GitHubCommitDTO> gitHubCommitList) {
         InsertValuesStep5<GithubCommitRecord, Long, String, String, LocalDateTime, String> step = dslContext
             .insertInto(
@@ -47,7 +45,6 @@ public class JooqGitHubRepository implements GitHubRepository {
     }
 
     @Override
-    @Transactional
     public Integer deleteCommits(List<GitHubCommitDTO> gitHubCommitList) {
 
         Condition condition = DSL.noCondition();
@@ -62,7 +59,6 @@ public class JooqGitHubRepository implements GitHubRepository {
     }
 
     @Override
-    @Transactional
     public List<GitHubCommitDTO> getCommits(Long linkId) {
         return dslContext.selectFrom(GithubCommit.GITHUB_COMMIT)
             .where(GithubCommit.GITHUB_COMMIT.LINK_ID.eq(linkId))
@@ -75,7 +71,6 @@ public class JooqGitHubRepository implements GitHubRepository {
     }
 
     @Override
-    @Transactional
     public List<GitHubCommitDTO> getCommits(URI uri) {
         Long id = jooqLinkRepository.findLinkIdByUrl(uri);
         return getCommits(id);

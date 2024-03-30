@@ -10,7 +10,6 @@ import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class JpaStackOverFlowRepository implements StackOverFlowRepository {
@@ -18,7 +17,6 @@ public class JpaStackOverFlowRepository implements StackOverFlowRepository {
     private final JpaStackOverFlowRepositoryInterface jpaStackOverFlowRepository;
 
     @Override
-    @Transactional
     public Integer addAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
         int cnt = 0;
         for (var dto : stackOverFlowAnswerDTOList) {
@@ -39,7 +37,6 @@ public class JpaStackOverFlowRepository implements StackOverFlowRepository {
     }
 
     @Override
-    @Transactional
     public Integer deleteAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
         int cnt = 0;
         for (var dto : stackOverFlowAnswerDTOList) {
@@ -52,7 +49,6 @@ public class JpaStackOverFlowRepository implements StackOverFlowRepository {
     }
 
     @Override
-    @Transactional
     public List<StackOverFlowAnswerDTO> getAnswers(Long linkId) {
 
         return jpaStackOverFlowRepository.findAllByLinkEntityLinkId(linkId).stream()
@@ -60,7 +56,6 @@ public class JpaStackOverFlowRepository implements StackOverFlowRepository {
     }
 
     @Override
-    @Transactional
     public List<StackOverFlowAnswerDTO> getAnswers(URI uri) {
         return jpaStackOverFlowRepository.findAllByLinkEntityUri(uri.toString()).stream()
             .map(MapperStackOverFlowDTOEntity::entityToDto).toList();

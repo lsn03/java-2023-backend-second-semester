@@ -52,7 +52,6 @@ public class JpaLinkService implements LinkService {
     }
 
     @Override
-    @Transactional
     public List<LinkDTO> findAll(Long tgChatId) {
         List<LinkDTO> response = jpaLinkRepository.findAllByChatId(tgChatId);
         if (response.isEmpty()) {

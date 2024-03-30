@@ -63,7 +63,6 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    @Transactional
     public List<LinkDTO> findAll(Long tgChatId) {
         var response = jdbcLinkRepository.findAllByChatId(tgChatId);
         if (response.isEmpty()) {

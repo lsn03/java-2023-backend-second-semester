@@ -13,16 +13,19 @@ import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class JpaLinkRepository implements LinkRepository {
+    private static final String FIND_ALL_OLD_LINKS = """
+        select le
+        from LinkEntity le
+        where le.lastUpdate is null  or le.lastUpdate < :time
+        """;
     private final JpaLinkRepositoryInterface jpaLinkRepository;
     private final EntityManager entityManager;
     private final JpaLinkChatRepository jpaLinkChatRepository;
 
     @Override
-    @Transactional
     public LinkDTO add(LinkDTO linkDTO) {
 
         linkDTO.setCreatedAt(LocalDateTime.now().atOffset(ZoneOffset.UTC));
@@ -38,7 +41,6 @@ public class JpaLinkRepository implements LinkRepository {
     }
 
     @Override
-    @Transactional
     public Integer remove(LinkDTO linkDTO) {
         Long linkId = findLinkIdByUrl(linkDTO.getUri());
         linkDTO.setLinkId(linkId);
@@ -76,7 +78,6 @@ public class JpaLinkRepository implements LinkRepository {
     }
 
     @Override
-    @Transactional
     public void updateLink(LinkDTO elem) {
         elem.setLastUpdate(OffsetDateTime.now());
         var entity = MapperLinkDTOLinkEntity.dtoToEntity(elem);
@@ -86,11 +87,7 @@ public class JpaLinkRepository implements LinkRepository {
     @Override
     public List<LinkDTO> findAllOldLinks(Integer timeInSeconds) {
         LocalDateTime differenceTime = LocalDateTime.now().minusSeconds(timeInSeconds);
-        var entityList = entityManager.createQuery("""
-                select le
-                from LinkEntity le
-                where le.lastUpdate is null  or le.lastUpdate < :time
-                """, LinkEntity.class)
+        var entityList = entityManager.createQuery(FIND_ALL_OLD_LINKS, LinkEntity.class)
             .setParameter("time", differenceTime)
             .getResultList();
 

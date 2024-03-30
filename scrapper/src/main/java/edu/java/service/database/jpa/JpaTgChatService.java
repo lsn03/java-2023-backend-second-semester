@@ -24,7 +24,6 @@ public class JpaTgChatService implements TgChatService {
     }
 
     @Override
-    @Transactional
     public List<ChatDTO> findAll() {
         return jpaChatRepository.findAll();
     }

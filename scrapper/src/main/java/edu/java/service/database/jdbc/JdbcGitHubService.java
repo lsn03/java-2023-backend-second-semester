@@ -31,13 +31,11 @@ public class JdbcGitHubService implements GitHubService {
     }
 
     @Override
-    @Transactional
     public List<GitHubCommitDTO> getCommits(Long linkId) {
         return jdbcGitHubRepository.getCommits(linkId);
     }
 
     @Override
-    @Transactional
     public List<GitHubCommitDTO> getCommits(URI uri) {
         return jdbcGitHubRepository.getCommits(uri);
     }

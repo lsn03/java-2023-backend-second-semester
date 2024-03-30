@@ -66,7 +66,6 @@ public class JooqLinkService implements LinkService {
     }
 
     @Override
-    @Transactional
     public List<LinkDTO> findAll(Long tgChatId) {
         List<LinkDTO> response = jooqLinkRepository.findAllByChatId(tgChatId);
         if (response.isEmpty()) {

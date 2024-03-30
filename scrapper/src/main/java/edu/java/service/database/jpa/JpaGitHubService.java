@@ -35,13 +35,11 @@ public class JpaGitHubService implements GitHubService {
     }
 
     @Override
-    @Transactional
     public List<GitHubCommitDTO> getCommits(Long linkId) {
         return jpaGitHubRepository.getCommits(linkId);
     }
 
     @Override
-    @Transactional
     public List<GitHubCommitDTO> getCommits(URI uri) {
         return jpaGitHubRepository.getCommits(uri);
     }

@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.exception.BotExceptionType;
-import edu.java.bot.exception.RepeatTrackException;
 import edu.java.bot.exception.UnsupportedSiteException;
 import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
