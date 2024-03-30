@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -46,6 +47,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     }
 
     @Override
+    @Transactional
     public List<LinkUpdateRequest> update() throws NoSuchAlgorithmException {
         List<LinkDto> list = linkRepository.findAllOldLinks(TIME_TO_OLD_LINK_IN_SECONDS);
         List<LinkDto> listForUpdate = new ArrayList<>();

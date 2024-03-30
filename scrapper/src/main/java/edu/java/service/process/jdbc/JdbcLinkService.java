@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +21,7 @@ public class JdbcLinkService implements LinkService {
     private final JdbcLinkChatRepository jdbcLinkChatRepository;
 
     @Override
+    @Transactional
     public LinkDto add(LinkDto linkDTO) {
         try {
 
@@ -50,6 +52,7 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
+    @Transactional
     public Integer remove(LinkDto linkDTO) {
         int affectRows = jdbcLinkChatRepository.remove(linkDTO);
         return affectRows + jdbcLinkRepository.remove(linkDTO);
