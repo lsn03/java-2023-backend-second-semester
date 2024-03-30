@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class LinkDTO {
+public class LinkDto {
     private URI uri;
     private Long tgChatId;
     private Long linkId;

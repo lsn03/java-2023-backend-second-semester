@@ -1,6 +1,6 @@
 package edu.java.service.process;
 
-import edu.java.domain.model.ChatDTO;
+import edu.java.domain.model.ChatDto;
 import java.util.List;
 
 public interface TgChatService {
@@ -8,5 +8,5 @@ public interface TgChatService {
 
     void remove(Long tgChatId);
 
-    List<ChatDTO> findAll();
+    List<ChatDto> findAll();
 }

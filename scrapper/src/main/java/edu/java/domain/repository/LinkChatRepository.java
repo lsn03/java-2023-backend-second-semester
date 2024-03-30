@@ -1,16 +1,16 @@
 package edu.java.domain.repository;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import java.util.List;
 
 public interface LinkChatRepository {
-    void add(LinkDTO linkDTO);
+    void add(LinkDto linkDTO);
 
-    Integer remove(LinkDTO linkDTO);
+    Integer remove(LinkDto linkDTO);
 
     Integer remove(Long tgChatId);
 
-    List<LinkDTO> findAllByChatId(Long tgChatId);
+    List<LinkDto> findAllByChatId(Long tgChatId);
 
-    List<LinkDTO> findAllByLinkId(Long tgChatId);
+    List<LinkDto> findAllByLinkId(Long tgChatId);
 }

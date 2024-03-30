@@ -1,10 +1,10 @@
 package edu.java.service.parser;
 
-import edu.java.model.UriDTO;
+import edu.java.model.UriDto;
 import java.net.URI;
 
 public interface Handler {
     boolean canHandle(URI uri);
 
-    UriDTO handle(URI uri);
+    UriDto handle(URI uri);
 }

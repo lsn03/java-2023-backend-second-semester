@@ -1,6 +1,6 @@
 package edu.java.service.process.jdbc;
 
-import edu.java.domain.model.ChatDTO;
+import edu.java.domain.model.ChatDto;
 import edu.java.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.exception.exception.UserAlreadyExistException;
 import edu.java.service.process.TgChatService;
@@ -30,7 +30,7 @@ public class JdbcTgChatService implements TgChatService {
     }
 
     @Override
-    public List<ChatDTO> findAll() {
+    public List<ChatDto> findAll() {
         return jdbcChatRepository.findAll();
     }
 }

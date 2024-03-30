@@ -1,10 +1,10 @@
 package edu.java.service;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.LinkRepository;
-import edu.java.model.GitHubPullRequestUriDTO;
-import edu.java.model.StackOverFlowQuestionUriDTO;
-import edu.java.model.UriDTO;
+import edu.java.model.GitHubPullRequestUriDto;
+import edu.java.model.StackOverFlowQuestionUriDto;
+import edu.java.model.UriDto;
 import edu.java.model.github.PullRequestModelResponse;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import edu.java.model.stack_over_flow.StackOverFlowModel;
@@ -47,10 +47,10 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     @Override
     public List<LinkUpdateRequest> update() throws NoSuchAlgorithmException {
-        List<LinkDTO> list = linkRepository.findAllOldLinks(TIME_TO_OLD_LINK_IN_SECONDS);
-        List<LinkDTO> listForUpdate = new ArrayList<>();
+        List<LinkDto> list = linkRepository.findAllOldLinks(TIME_TO_OLD_LINK_IN_SECONDS);
+        List<LinkDto> listForUpdate = new ArrayList<>();
 
-        for (LinkDTO elem : list) {
+        for (LinkDto elem : list) {
 
             URI uri = elem.getUri();
             for (var handler : handlers) {
@@ -81,17 +81,17 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         return List.of();
     }
 
-    private String processDto(UriDTO uriDto) throws NoSuchAlgorithmException {
+    private String processDto(UriDto uriDto) throws NoSuchAlgorithmException {
         String answer = "";
-        if (uriDto instanceof GitHubPullRequestUriDTO) {
-            answer = processGitHubUriDTO((GitHubPullRequestUriDTO) uriDto);
-        } else if (uriDto instanceof StackOverFlowQuestionUriDTO) {
-            answer = processStackOverFlowUriDTO((StackOverFlowQuestionUriDTO) uriDto);
+        if (uriDto instanceof GitHubPullRequestUriDto) {
+            answer = processGitHubUriDTO((GitHubPullRequestUriDto) uriDto);
+        } else if (uriDto instanceof StackOverFlowQuestionUriDto) {
+            answer = processStackOverFlowUriDTO((StackOverFlowQuestionUriDto) uriDto);
         }
         return answer;
     }
 
-    private String processStackOverFlowUriDTO(StackOverFlowQuestionUriDTO uriDto) throws NoSuchAlgorithmException {
+    private String processStackOverFlowUriDTO(StackOverFlowQuestionUriDto uriDto) throws NoSuchAlgorithmException {
         String string;
 
         StackOverFlowModel response =
@@ -101,7 +101,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     }
 
-    private String processGitHubUriDTO(GitHubPullRequestUriDTO uriDto) throws NoSuchAlgorithmException {
+    private String processGitHubUriDTO(GitHubPullRequestUriDto uriDto) throws NoSuchAlgorithmException {
         String string;
 
         PullRequestModelResponse response =
@@ -113,19 +113,19 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
 
     }
 
-    private List<LinkUpdateRequest> convertLinkDtoToLinkUpdateRequest(List<LinkDTO> linkDTOList) {
+    private List<LinkUpdateRequest> convertLinkDtoToLinkUpdateRequest(List<LinkDto> linkDtoList) {
 
-        Map<Long, Map<URI, List<LinkDTO>>> groupedByLinkIdAndUri = linkDTOList.stream()
+        Map<Long, Map<URI, List<LinkDto>>> groupedByLinkIdAndUri = linkDtoList.stream()
             .collect(Collectors.groupingBy(
-                LinkDTO::getLinkId,
-                Collectors.groupingBy(LinkDTO::getUri)
+                LinkDto::getLinkId,
+                Collectors.groupingBy(LinkDto::getUri)
             ));
 
         List<LinkUpdateRequest> linkUpdateRequests = new ArrayList<>();
 
         groupedByLinkIdAndUri.forEach((linkId, uriMap) -> uriMap.forEach((uri, dtos) -> {
             List<Long> tgChatIds = dtos.stream()
-                .map(LinkDTO::getTgChatId)
+                .map(LinkDto::getTgChatId)
                 .distinct()
                 .collect(Collectors.toList());
 
@@ -135,7 +135,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         return linkUpdateRequests;
     }
 
-    private void updateDatabase(List<LinkDTO> list) {
+    private void updateDatabase(List<LinkDto> list) {
         for (var elem : list) {
             linkRepository.updateLink(elem);
         }

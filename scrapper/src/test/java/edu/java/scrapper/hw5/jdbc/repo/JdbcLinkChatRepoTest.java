@@ -1,6 +1,6 @@
 package edu.java.scrapper.hw5.jdbc.repo;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.domain.repository.jdbc.JdbcLinkChatRepository;
 import edu.java.domain.repository.jdbc.JdbcLinkRepository;
@@ -26,21 +26,21 @@ public class JdbcLinkChatRepoTest extends IntegrationTest {
     @Autowired
     private JdbcLinkRepository jdbcLinkRepository;
     long chatId = 1l;
-    LinkDTO linkDTO;
+    LinkDto linkDto;
 
     @Test
     @Transactional
     @Rollback
     public void addTest() {
-        linkDTO = new LinkDTO();
-        linkDTO.setUri(URI.create("https://exmaple.com"));
-        linkDTO.setTgChatId(chatId);
+        linkDto = new LinkDto();
+        linkDto.setUri(URI.create("https://exmaple.com"));
+        linkDto.setTgChatId(chatId);
         jdbcChatRepository.add(chatId);
-        jdbcLinkRepository.add(linkDTO);
+        jdbcLinkRepository.add(linkDto);
 
-        assertDoesNotThrow(() -> jdbcLinkChatRepository.add(linkDTO));
+        assertDoesNotThrow(() -> jdbcLinkChatRepository.add(linkDto));
         var allByChat = jdbcLinkChatRepository.findAllByChatId(chatId);
-        var allByLink = jdbcLinkChatRepository.findAllByLinkId(linkDTO.getLinkId());
+        var allByLink = jdbcLinkChatRepository.findAllByLinkId(linkDto.getLinkId());
 
         assertFalse(allByChat.isEmpty());
         assertFalse(allByLink.isEmpty());
@@ -52,15 +52,15 @@ public class JdbcLinkChatRepoTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void removeTest() {
-        linkDTO = new LinkDTO();
-        linkDTO.setUri(URI.create("https://exmaple.com"));
-        linkDTO.setTgChatId(chatId);
+        linkDto = new LinkDto();
+        linkDto.setUri(URI.create("https://exmaple.com"));
+        linkDto.setTgChatId(chatId);
         jdbcChatRepository.add(chatId);
-        jdbcLinkRepository.add(linkDTO);
+        jdbcLinkRepository.add(linkDto);
 
-        assertDoesNotThrow(() -> jdbcLinkChatRepository.remove(linkDTO));
+        assertDoesNotThrow(() -> jdbcLinkChatRepository.remove(linkDto));
         var allByChat = jdbcLinkChatRepository.findAllByChatId(chatId);
-        var allByLink = jdbcLinkChatRepository.findAllByLinkId(linkDTO.getLinkId());
+        var allByLink = jdbcLinkChatRepository.findAllByLinkId(linkDto.getLinkId());
 
         assertTrue(allByChat.isEmpty());
         assertTrue(allByLink.isEmpty());

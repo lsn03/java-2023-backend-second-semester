@@ -1,6 +1,6 @@
 package edu.java.service.process.jdbc;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.jdbc.JdbcLinkChatRepository;
 import edu.java.domain.repository.jdbc.JdbcLinkRepository;
 import edu.java.exception.exception.ListEmptyException;
@@ -20,7 +20,7 @@ public class JdbcLinkService implements LinkService {
     private final JdbcLinkChatRepository jdbcLinkChatRepository;
 
     @Override
-    public LinkDTO add(LinkDTO linkDTO) {
+    public LinkDto add(LinkDto linkDTO) {
         try {
 
             jdbcLinkRepository.add(linkDTO);
@@ -50,13 +50,13 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public Integer remove(LinkDTO linkDTO) {
+    public Integer remove(LinkDto linkDTO) {
         int affectRows = jdbcLinkChatRepository.remove(linkDTO);
         return affectRows + jdbcLinkRepository.remove(linkDTO);
     }
 
     @Override
-    public List<LinkDTO> findAll(Long tgChatId) {
+    public List<LinkDto> findAll(Long tgChatId) {
         var response = jdbcLinkRepository.findAllByChatId(tgChatId);
         if (response.isEmpty()) {
             throw new ListEmptyException("List empty for chat " + tgChatId);

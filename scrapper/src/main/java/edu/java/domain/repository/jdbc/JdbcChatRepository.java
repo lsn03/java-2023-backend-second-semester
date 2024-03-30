@@ -1,6 +1,6 @@
 package edu.java.domain.repository.jdbc;
 
-import edu.java.domain.model.ChatDTO;
+import edu.java.domain.model.ChatDto;
 import edu.java.domain.repository.ChatRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -42,9 +42,9 @@ public class JdbcChatRepository implements ChatRepository {
 
     @Override
     @Transactional
-    public List<ChatDTO> findAll() {
+    public List<ChatDto> findAll() {
         return jdbcTemplate.query("select * from chat", (rs, rowNum) -> {
-            return new ChatDTO(rs.getLong("chat_id"), rs.getBoolean("active"));
+            return new ChatDto(rs.getLong("chat_id"), rs.getBoolean("active"));
         });
 
     }

@@ -1,7 +1,6 @@
 package edu.java.scrapper.hw5.handler;
 
-import edu.java.model.GitHubPullRequestUriDTO;
-import edu.java.scrapper.IntegrationTest;
+import edu.java.model.GitHubPullRequestUriDto;
 import edu.java.service.parser.GitHubHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -43,8 +42,8 @@ public class GitHubHandlerTest {
         "https://github.com/owner2/blabla/pull/10, owner2, blabla, 10"
     })
     public void testHandle(URI uri, String owner, String repo, Integer number) {
-        GitHubPullRequestUriDTO response = (GitHubPullRequestUriDTO) gitHubHandler.handle(uri);
-        GitHubPullRequestUriDTO expected = new GitHubPullRequestUriDTO(owner, repo, number);
+        GitHubPullRequestUriDto response = (GitHubPullRequestUriDto) gitHubHandler.handle(uri);
+        GitHubPullRequestUriDto expected = new GitHubPullRequestUriDto(owner, repo, number);
         assertEquals(expected, response);
 
     }

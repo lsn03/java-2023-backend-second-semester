@@ -1,6 +1,6 @@
 package edu.java.scrapper.hw5.jdbc.service;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.exception.exception.LinkNotFoundException;
 import edu.java.exception.exception.ListEmptyException;
@@ -26,7 +26,7 @@ public class JdbcLinkServiceTest extends IntegrationTest {
     @Autowired
     private JdbcChatRepository jdbcChatRepository;
 
-    private LinkDTO linkForAction;
+    private LinkDto linkForAction;
     long tgChatId = 1;
     URI uri = URI.create("https://github.com/owner/repo/pull/1");
     @Mock
@@ -36,7 +36,7 @@ public class JdbcLinkServiceTest extends IntegrationTest {
     @Rollback
     @Transactional
     public void testAddSuccess() {
-        linkForAction = new LinkDTO();
+        linkForAction = new LinkDto();
         linkForAction.setTgChatId(tgChatId);
         linkForAction.setUri(uri);
         jdbcChatRepository.add(tgChatId);
@@ -55,15 +55,17 @@ public class JdbcLinkServiceTest extends IntegrationTest {
     @Rollback
     @Transactional
     public void testAddForNotExistUser() {
-        linkForAction = new LinkDTO();
+        linkForAction = new LinkDto();
         linkForAction.setTgChatId(tgChatId);
         linkForAction.setUri(uri);
         assertThrows(UserDoesntExistException.class, () -> jdbcLinkService.add(linkForAction));
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void testAddRepeatTrackException() {
-        linkForAction = new LinkDTO();
+        linkForAction = new LinkDto();
         linkForAction.setTgChatId(tgChatId);
         linkForAction.setUri(uri);
         Mockito.when(mockService.add(linkForAction)).thenThrow(RepeatTrackException.class);
@@ -83,7 +85,7 @@ public class JdbcLinkServiceTest extends IntegrationTest {
     @Rollback
     @Transactional
     public void testRemoveNotFoundException() {
-        linkForAction = new LinkDTO();
+        linkForAction = new LinkDto();
         linkForAction.setTgChatId(tgChatId);
         linkForAction.setUri(uri);
 
@@ -94,7 +96,7 @@ public class JdbcLinkServiceTest extends IntegrationTest {
     @Rollback
     @Transactional
     public void testRemoveSuccess() {
-        linkForAction = new LinkDTO();
+        linkForAction = new LinkDto();
         linkForAction.setTgChatId(tgChatId);
         linkForAction.setUri(uri);
         jdbcChatRepository.add(tgChatId);
