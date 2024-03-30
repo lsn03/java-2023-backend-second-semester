@@ -1,7 +1,7 @@
 package edu.java.bot.storage;
 
+import edu.java.bot.exception.BotExceptionType;
 import edu.java.bot.exception.IncorrectParametersException;
-import edu.java.bot.exception.ListEmptyException;
 import edu.java.bot.model.dto.request.AddLinkRequest;
 import edu.java.bot.model.dto.request.RemoveLinkRequest;
 import edu.java.bot.model.dto.response.ApiErrorResponse;
@@ -84,7 +84,7 @@ public class InMemoryStorage implements Storage {
             return urls2.getLists();
         }
         ApiErrorResponse response = (ApiErrorResponse) urls;
-        if (!response.getExceptionName().equals(ListEmptyException.class.getSimpleName())) {
+        if (!response.getExceptionName().equals(BotExceptionType.LIST_EMPTY_EXCEPTION.name())) {
             throw new IncorrectParametersException(response.getExceptionMessage());
         }
         return List.of();
