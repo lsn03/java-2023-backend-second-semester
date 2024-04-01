@@ -20,16 +20,16 @@ import org.springframework.stereotype.Repository;
 @AllArgsConstructor
 public class JdbcLinkRepository implements LinkRepository {
     private static final String LINK_ID = "link_id";
-    private static final String URI = "uri";
-    private static final String HASH = "hash";
-    private static final String ADD_LINK = "insert into link (uri,created_at)  values (?,now())";
+    private static final String URI_FIELD = "uri";
+
+    private static final String ADD_LINK = "insert into link (uri,created_at)  values (?, ?)";
     private static final String FIND_LINK_ID_BY_URL = "select link_id from link where uri = ? limit 1 ";
     private static final String DELETE_BY_LINK_ID = "delete from link where link_id = (?) ;";
-    private static final String FIND_ALL = "select link_id, uri, hash, created_at, last_update from link";
+    private static final String FIND_ALL = "select link_id, uri, created_at, last_update from link";
     private static final String UPDATE_LINK =
-        "update link set uri = ?, last_update = now(), hash = ? where link_id = ? ";
+        "update link set uri = ?, last_update = now() where link_id = ? ";
     private static final String FIND_ALL_OLD_LINKS = """
-        select lc.link_id,uri,created_at,last_update,hash,chat_id
+        select lc.link_id,uri,created_at,last_update ,chat_id
              from link left join link_chat lc on
                 link.link_id = lc.link_id
          where last_update is null or  last_update < now() - interval
@@ -104,11 +104,16 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
+    public List<LinkDto> findAllByLinkId(Long linkId) {
+        return jdbcLinkChatRepository.findAllByLinkId(linkId);
+    }
+
+    @Override
     public List<LinkDto> findAll() {
         return jdbcTemplate.query(
             FIND_ALL,
             (rs, rowNum) -> new LinkDto(
-                java.net.URI.create(rs.getString(URI)),
+                java.net.URI.create(rs.getString(URI_FIELD)),
                 null,
                 rs.getLong(LINK_ID),
 
@@ -132,7 +137,7 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     public List<LinkDto> findAllOldLinks(Integer timeInSeconds) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         String interval = "'" + timeInSeconds + " seconds '";
 
         return jdbcTemplate.query(

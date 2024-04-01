@@ -36,11 +36,11 @@ public class JdbcLinkChatRepoTest extends IntegrationTest {
         linkDTO.setUri(URI.create("https://exmaple.com"));
         linkDTO.setTgChatId(chatId);
         jdbcChatRepository.add(chatId);
-        jdbcLinkRepository.add(linkDto);
+        jdbcLinkRepository.add(linkDTO);
 
-        assertDoesNotThrow(() -> jdbcLinkChatRepository.add(linkDto));
+        assertDoesNotThrow(() -> jdbcLinkChatRepository.add(linkDTO));
         var allByChat = jdbcLinkChatRepository.findAllByChatId(chatId);
-        var allByLink = jdbcLinkChatRepository.findAllByLinkId(linkDto.getLinkId());
+        var allByLink = jdbcLinkChatRepository.findAllByLinkId(linkDTO.getLinkId());
 
         assertFalse(allByChat.isEmpty());
         assertFalse(allByLink.isEmpty());
@@ -56,11 +56,11 @@ public class JdbcLinkChatRepoTest extends IntegrationTest {
         linkDTO.setUri(URI.create("https://exmaple.com"));
         linkDTO.setTgChatId(chatId);
         jdbcChatRepository.add(chatId);
-        jdbcLinkRepository.add(linkDto);
+        jdbcLinkRepository.add(linkDTO);
 
-        assertDoesNotThrow(() -> jdbcLinkChatRepository.remove(linkDto));
+        assertDoesNotThrow(() -> jdbcLinkChatRepository.remove(linkDTO));
         var allByChat = jdbcLinkChatRepository.findAllByChatId(chatId);
-        var allByLink = jdbcLinkChatRepository.findAllByLinkId(linkDto.getLinkId());
+        var allByLink = jdbcLinkChatRepository.findAllByLinkId(linkDTO.getLinkId());
 
         assertTrue(allByChat.isEmpty());
         assertTrue(allByLink.isEmpty());

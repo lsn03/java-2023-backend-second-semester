@@ -36,7 +36,7 @@ public class JdbcLinkRepoTest extends IntegrationTest {
         var response = jdbcLinkRepository.findAll();
         assertNotNull(response);
         assertFalse(response.isEmpty());
-        assertEquals(linkDto, response.getFirst());
+        assertEquals(linkDTO, response.getFirst());
 
     }
 

@@ -45,9 +45,8 @@ public class JdbcChatRepository implements ChatRepository {
     }
 
     @Override
-    @Transactional
     public List<ChatDto> findAll() {
-        return jdbcTemplate.query("select * from chat", (rs, rowNum) -> {
+        return jdbcTemplate.query(SELECT_FROM_CHAT, (rs, rowNum) -> {
             return new ChatDto(rs.getLong("chat_id"), rs.getBoolean("active"));
         });
 
