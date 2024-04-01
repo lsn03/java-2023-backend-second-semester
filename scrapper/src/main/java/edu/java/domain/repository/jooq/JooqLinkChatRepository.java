@@ -10,7 +10,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,7 +17,6 @@ public class JooqLinkChatRepository implements LinkChatRepository {
     private final DSLContext dslContext;
 
     @Override
-    @Transactional
     public void add(LinkDTO linkDTO) {
         dslContext.insertInto(LinkChat.LINK_CHAT, LinkChat.LINK_CHAT.LINK_ID, LinkChat.LINK_CHAT.CHAT_ID)
             .values(linkDTO.getLinkId(), linkDTO.getTgChatId())
@@ -26,7 +24,6 @@ public class JooqLinkChatRepository implements LinkChatRepository {
     }
 
     @Override
-    @Transactional
     public Integer remove(LinkDTO linkDTO) {
         return dslContext.deleteFrom(LinkChat.LINK_CHAT)
             .where(LinkChat.LINK_CHAT.LINK_ID.eq(linkDTO.getLinkId())
@@ -35,7 +32,6 @@ public class JooqLinkChatRepository implements LinkChatRepository {
     }
 
     @Override
-    @Transactional
     public Integer remove(Long tgChatId) {
         return dslContext.deleteFrom(LinkChat.LINK_CHAT)
             .where(LinkChat.LINK_CHAT.CHAT_ID.eq(tgChatId))
@@ -43,7 +39,6 @@ public class JooqLinkChatRepository implements LinkChatRepository {
     }
 
     @Override
-    @Transactional
     public List<LinkDTO> findAllByChatId(Long tgChatId) {
         return dslContext.select(Link.LINK.CREATED_AT, Link.LINK.LINK_ID, Link.LINK.URI, LinkChat.LINK_CHAT.CHAT_ID)
             .from(Link.LINK)
@@ -61,7 +56,6 @@ public class JooqLinkChatRepository implements LinkChatRepository {
     }
 
     @Override
-    @Transactional
     public List<LinkDTO> findAllByLinkId(Long linkId) {
         return dslContext.select(Link.LINK.LINK_ID, Link.LINK.URI, LinkChat.LINK_CHAT.CHAT_ID)
             .from(Link.LINK)

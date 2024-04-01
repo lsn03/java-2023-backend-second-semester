@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.InsertValuesStep7;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Repository
@@ -21,7 +20,6 @@ public class JooqStackOverFlowRepository implements StackOverFlowRepository {
     private final JooqLinkRepository jooqLinkRepository;
 
     @Override
-    @Transactional
     public Integer addAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
         InsertValuesStep7<StackoverflowAnswerRecord,
             Long,
@@ -59,7 +57,6 @@ public class JooqStackOverFlowRepository implements StackOverFlowRepository {
     }
 
     @Override
-    @Transactional
     public Integer deleteAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
         List<Long> answerIdList = stackOverFlowAnswerDTOList.stream().map(StackOverFlowAnswerDTO::getAnswerId).toList();
 
@@ -69,7 +66,6 @@ public class JooqStackOverFlowRepository implements StackOverFlowRepository {
     }
 
     @Override
-    @Transactional
     public List<StackOverFlowAnswerDTO> getAnswers(Long linkId) {
         return dslContext.selectFrom(StackoverflowAnswer.STACKOVERFLOW_ANSWER)
             .where(StackoverflowAnswer.STACKOVERFLOW_ANSWER.LINK_ID.eq(linkId))
@@ -89,7 +85,6 @@ public class JooqStackOverFlowRepository implements StackOverFlowRepository {
     }
 
     @Override
-    @Transactional
     public List<StackOverFlowAnswerDTO> getAnswers(URI uri) {
         Long id = jooqLinkRepository.findLinkIdByUrl(uri);
 

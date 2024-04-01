@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     private int oldLinksInSeconds;
 
     @Override
+    @Transactional
     public List<LinkUpdateRequest> update() {
         List<LinkDTO> list = jdbcLinkRepository.findAllOldLinks(oldLinksInSeconds);
 
@@ -79,7 +81,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    private void setTime() {
+    protected void setTime() {
         oldLinksInSeconds = (int) applicationConfig.scheduler().forceCheckDelay().toSeconds();
     }
 

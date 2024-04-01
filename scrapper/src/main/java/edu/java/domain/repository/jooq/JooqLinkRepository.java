@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Repository
@@ -24,7 +23,6 @@ public class JooqLinkRepository implements LinkRepository {
     private final JooqLinkChatRepository jooqLinkChatRepository;
 
     @Override
-    @Transactional
     public LinkDTO add(LinkDTO linkDTO) {
         LinkRecord linkRecord = dslContext.insertInto(
                 Link.LINK,
@@ -42,7 +40,6 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    @Transactional
     public Integer remove(LinkDTO linkDTO) {
         return dslContext
             .delete(Link.LINK)
@@ -57,20 +54,17 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    @Transactional
     public List<LinkDTO> findAllByChatId(Long tgChatId) {
 
         return jooqLinkChatRepository.findAllByChatId(tgChatId);
     }
 
     @Override
-    @Transactional
     public List<LinkDTO> findAllByLinkId(Long linkId) {
         return jooqLinkChatRepository.findAllByLinkId(linkId);
     }
 
     @Override
-    @Transactional
     public Long findLinkIdByUrl(URI uri) {
         return dslContext.select(Link.LINK.LINK_ID)
             .from(Link.LINK)
@@ -79,7 +73,6 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    @Transactional
     public List<LinkDTO> findAll() {
         return dslContext.selectFrom(Link.LINK)
             .fetchInto(LinkDTO.class);
@@ -87,7 +80,6 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    @Transactional
     public void updateLink(LinkDTO elem) {
         dslContext.update(Link.LINK)
             .set(Link.LINK.URI, elem.getUri().toString())
@@ -97,7 +89,6 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    @Transactional
     public List<LinkDTO> findAllOldLinks(Integer timeInSeconds) {
         return dslContext.selectDistinct(
                 Link.LINK.LINK_ID,

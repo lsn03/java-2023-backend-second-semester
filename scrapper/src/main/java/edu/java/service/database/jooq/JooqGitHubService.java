@@ -35,13 +35,11 @@ public class JooqGitHubService implements GitHubService {
     }
 
     @Override
-    @Transactional
     public List<GitHubCommitDTO> getCommits(Long linkId) {
         return jooqGitHubRepository.getCommits(linkId);
     }
 
     @Override
-    @Transactional
     public List<GitHubCommitDTO> getCommits(URI uri) {
         return jooqGitHubRepository.getCommits(uri);
     }

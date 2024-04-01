@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -15,6 +16,7 @@ public class JooqTgChatService implements TgChatService {
     private final JooqChatRepository jooqChatRepository;
 
     @Override
+    @Transactional
     public void add(Long tgChatId) {
         try {
             jooqChatRepository.add(tgChatId);
@@ -24,6 +26,7 @@ public class JooqTgChatService implements TgChatService {
     }
 
     @Override
+    @Transactional
     public void remove(Long tgChatId) {
         jooqChatRepository.remove(tgChatId);
     }
