@@ -61,6 +61,8 @@ public class JdbcLinkServiceTest extends IntegrationTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void testAddRepeatTrackException() {
         linkForAction = new LinkDto();
         linkForAction.setTgChatId(tgChatId);
