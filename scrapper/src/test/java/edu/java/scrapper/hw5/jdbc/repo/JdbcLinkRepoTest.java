@@ -1,8 +1,7 @@
 package edu.java.scrapper.hw5.jdbc.repo;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.jdbc.JdbcLinkRepository;
-import edu.java.exception.exception.LinkNotFoundException;
 import edu.java.scrapper.IntegrationTest;
 import java.net.URI;
 import org.junit.jupiter.api.Test;
@@ -22,14 +21,14 @@ public class JdbcLinkRepoTest extends IntegrationTest {
     @Autowired
     private JdbcLinkRepository jdbcLinkRepository;
 
-    LinkDTO linkDTO;
+    LinkDto linkDTO;
 
     @Test
     @Rollback
     @Transactional
     public void addFirstTime() {
 
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
 
         linkDTO.setUri(URI.create("http://example.com"));
         jdbcLinkRepository.add(linkDTO);
@@ -46,7 +45,7 @@ public class JdbcLinkRepoTest extends IntegrationTest {
     @Transactional
     public void addSecondTime() {
 
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(URI.create("http://example.com"));
         jdbcLinkRepository.add(linkDTO);
         assertThrows(DuplicateKeyException.class, () -> jdbcLinkRepository.add(linkDTO));
@@ -57,7 +56,7 @@ public class JdbcLinkRepoTest extends IntegrationTest {
     @Rollback
     @Transactional
     public void removeTest() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(URI.create("http://example.com"));
         jdbcLinkRepository.add(linkDTO);
         assertNotNull(linkDTO.getLinkId());

@@ -1,7 +1,7 @@
 package edu.java.scrapper.hw5.handler;
 
 import edu.java.exception.exception.IncorrectParametersException;
-import edu.java.model.StackOverFlowQuestionUriDTO;
+import edu.java.model.StackOverFlowQuestionUriDto;
 import edu.java.service.handler.StackOverFlowHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -42,8 +42,8 @@ public class StackOverHandlerTest {
         "https://stackoverflow.com/questions/1/name, 1",
     })
     public void testHandle(URI uri, Integer questionId) {
-        StackOverFlowQuestionUriDTO response = (StackOverFlowQuestionUriDTO) stackOverFlowHandler.handle(uri);
-        StackOverFlowQuestionUriDTO expected = new StackOverFlowQuestionUriDTO(questionId);
+        StackOverFlowQuestionUriDto response = (StackOverFlowQuestionUriDto) stackOverFlowHandler.handle(uri);
+        StackOverFlowQuestionUriDto expected = new StackOverFlowQuestionUriDto(questionId);
         assertEquals(expected, response);
 
     }

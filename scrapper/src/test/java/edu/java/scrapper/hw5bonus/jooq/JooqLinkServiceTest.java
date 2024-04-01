@@ -1,6 +1,6 @@
 package edu.java.scrapper.hw5bonus.jooq;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.exception.exception.IncorrectParametersException;
 import edu.java.exception.exception.ListEmptyException;
 import edu.java.exception.exception.RepeatTrackException;
@@ -27,14 +27,14 @@ public class JooqLinkServiceTest extends IntegrationTest {
     @Autowired
     private JooqLinkService jooqLinkService;
     URI uri = URI.create("https://github.com/lsn03/java-2023-backend-second-semester/pull/5");
-    LinkDTO linkDTO;
+    LinkDto linkDTO;
     OffsetDateTime createdAt = OffsetDateTime.of(2015, 1, 1, 1, 1, 1, 0, ZoneOffset.UTC);
 
     @Test
     @Transactional
     @Rollback
     public void testAddFirstTimeSuccess() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(uri);
         linkDTO.setTgChatId(TG_CHAT_ID);
         linkDTO.setCreatedAt(createdAt);
@@ -51,7 +51,7 @@ public class JooqLinkServiceTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void testAddTwiceTime() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(uri);
         linkDTO.setTgChatId(TG_CHAT_ID);
         linkDTO.setCreatedAt(createdAt);
@@ -66,7 +66,7 @@ public class JooqLinkServiceTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void testAddInvalidLink() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(URI.create("https://example.com"));
         linkDTO.setTgChatId(TG_CHAT_ID);
         linkDTO.setCreatedAt(createdAt);
@@ -88,7 +88,7 @@ public class JooqLinkServiceTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void testRemoveForOneChat() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(uri);
         linkDTO.setTgChatId(TG_CHAT_ID);
         linkDTO.setCreatedAt(createdAt);
@@ -105,7 +105,7 @@ public class JooqLinkServiceTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void testRemoveForTwoChats() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(uri);
         linkDTO.setTgChatId(TG_CHAT_ID);
         linkDTO.setCreatedAt(createdAt);

@@ -2,8 +2,8 @@ package edu.java.service.client;
 
 import edu.java.configuration.ApplicationConfig;
 import edu.java.model.stack_over_flow.StackOverFlowModel;
-import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
-import edu.java.model.stack_over_flow.dto.QuestionHeaderDTOResponse;
+import edu.java.model.stack_over_flow.dto.QuestionAnswerDtoResponse;
+import edu.java.model.stack_over_flow.dto.QuestionHeaderDtoResponse;
 import edu.java.model.stack_over_flow.wrapper.StackOverFlowAnswerResponseWrapper;
 import edu.java.model.stack_over_flow.wrapper.StackOverFlowHeaderResponseWrapper;
 import java.util.List;
@@ -34,7 +34,7 @@ public class StackOverFlowHttpClient implements StackOverFlowClient {
     }
 
     @Override
-    public List<QuestionAnswerDTOResponse> fetchAnswers(int questionId) {
+    public List<QuestionAnswerDtoResponse> fetchAnswers(int questionId) {
         return webClient.get()
             .uri(
                 "/questions/{questionId}/answers?site=stackoverflow&access_token={token}&key={key}",
@@ -49,7 +49,7 @@ public class StackOverFlowHttpClient implements StackOverFlowClient {
     }
 
     @Override
-    public QuestionHeaderDTOResponse fetchHeader(int questionId) {
+    public QuestionHeaderDtoResponse fetchHeader(int questionId) {
         return webClient.get()
             .uri(
                 "/questions/{questionId}?order=desc&sort=activity&site=stackoverflow&access_token={token}&key={key}",

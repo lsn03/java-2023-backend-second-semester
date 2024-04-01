@@ -1,6 +1,6 @@
 package edu.java.service.database.jooq;
 
-import edu.java.domain.model.ChatDTO;
+import edu.java.domain.model.ChatDto;
 import edu.java.domain.repository.jooq.JooqChatRepository;
 import edu.java.exception.exception.UserAlreadyExistException;
 import edu.java.service.database.TgChatService;
@@ -32,7 +32,7 @@ public class JooqTgChatService implements TgChatService {
     }
 
     @Override
-    public List<ChatDTO> findAll() {
+    public List<ChatDto> findAll() {
         return jooqChatRepository.findAll();
     }
 }

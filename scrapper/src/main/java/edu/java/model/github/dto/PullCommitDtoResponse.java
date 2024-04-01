@@ -1,7 +1,7 @@
 package edu.java.model.github.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.java.model.github.dto.info.UserInfoDTO;
+import edu.java.model.github.dto.info.UserInfoDto;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PullCommitDTOResponse {
+public class PullCommitDtoResponse {
     private String sha;
 
     @JsonProperty("html_url")
@@ -18,7 +18,7 @@ public class PullCommitDTOResponse {
 
     private CommitDetail commit;
 
-    private UserInfoDTO committer;
+    private UserInfoDto committer;
 
     @AllArgsConstructor
     @NoArgsConstructor

@@ -1,9 +1,9 @@
 package edu.java.service.updater;
 
 import edu.java.configuration.ApplicationConfig;
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.LinkRepository;
-import edu.java.model.UriDTO;
+import edu.java.model.UriDto;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import edu.java.service.handler.Handler;
 import edu.java.service.processor.Processor;
@@ -29,11 +29,11 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     @Override
     @Transactional
     public List<LinkUpdateRequest> update() {
-        List<LinkDTO> list = jdbcLinkRepository.findAllOldLinks(oldLinksInSeconds);
+        List<LinkDto> list = jdbcLinkRepository.findAllOldLinks(oldLinksInSeconds);
 
         List<LinkUpdateRequest> answer = new ArrayList<>();
 
-        for (LinkDTO elem : list) {
+        for (LinkDto elem : list) {
             List<LinkUpdateRequest> response = null;
 
             URI uri = elem.getUri();
@@ -51,7 +51,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
                     jdbcLinkRepository.findAllByLinkId(elem.getLinkId())
                         .stream()
                         .map(
-                            LinkDTO::getTgChatId
+                            LinkDto::getTgChatId
                         ).toList();
 
                 for (var responseElem : response) {
@@ -70,7 +70,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
         return answer;
     }
 
-    private List<LinkUpdateRequest> processDto(LinkDTO linkDTO, UriDTO uriDto) {
+    private List<LinkUpdateRequest> processDto(LinkDto linkDTO, UriDto uriDto) {
         for (var processor : processors) {
             var response = processor.processUriDTO(linkDTO, uriDto);
             if (response != null) {

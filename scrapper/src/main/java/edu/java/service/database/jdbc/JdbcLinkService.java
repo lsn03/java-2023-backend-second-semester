@@ -1,6 +1,6 @@
 package edu.java.service.database.jdbc;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.jdbc.JdbcLinkChatRepository;
 import edu.java.domain.repository.jdbc.JdbcLinkRepository;
 import edu.java.exception.exception.IncorrectParametersException;
@@ -27,7 +27,7 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     @Transactional
-    public LinkDTO add(LinkDTO linkDTO) {
+    public LinkDto add(LinkDto linkDTO) {
         for (var handler : handlers) {
             if (handler.canHandle(linkDTO.getUri())) {
 
@@ -59,7 +59,7 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     @Transactional
-    public Integer remove(LinkDTO linkDTO) {
+    public Integer remove(LinkDto linkDTO) {
         Long linkId = jdbcLinkRepository.findLinkIdByUrl(linkDTO.getUri());
         linkDTO.setLinkId(linkId);
         int affectRows = jdbcLinkChatRepository.remove(linkDTO);
@@ -68,7 +68,7 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     @Transactional
-    public List<LinkDTO> findAll(Long tgChatId) {
+    public List<LinkDto> findAll(Long tgChatId) {
         var response = jdbcLinkRepository.findAllByChatId(tgChatId);
         if (response.isEmpty()) {
             throw new ListEmptyException("List empty for chat " + tgChatId);

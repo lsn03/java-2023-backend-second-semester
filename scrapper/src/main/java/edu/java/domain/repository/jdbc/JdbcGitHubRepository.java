@@ -1,6 +1,6 @@
 package edu.java.domain.repository.jdbc;
 
-import edu.java.domain.model.GitHubCommitDTO;
+import edu.java.domain.model.GitHubCommitDto;
 import edu.java.domain.repository.GitHubRepository;
 import java.net.URI;
 import java.sql.ResultSet;
@@ -34,7 +34,7 @@ public class JdbcGitHubRepository implements GitHubRepository {
 
     @Override
     @Transactional
-    public Integer addCommits(List<GitHubCommitDTO> gitHubCommitList) {
+    public Integer addCommits(List<GitHubCommitDto> gitHubCommitList) {
 
         String sql = "insert into github_commit (link_id, sha, author, created_at, message) values (?, ?, ?, ?, ?)";
 
@@ -53,7 +53,7 @@ public class JdbcGitHubRepository implements GitHubRepository {
 
     @Override
     @Transactional
-    public Integer deleteCommits(List<GitHubCommitDTO> gitHubCommitList) {
+    public Integer deleteCommits(List<GitHubCommitDto> gitHubCommitList) {
 
         String sql = "delete from github_commit where link_id = ? and sha = ?";
 
@@ -69,7 +69,7 @@ public class JdbcGitHubRepository implements GitHubRepository {
 
     @Override
     @Transactional
-    public List<GitHubCommitDTO> getCommits(Long linkId) {
+    public List<GitHubCommitDto> getCommits(Long linkId) {
         return jdbcTemplate.query(
             "select commit_id, link_id, sha, author, created_at, message from github_commit where link_id = ?",
             (rs, rowNum) -> getGitHubCommitDTO(rs), linkId
@@ -78,7 +78,7 @@ public class JdbcGitHubRepository implements GitHubRepository {
 
     @Override
     @Transactional
-    public List<GitHubCommitDTO> getCommits(URI uri) {
+    public List<GitHubCommitDto> getCommits(URI uri) {
 
         return jdbcTemplate.query(
             """
@@ -94,8 +94,8 @@ public class JdbcGitHubRepository implements GitHubRepository {
     }
 
     @NotNull
-    private static GitHubCommitDTO getGitHubCommitDTO(ResultSet rs) throws SQLException {
-        return new GitHubCommitDTO(
+    private static GitHubCommitDto getGitHubCommitDTO(ResultSet rs) throws SQLException {
+        return new GitHubCommitDto(
             rs.getLong(SEL_INDEX_COMMIT_ID),
             rs.getLong(SEL_INDEX_LINK_ID),
             rs.getString(SEL_INDEX_SHA),

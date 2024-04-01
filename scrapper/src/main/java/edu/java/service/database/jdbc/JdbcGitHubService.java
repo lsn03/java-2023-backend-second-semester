@@ -1,6 +1,6 @@
 package edu.java.service.database.jdbc;
 
-import edu.java.domain.model.GitHubCommitDTO;
+import edu.java.domain.model.GitHubCommitDto;
 import edu.java.domain.repository.jdbc.JdbcGitHubRepository;
 import edu.java.exception.exception.RecordAlreadyExistException;
 import edu.java.service.database.GitHubService;
@@ -18,7 +18,7 @@ public class JdbcGitHubService implements GitHubService {
 
     @Override
     @Transactional
-    public Integer addCommits(List<GitHubCommitDTO> gitHubCommitList) {
+    public Integer addCommits(List<GitHubCommitDto> gitHubCommitList) {
         try {
             return jdbcGitHubRepository.addCommits(gitHubCommitList);
         } catch (DuplicateKeyException e) {
@@ -28,19 +28,19 @@ public class JdbcGitHubService implements GitHubService {
 
     @Override
     @Transactional
-    public Integer deleteCommits(List<GitHubCommitDTO> gitHubCommitList) {
+    public Integer deleteCommits(List<GitHubCommitDto> gitHubCommitList) {
         return jdbcGitHubRepository.deleteCommits(gitHubCommitList);
     }
 
     @Override
     @Transactional
-    public List<GitHubCommitDTO> getCommits(Long linkId) {
+    public List<GitHubCommitDto> getCommits(Long linkId) {
         return jdbcGitHubRepository.getCommits(linkId);
     }
 
     @Override
     @Transactional
-    public List<GitHubCommitDTO> getCommits(URI uri) {
+    public List<GitHubCommitDto> getCommits(URI uri) {
         return jdbcGitHubRepository.getCommits(uri);
     }
 }

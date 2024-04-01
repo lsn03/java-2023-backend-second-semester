@@ -1,6 +1,6 @@
 package edu.java.domain.repository.jdbc;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.LinkRepository;
 import java.net.URI;
 import java.sql.PreparedStatement;
@@ -28,7 +28,7 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     @Transactional
-    public LinkDTO add(LinkDTO linkDTO) {
+    public LinkDto add(LinkDto linkDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         var create = linkDTO.getCreatedAt();
         jdbcTemplate.update(
@@ -74,11 +74,11 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     @Transactional
-    public Integer remove(LinkDTO linkDTO) {
+    public Integer remove(LinkDto linkDTO) {
         Long linkId = findLinkIdByUrl(linkDTO.getUri());
         linkDTO.setLinkId(linkId);
         int response = 0;
-        List<LinkDTO> list = jdbcLinkChatRepository.findAllByLinkId(linkDTO.getLinkId());
+        List<LinkDto> list = jdbcLinkChatRepository.findAllByLinkId(linkDTO.getLinkId());
         if (list.isEmpty()) {
             response = jdbcTemplate.update(
                 "delete from link where link_id = (?) ;",
@@ -91,22 +91,22 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     @Transactional
-    public List<LinkDTO> findAllByLinkId(Long linkId) {
+    public List<LinkDto> findAllByLinkId(Long linkId) {
         return jdbcLinkChatRepository.findAllByLinkId(linkId);
     }
 
     @Override
     @Transactional
-    public List<LinkDTO> findAllByChatId(Long tgChatId) {
+    public List<LinkDto> findAllByChatId(Long tgChatId) {
         return jdbcLinkChatRepository.findAllByChatId(tgChatId);
     }
 
     @Override
     @Transactional
-    public List<LinkDTO> findAll() {
+    public List<LinkDto> findAll() {
         return jdbcTemplate.query(
             "select link_id, uri, created_at, last_update from link",
-            (rs, rowNum) -> new LinkDTO(
+            (rs, rowNum) -> new LinkDto(
                 java.net.URI.create(rs.getString(URI_FIELD)),
                 null,
                 rs.getLong(LINK_ID),
@@ -119,7 +119,7 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Transactional
     @Override
-    public void updateLink(LinkDTO linkDTO) {
+    public void updateLink(LinkDto linkDTO) {
         jdbcTemplate.update(
             "update link set uri = ?, last_update = now() where link_id = ? ",
             new Object[] {
@@ -132,7 +132,7 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     @Transactional
-    public List<LinkDTO> findAllOldLinks(Integer timeInSeconds) {
+    public List<LinkDto> findAllOldLinks(Integer timeInSeconds) {
 
         String interval = "'" + timeInSeconds + " seconds '";
 
@@ -141,7 +141,7 @@ public class JdbcLinkRepository implements LinkRepository {
                 + "from link "
                 + "where last_update is null or  last_update < now() - interval " + interval,
             (rs, rowNum) -> {
-                LinkDTO linkDTO = new LinkDTO();
+                LinkDto linkDTO = new LinkDto();
                 linkDTO.setLinkId(rs.getLong(LINK_ID));
                 linkDTO.setUri(URI.create(rs.getString(URI_FIELD)));
                 linkDTO.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime().atOffset(ZoneOffset.UTC));

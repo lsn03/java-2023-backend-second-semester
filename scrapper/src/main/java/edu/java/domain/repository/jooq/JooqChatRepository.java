@@ -1,7 +1,7 @@
 package edu.java.domain.repository.jooq;
 
 import edu.java.domain.jooq.tables.Chat;
-import edu.java.domain.model.ChatDTO;
+import edu.java.domain.model.ChatDto;
 import edu.java.domain.repository.ChatRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +38,9 @@ public class JooqChatRepository implements ChatRepository {
     }
 
     @Override
-    public List<ChatDTO> findAll() {
+    public List<ChatDto> findAll() {
         return dslContext.selectFrom(Chat.CHAT)
-            .fetchInto(ChatDTO.class);
+            .fetchInto(ChatDto.class);
     }
 
     protected boolean findInActiveUserById(Long tgChatId) {

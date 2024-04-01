@@ -1,6 +1,6 @@
 package edu.java.scrapper.hw5.jdbc.repo;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.domain.repository.jdbc.JdbcLinkChatRepository;
 import edu.java.domain.repository.jdbc.JdbcLinkRepository;
@@ -26,13 +26,13 @@ public class JdbcLinkChatRepoTest extends IntegrationTest {
     @Autowired
     private JdbcLinkRepository jdbcLinkRepository;
     long chatId = 1l;
-    LinkDTO linkDTO;
+    LinkDto linkDTO;
 
     @Test
     @Transactional
     @Rollback
     public void addTest() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(URI.create("https://exmaple.com"));
         linkDTO.setTgChatId(chatId);
         jdbcChatRepository.add(chatId);
@@ -52,7 +52,7 @@ public class JdbcLinkChatRepoTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void removeTest() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(URI.create("https://exmaple.com"));
         linkDTO.setTgChatId(chatId);
         jdbcChatRepository.add(chatId);

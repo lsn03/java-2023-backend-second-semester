@@ -3,7 +3,7 @@ package edu.java.domain.repository.jooq;
 import edu.java.domain.jooq.tables.Link;
 import edu.java.domain.jooq.tables.LinkChat;
 import edu.java.domain.jooq.tables.records.LinkRecord;
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.LinkRepository;
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ public class JooqLinkRepository implements LinkRepository {
     private final JooqLinkChatRepository jooqLinkChatRepository;
 
     @Override
-    public LinkDTO add(LinkDTO linkDTO) {
+    public LinkDto add(LinkDto linkDTO) {
         LinkRecord linkRecord = dslContext.insertInto(
                 Link.LINK,
                 Link.LINK.URI,
@@ -40,7 +40,7 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public Integer remove(LinkDTO linkDTO) {
+    public Integer remove(LinkDto linkDTO) {
         return dslContext
             .delete(Link.LINK)
             .where(Link.LINK.URI.eq(linkDTO.getUri().toString()))
@@ -54,13 +54,13 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public List<LinkDTO> findAllByChatId(Long tgChatId) {
+    public List<LinkDto> findAllByChatId(Long tgChatId) {
 
         return jooqLinkChatRepository.findAllByChatId(tgChatId);
     }
 
     @Override
-    public List<LinkDTO> findAllByLinkId(Long linkId) {
+    public List<LinkDto> findAllByLinkId(Long linkId) {
         return jooqLinkChatRepository.findAllByLinkId(linkId);
     }
 
@@ -73,14 +73,14 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public List<LinkDTO> findAll() {
+    public List<LinkDto> findAll() {
         return dslContext.selectFrom(Link.LINK)
-            .fetchInto(LinkDTO.class);
+            .fetchInto(LinkDto.class);
 
     }
 
     @Override
-    public void updateLink(LinkDTO elem) {
+    public void updateLink(LinkDto elem) {
         dslContext.update(Link.LINK)
             .set(Link.LINK.URI, elem.getUri().toString())
             .set(Link.LINK.LAST_UPDATE, LocalDateTime.now())
@@ -89,7 +89,7 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public List<LinkDTO> findAllOldLinks(Integer timeInSeconds) {
+    public List<LinkDto> findAllOldLinks(Integer timeInSeconds) {
         return dslContext.selectDistinct(
                 Link.LINK.LINK_ID,
                 Link.LINK.URI,
@@ -101,7 +101,7 @@ public class JooqLinkRepository implements LinkRepository {
                     timeInSeconds
                 )
             ).fetch(recordLinkDTO -> {
-                LinkDTO linkDTO = new LinkDTO();
+                LinkDto linkDTO = new LinkDto();
 
                 linkDTO.setLinkId(recordLinkDTO.get(Link.LINK.LINK_ID));
                 linkDTO.setUri(URI.create(recordLinkDTO.get(Link.LINK.URI)));

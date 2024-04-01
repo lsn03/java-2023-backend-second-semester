@@ -1,23 +1,23 @@
 package edu.java.domain.repository;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import java.net.URI;
 import java.util.List;
 
 public interface LinkRepository {
-    LinkDTO add(LinkDTO linkDTO);
+    LinkDto add(LinkDto linkDTO);
 
-    Integer remove(LinkDTO linkDTO);
+    Integer remove(LinkDto linkDTO);
 
-    List<LinkDTO> findAllByChatId(Long tgChatId);
+    List<LinkDto> findAllByChatId(Long tgChatId);
 
-    List<LinkDTO> findAllByLinkId(Long linkId);
+    List<LinkDto> findAllByLinkId(Long linkId);
 
     Long findLinkIdByUrl(URI uri);
 
-    List<LinkDTO> findAll();
+    List<LinkDto> findAll();
 
-    void updateLink(LinkDTO elem);
+    void updateLink(LinkDto elem);
 
-    List<LinkDTO> findAllOldLinks(Integer timeInSeconds);
+    List<LinkDto> findAllOldLinks(Integer timeInSeconds);
 }
