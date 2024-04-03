@@ -27,6 +27,7 @@ public class StackOverFlowTest {
     ApplicationConfig config = new ApplicationConfig(
         null,
         null,
+        null,
         null, null,
         new ApplicationConfig.StackOverFlowApiProperties(TOKEN, KEY)
     );

@@ -128,27 +128,27 @@ services:
       - kafka_data_3:/var/lib/kafka/data
 
 
-  init-kafka:
-    image: confluentinc/cp-kafka:7.2.1
-    depends_on:
-      - kafka1
-      - kafka2
-      - kafka3
-    entrypoint: [ '/bin/sh', '-c' ]
-    command: |
-      "
-      # blocks until kafka is reachable
-      kafka-topics --bootstrap-server kafka1:9091,kafka2:9092,kafka3:9093 --list
-
-      echo -e 'Creating kafka topics'
-      kafka-topics --bootstrap-server kafka1:9091,kafka2:9092,kafka3:9093 --create --if-not-exists --topic messages.string --replication-factor 2 --partitions 2
-
-
-      echo -e 'Successfully created the following topics:'
-      kafka-topics --bootstrap-server kafka1:9091,kafka2:9092,kafka3:9093 --list
-      "
-    networks:
-      - backend
+#  init-kafka:
+#    image: confluentinc/cp-kafka:7.2.1
+#    depends_on:
+#      - kafka1
+#      - kafka2
+#      - kafka3
+#    entrypoint: [ '/bin/sh', '-c' ]
+#    command: |
+#      "
+#      # blocks until kafka is reachable
+#      kafka-topics --bootstrap-server kafka1:9091,kafka2:9092,kafka3:9093 --list
+#
+#      echo -e 'Creating kafka topics'
+#      kafka-topics --bootstrap-server kafka1:9091,kafka2:9092,kafka3:9093 --create --if-not-exists --topic topic1 --replication-factor 1 --partitions 10
+#
+#
+#      echo -e 'Successfully created the following topics:'
+#      kafka-topics --bootstrap-server kafka1:9091,kafka2:9092,kafka3:9093 --list
+#      "
+#    networks:
+#      - backend
 volumes:
   postgresql: {}
   kafka_data_1: {}

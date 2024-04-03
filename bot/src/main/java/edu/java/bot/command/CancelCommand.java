@@ -7,6 +7,7 @@ import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,12 +30,8 @@ public class CancelCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        log.info(
-            "User @{} entered \"{}\" user_id={}",
-            update.message().chat().username(),
-            update.message().text(),
-            chatId
-        );
+        CommandUtils.extractMessageForLog(update, log);
+
         if (!storage.isUserAuth(chatId)) {
             return new SendMessage(chatId, CommandUtils.USER_NOT_REGISTERED);
         } else {
@@ -46,6 +43,8 @@ public class CancelCommand implements Command {
         }
 
     }
+
+
 
     @Override
     public boolean supports(Update update) {

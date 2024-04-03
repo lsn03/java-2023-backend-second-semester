@@ -1,5 +1,8 @@
 package edu.java.bot.command;
 
+import com.pengrad.telegrambot.model.Update;
+import org.slf4j.Logger;
+
 public final class CommandUtils {
     public static final String CANCEL_INPUT = "Ввод отменён.";
     public static final String NOTHING_TO_CANCEL = "Нечего отменять.";
@@ -24,6 +27,18 @@ public final class CommandUtils {
     private CommandUtils() {
 
     }
-
+    public static void extractMessageForLog(Update update, Logger log) {
+        Long chatId = update.message().chat().id();
+        String username = update.message().chat().username();
+        String text = update.message().text();
+        String userFirstName = update.message().chat().firstName();
+        log.info(
+            "User @{} firstName={} entered \"{}\" user_id={}",
+            username,
+            userFirstName,
+            text,
+            chatId
+        );
+    }
 
 }

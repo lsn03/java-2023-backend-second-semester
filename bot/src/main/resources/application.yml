@@ -13,12 +13,24 @@ app:
   rate:
     count: 20
     seconds: 60
+  kafka:
+    using-queue: true
+    partitions: 10
+    replicas: 1
+    topic: topic1
 
 spring:
   application:
     name: bot
   jackson:
     time-zone: UTC
+  devtools:
+    restart:
+      enabled: false
+  kafka:
+    consumer:
+      group-id: my-group-id
+    bootstrap-servers: localhost:29091,localhost:29092,localhost:29093
 
 springdoc:
   swagger-ui:

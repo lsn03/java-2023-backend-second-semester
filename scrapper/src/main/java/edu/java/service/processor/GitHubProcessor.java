@@ -65,7 +65,6 @@ public class GitHubProcessor implements Processor {
         }
 
         var commitsFromDB = gitHubService.getCommits(linkDTO.getUri());
-        log.info(commitsFromDB.toString());
         List<GitHubCommitDTO> listForUpdate = new ArrayList<>();
 
         for (var commit : commitsFromAPI) {
@@ -75,7 +74,6 @@ public class GitHubProcessor implements Processor {
 
         }
         gitHubService.addCommits(listForUpdate);
-        log.info(listForUpdate.toString());
         STRING_BUILDER.setLength(0);
         if (listForUpdate.size() > MAX_MESSAGE_SIZE) {
             STRING_BUILDER.append("Появилось ").append(listForUpdate.size()).append(" коммитов в пулл реквесте: ")

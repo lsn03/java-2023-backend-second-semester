@@ -1,5 +1,6 @@
 package edu.java.bot.configuration;
 
+import edu.java.bot.configuration.kafka.KafkaProperties;
 import edu.java.bot.configuration.rate.BucketProperties;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
@@ -16,6 +17,7 @@ public record ApplicationConfig(
     @NotEmpty
     String telegramToken,
     BucketProperties rate,
+    KafkaProperties kafka,
     RetryConfig retry,
     String scrapperBaseUrl
 ) {

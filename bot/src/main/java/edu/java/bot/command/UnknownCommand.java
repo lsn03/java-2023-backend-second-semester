@@ -21,12 +21,7 @@ public class UnknownCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        log.warn(
-            "User @{} entered \"{}\" user_id={}",
-            update.message().chat().username(),
-            update.message().text(),
-            chatId
-        );
+        CommandUtils.extractMessageForLog(update, log);
 
         return new SendMessage(chatId, CommandUtils.UNKNOWN_COMMAND_HELP);
     }
