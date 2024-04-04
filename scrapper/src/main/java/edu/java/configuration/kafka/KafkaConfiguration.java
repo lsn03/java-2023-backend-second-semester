@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 
 @Configuration
 @Component
-@ConditionalOnProperty(prefix = "app", name = "kafka.using-queue", havingValue = "true")
+@ConditionalOnProperty(prefix = "app.kafka", name = "using-queue", havingValue = "true")
 @Slf4j
 @RequiredArgsConstructor
 public class KafkaConfiguration {
@@ -45,12 +45,7 @@ public class KafkaConfiguration {
             .build();
     }
 
-//    @Bean
-//    public ApplicationRunner runner(KafkaTemplate<String, String> template) {
-//        return args -> {
-//            template.send("topic1", "test");
-//        };
-//    }
+
 
     @Bean
     public KafkaTemplate<String, String> stringMessageKafkaTemplate() {

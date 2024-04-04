@@ -4,6 +4,9 @@ public record KafkaProperties(
     Boolean usingQueue,
     Integer partitions,
     Integer replicas,
-    String topic
+    String topic,
+    String topicDlq,
+    String groupId,
+    String servers
 ) {
 }

@@ -18,6 +18,9 @@ app:
     partitions: 10
     replicas: 1
     topic: topic1
+    topic-dlq: topic1_dlq
+    servers: localhost:29091,localhost:29092,localhost:29093
+    group-id: my-group-id
 
 spring:
   application:

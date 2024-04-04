@@ -85,6 +85,7 @@ services:
       - backend
     volumes:
       - kafka_data_1:/var/lib/kafka/data
+
   kafka2:
     image: confluentinc/cp-kafka:7.2.1
     hostname: kafka2
