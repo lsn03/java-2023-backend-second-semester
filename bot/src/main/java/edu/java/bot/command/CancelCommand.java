@@ -7,7 +7,6 @@ import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -43,8 +42,6 @@ public class CancelCommand implements Command {
         }
 
     }
-
-
 
     @Override
     public boolean supports(Update update) {

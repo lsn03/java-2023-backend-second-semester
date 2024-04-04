@@ -2,10 +2,6 @@ package edu.java.service.scheduler;
 
 import edu.java.configuration.ApplicationConfig;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
-import edu.java.model.scrapper.dto.response.ApiErrorResponse;
-import edu.java.service.client.BotHttpClient;
-import edu.java.service.sender.ScrapperHttpSender;
-import edu.java.service.sender.ScrapperQueueProducer;
 import edu.java.service.sender.Sender;
 import edu.java.service.updater.LinkUpdaterService;
 import java.util.List;
@@ -23,6 +19,7 @@ public class LinkUpdaterScheduler {
     private final ApplicationConfig applicationConfig;
     private final LinkUpdaterService linkUpdaterService;
     private final Sender sender;
+
     @Scheduled(fixedDelayString = "#{@schedulerInterval}")
     public void update() {
         if (!applicationConfig.scheduler().enable()) {

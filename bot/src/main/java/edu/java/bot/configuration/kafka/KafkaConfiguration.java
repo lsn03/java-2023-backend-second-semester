@@ -23,9 +23,10 @@ public class KafkaConfiguration {
     private final ApplicationConfig config;
 
     @Bean
-    public KafkaProperties kafkaProperties(){
+    public KafkaProperties kafkaProperties() {
         return config.kafka();
     }
+
     @Bean
     public NewTopic dlqTopic() {
         return new NewTopic(
@@ -34,6 +35,7 @@ public class KafkaConfiguration {
             config.kafka().replicas().shortValue()
         );
     }
+
     @Bean
     public NewTopic topic() {
         return new NewTopic(
@@ -42,7 +44,6 @@ public class KafkaConfiguration {
             config.kafka().replicas().shortValue()
         );
     }
-
 
     @Bean
     public KafkaTemplate<String, String> stringMessageKafkaTemplate() {

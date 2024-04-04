@@ -2,14 +2,11 @@ package edu.java.service.sender;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.java.configuration.ApplicationConfig;
-import edu.java.configuration.kafka.KafkaConfiguration;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
-
 
 @RequiredArgsConstructor
 @Slf4j

@@ -10,14 +10,11 @@ import edu.java.bot.model.dto.response.LinkResponse;
 import edu.java.bot.storage.Storage;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class ListCommand implements Command {
-
 
     private final Storage storage;
     private final StringBuilder st;

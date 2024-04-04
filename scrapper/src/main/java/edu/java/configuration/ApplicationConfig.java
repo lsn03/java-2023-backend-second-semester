@@ -25,7 +25,7 @@ public record ApplicationConfig(Scheduler scheduler,
     }
 
     @Bean
-    public KafkaProperties kafkaProperties(){
+    public KafkaProperties kafkaProperties() {
         return kafka;
     }
 

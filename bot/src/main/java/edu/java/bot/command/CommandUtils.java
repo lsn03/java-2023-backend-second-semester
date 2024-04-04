@@ -27,6 +27,7 @@ public final class CommandUtils {
     private CommandUtils() {
 
     }
+
     public static void extractMessageForLog(Update update, Logger log) {
         Long chatId = update.message().chat().id();
         String username = update.message().chat().username();
