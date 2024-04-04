@@ -10,13 +10,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(prefix = "app", name = "kafka.using-queue", havingValue = "false")
+@ConditionalOnProperty(prefix = "app.kafka", name = "using-queue", havingValue = "false")
 @RequiredArgsConstructor
 @Slf4j
 public class HttpSenderConfiguration {
     private final BotHttpClient client;
+
     @Bean
-    public Sender httpSender(){
+    public Sender httpSender() {
         log.info("creating ScrapperHttpSender");
         return new ScrapperHttpSender(client);
     }

@@ -25,6 +25,11 @@ public record ApplicationConfig(Scheduler scheduler,
     }
 
     @Bean
+    public KafkaProperties kafkaProperties(){
+        return kafka;
+    }
+
+    @Bean
     public Bucket getBucket() {
         return Bucket.builder()
             .addLimit(Bandwidth.classic(

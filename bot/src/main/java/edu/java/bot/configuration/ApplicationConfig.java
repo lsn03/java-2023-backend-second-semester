@@ -30,4 +30,13 @@ public record ApplicationConfig(
             ))
             .build();
     }
+
+    @Bean
+    public ScrapperProperties scrapperProperties() {
+        return new ScrapperProperties(scrapperBaseUrl, retry);
+    }
+
+    public record ScrapperProperties(String scrapperBaseUrl, RetryConfig retryConfig) {
+
+    }
 }

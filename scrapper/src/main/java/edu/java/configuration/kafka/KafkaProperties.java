@@ -3,7 +3,9 @@ package edu.java.configuration.kafka;
 public record KafkaProperties(
     Boolean usingQueue,
     Integer partitions,
-    Integer replicas,
-    String topic
+    Short replicas,
+    String topic,
+    String clientId,
+    String servers
 ) {
 }

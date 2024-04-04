@@ -10,10 +10,12 @@ app:
     key: ${SOF_KEY:key}
     token: ${APP_SOF_ACCESS_TOKEN:token}
   kafka:
-    using-queue: true
+    using-queue: false
     partitions: 10
     replicas: 1
     topic: topic1
+    servers: localhost:29091,localhost:29092,localhost:29093
+    client-id: my-client-id
 #  retry:
 #    strategy: constant
 #    max-attempts: 3

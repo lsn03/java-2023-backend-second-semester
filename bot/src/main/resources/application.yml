@@ -14,7 +14,7 @@ app:
     count: 20
     seconds: 60
   kafka:
-    using-queue: true
+    using-queue: false
     partitions: 10
     replicas: 1
     topic: topic1

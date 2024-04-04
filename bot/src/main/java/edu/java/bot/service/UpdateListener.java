@@ -26,13 +26,13 @@ public class UpdateListener {
     private final StringBuilder stringBuilder = new StringBuilder();
 
     @KafkaListener(
-                    topics = "#{topic.name}",
-                   groupId = "my-group-id")
+        topics = "#{topic.name}",
+        groupId = "my-group-id")
     @SneakyThrows
     public void listenUsualQueue(String message) {
         try {
-            throw new RuntimeException("Error for first Read");
-//            processMessage(config.kafka().topic(), message);
+//            throw new RuntimeException("Error for first Read");
+            processMessage(config.kafka().topic(), message);
 
         } catch (Exception e) {
             log.error("Send to DLQ message {} {}", message, e);
@@ -44,8 +44,8 @@ public class UpdateListener {
     @KafkaListener(topics = "#{dlqTopic.name}", groupId = "my-group-id")
     public void listenDeadLetterQueue(String message) {
         try {
-            throw new IllegalAccessException(" cannot read from DLQ");
-//            processMessage(config.kafka().topicDlq(),message);
+//            throw new IllegalAccessException(" cannot read from DLQ");
+            processMessage(config.kafka().topicDlq(), message);
         } catch (Exception e) {
 
             log.error("Error while handling message from DLQ, message={}, exception: {}", message, e);
