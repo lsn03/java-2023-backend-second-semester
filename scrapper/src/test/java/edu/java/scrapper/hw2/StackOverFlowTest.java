@@ -24,13 +24,8 @@ public class StackOverFlowTest {
     int questionId = 1;
     private OffsetDateTime time = OffsetDateTime.of(2015, 12, 26, 12, 10, 15, 0, ZoneOffset.UTC);
     String title = "Lorem";
-    ApplicationConfig config = new ApplicationConfig(
-        null,
-        null,
-        null,
-        null, null,
-        new ApplicationConfig.StackOverFlowApiProperties(TOKEN, KEY)
-    );
+    ApplicationConfig.StackOverFlowApiProperties sofProperties =
+        new ApplicationConfig.StackOverFlowApiProperties(TOKEN, KEY);
 
     @Test
     public void testHeader(WireMockRuntimeInfo wireMockRuntimeInfo) {
@@ -83,7 +78,7 @@ public class StackOverFlowTest {
                     ).withStatus(200)
                 )
         );
-        client = new StackOverFlowHttpClient(baseUrl + port, config);
+        client = new StackOverFlowHttpClient(baseUrl + port, sofProperties);
         var response = client.fetchHeader(questionId);
         assertEquals(expected, response);
     }
@@ -91,7 +86,7 @@ public class StackOverFlowTest {
     @Test
     public void testAnswers(WireMockRuntimeInfo wireMockRuntimeInfo) {
 
-        client = new StackOverFlowHttpClient(baseUrl + wireMockRuntimeInfo.getHttpPort(), config);
+        client = new StackOverFlowHttpClient(baseUrl + wireMockRuntimeInfo.getHttpPort(), sofProperties);
         String url = String.format(
             "/questions/%s/answers?site=stackoverflow&access_token=%s&key=%s",
             questionId,
