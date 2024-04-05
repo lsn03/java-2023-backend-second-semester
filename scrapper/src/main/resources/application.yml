@@ -1,5 +1,5 @@
 app:
-  database-access-type: jooq
+  database-access-type: jooq # jpa, jdbc
   scheduler:
     enable: true
     interval: 20s
@@ -10,11 +10,11 @@ app:
     key: ${SOF_KEY:key}
     token: ${APP_SOF_ACCESS_TOKEN:token}
   kafka:
-    using-queue: false
+    using-queue: ${USING_QUEUE:true}
     partitions: 10
     replicas: 1
     topic: topic1
-    servers: localhost:29091,localhost:29092,localhost:29093
+    servers: ${BOOTSTRAP_SERVERS:localhost:29091,localhost:29092,localhost:29093 }
     client-id: my-client-id
 #  retry:
 #    strategy: constant
@@ -44,7 +44,7 @@ spring:
   kafka:
     producer:
       client-id: my-client-id
-    bootstrap-servers: localhost:29091,localhost:29092,localhost:29093
+    bootstrap-servers: ${BOOTSTRAP_SERVERS:localhost:29091,localhost:29092,localhost:29093 }
 
 springdoc:
   swagger-ui:

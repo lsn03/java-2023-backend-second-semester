@@ -8,13 +8,12 @@ app:
     max-attempts: 3
     max-delay: 5000 # ms
     start-delay: 5000 # ms
-#    status-codes: [ 409, 404, 200 ]
-    status-codes: [429, 500,501, 502,503]
+    status-codes: [429, 500, 501, 502, 503]
   rate:
     count: 20
     seconds: 60
   kafka:
-    using-queue: false
+    using-queue: ${USING_QUEUE:true}
     partitions: 10
     replicas: 1
     topic: topic1
