@@ -60,3 +60,23 @@ client:
     sof-base-url: ${SOF_BASE_URL:https://api.stackexchange.com/2.3}
     bot-base-url: ${BOT_BASE_URL:http://localhost:8090}
 
+# Metrics
+management:
+  server:
+    port: 8081
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: /
+      path-mapping:
+        prometheus: metrics
+  endpoint:
+    health:
+      enabled: true
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
+  tags:
+    application: ${spring.application.name}
+
