@@ -3,9 +3,9 @@ package edu.java.scrapper.hw2;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
-import edu.java.model.stack_over_flow.dto.AccountDTO;
-import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
-import edu.java.model.stack_over_flow.dto.QuestionHeaderDTOResponse;
+import edu.java.model.stack_over_flow.dto.AccountDto;
+import edu.java.model.stack_over_flow.dto.QuestionAnswerDtoResponse;
+import edu.java.model.stack_over_flow.dto.QuestionHeaderDtoResponse;
 import edu.java.service.StackOverFlowService;
 import edu.java.service.client.StackOverFlowClient;
 import java.time.OffsetDateTime;
@@ -27,12 +27,12 @@ public class StackOverFlowTest {
 
         client = new StackOverFlowService(baseUrl + wireMockRuntimeInfo.getHttpPort());
         String url = String.format("/questions/%d?order=desc&sort=activity&site=stackoverflow", questionId);
-        AccountDTO owner = new AccountDTO(1, "Maxim");
+        AccountDto owner = new AccountDto(1, "Maxim");
         boolean isAnswered = false;
         String link = "sof.link";
         long lastEdit = 1451131815;
-        QuestionHeaderDTOResponse
-            dto = new QuestionHeaderDTOResponse(owner, isAnswered, lastEdit, title, questionId, link);
+        QuestionHeaderDtoResponse
+            dto = new QuestionHeaderDtoResponse(owner, isAnswered, lastEdit, title, questionId, link);
 
         WireMock.stubFor(
             WireMock.get(url)
@@ -78,14 +78,14 @@ public class StackOverFlowTest {
 
         client = new StackOverFlowService(baseUrl + wireMockRuntimeInfo.getHttpPort());
         String url = String.format("/questions/%d/answers?site=stackoverflow", questionId);
-        AccountDTO owner = new AccountDTO(1, "Maxim");
+        AccountDto owner = new AccountDto(1, "Maxim");
         boolean isAccepted = false;
         long creationDate = 1451131815;
         long lastActivityDate = 1451131815;
         Long lastEdit = null;
         int answerId = 1;
-        QuestionAnswerDTOResponse dto =
-            new QuestionAnswerDTOResponse(owner, isAccepted, creationDate, lastActivityDate, lastEdit, answerId);
+        QuestionAnswerDtoResponse dto =
+            new QuestionAnswerDtoResponse(owner, isAccepted, creationDate, lastActivityDate, lastEdit, answerId);
         var list = List.of(dto);
         WireMock.stubFor(
             WireMock.get(url)

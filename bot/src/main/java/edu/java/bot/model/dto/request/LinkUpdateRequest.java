@@ -6,10 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class LinkUpdateRequest extends MyRequest {
     private long id;
     private String url;

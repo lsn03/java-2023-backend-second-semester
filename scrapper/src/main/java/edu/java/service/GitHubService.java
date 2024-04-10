@@ -1,10 +1,10 @@
 package edu.java.service;
 
 import edu.java.model.github.PullRequestModelResponse;
-import edu.java.model.github.dto.IssueCommentDTOResponse;
-import edu.java.model.github.dto.PullCommentDTOResponse;
-import edu.java.model.github.dto.PullCommitDTOResponse;
-import edu.java.model.github.dto.PullReviewDTOResponse;
+import edu.java.model.github.dto.IssueCommentDtoResponse;
+import edu.java.model.github.dto.PullCommentDtoResponse;
+import edu.java.model.github.dto.PullCommitDtoResponse;
+import edu.java.model.github.dto.PullReviewDtoResponse;
 import edu.java.service.client.GitHubClient;
 import java.util.List;
 import org.springframework.core.ParameterizedTypeReference;
@@ -26,10 +26,10 @@ public class GitHubService implements GitHubClient {
 
     @Override
     public PullRequestModelResponse fetchPullRequest(String owner, String repo, int pullNumber) {
-        List<IssueCommentDTOResponse> issueComments = getIssueComments(owner, repo, pullNumber);
-        List<PullReviewDTOResponse> pullReviews = getPullReviews(owner, repo, pullNumber);
-        List<PullCommentDTOResponse> pullComments = getPullComments(owner, repo, pullNumber);
-        List<PullCommitDTOResponse> pullCommits = getAllCommitsInPullRequest(owner, repo, pullNumber);
+        List<IssueCommentDtoResponse> issueComments = getIssueComments(owner, repo, pullNumber);
+        List<PullReviewDtoResponse> pullReviews = getPullReviews(owner, repo, pullNumber);
+        List<PullCommentDtoResponse> pullComments = getPullComments(owner, repo, pullNumber);
+        List<PullCommitDtoResponse> pullCommits = getAllCommitsInPullRequest(owner, repo, pullNumber);
 
         PullRequestModelResponse model = new PullRequestModelResponse();
         model.setIssueCommentDTOS(issueComments);
@@ -41,37 +41,37 @@ public class GitHubService implements GitHubClient {
     }
 
     @Override
-    public List<IssueCommentDTOResponse> getIssueComments(String owner, String repo, int pullNumber) {
+    public List<IssueCommentDtoResponse> getIssueComments(String owner, String repo, int pullNumber) {
         return webClient.get()
             .uri("/repos/{owner}/{repo}/issues/{pullNumber}/comments", owner, repo, pullNumber)
             .retrieve()
-            .bodyToMono(new ParameterizedTypeReference<List<IssueCommentDTOResponse>>() {
+            .bodyToMono(new ParameterizedTypeReference<List<IssueCommentDtoResponse>>() {
             }).block();
 
     }
 
     @Override
-    public List<PullReviewDTOResponse> getPullReviews(String owner, String repo, int pullNumber) {
+    public List<PullReviewDtoResponse> getPullReviews(String owner, String repo, int pullNumber) {
         return webClient.get()
             .uri("/repos/{owner}/{repo}/pulls/{pullNumber}/reviews", owner, repo, pullNumber)
-            .retrieve().bodyToMono(new ParameterizedTypeReference<List<PullReviewDTOResponse>>() {
+            .retrieve().bodyToMono(new ParameterizedTypeReference<List<PullReviewDtoResponse>>() {
             }).block();
     }
 
     @Override
-    public List<PullCommentDTOResponse> getPullComments(String owner, String repo, int pullNumber) {
+    public List<PullCommentDtoResponse> getPullComments(String owner, String repo, int pullNumber) {
         return webClient.get()
             .uri("repos/{owner}/{repo}/pulls/{pullNumber}/comments", owner, repo, pullNumber)
-            .retrieve().bodyToMono(new ParameterizedTypeReference<List<PullCommentDTOResponse>>() {
+            .retrieve().bodyToMono(new ParameterizedTypeReference<List<PullCommentDtoResponse>>() {
             }).block();
 
     }
 
     @Override
-    public List<PullCommitDTOResponse> getAllCommitsInPullRequest(String owner, String repo, int pullNumber) {
+    public List<PullCommitDtoResponse> getAllCommitsInPullRequest(String owner, String repo, int pullNumber) {
         return webClient.get()
             .uri("/repos/{owner}/{repo}/pulls/{pullNumber}/commits", owner, repo, pullNumber)
-            .retrieve().bodyToMono(new ParameterizedTypeReference<List<PullCommitDTOResponse>>() {
+            .retrieve().bodyToMono(new ParameterizedTypeReference<List<PullCommitDtoResponse>>() {
             }).block();
     }
 }
