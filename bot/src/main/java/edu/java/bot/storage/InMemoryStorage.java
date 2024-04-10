@@ -53,7 +53,7 @@ public class InMemoryStorage implements Storage {
                 }
                 users.add(userId);
             } catch (Exception e) {
-                log.error("{} {}", e.getMessage(), e.getStackTrace());
+                log.error("{}", e);
                 throw new RuntimeException(e);
             }
 

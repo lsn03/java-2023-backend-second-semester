@@ -1,10 +1,10 @@
 global:
   scrape_interval: 30s
   scrape_timeout: 10s
-scrape_configs:
-  job_name: 'bot'
-  metrics_path: /metrics
-  scheme: http
-  static_configs:
-    - targets: [ 'localhost:8082' ]
 
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["host.docker.internal:8081","host.docker.internal:8091"]
+    metrics_path: /metrics

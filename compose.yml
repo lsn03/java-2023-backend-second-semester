@@ -132,15 +132,30 @@ services:
     image: prom/prometheus
     volumes:
       - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+#      - prometheus_data:/prometheus
     networks:
       - backend
     ports:
       - 9090:9090
+  grafana:
+    image: grafana/grafana-oss
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+#    volumes:
+#      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - backend
+
 volumes:
   postgresql: {}
   kafka_data_1: {}
   kafka_data_2: {}
   kafka_data_3: {}
+#  prometheus_data: {}
+#  grafana_data: {}
 
 networks:
   backend: {}

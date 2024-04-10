@@ -10,7 +10,7 @@ app:
     key: ${SOF_KEY:key}
     token: ${APP_SOF_ACCESS_TOKEN:token}
   kafka:
-    using-queue: ${USING_QUEUE:true}
+    using-queue: ${USING_QUEUE:false}
     partitions: 10
     replicas: 1
     topic: topic1
@@ -65,11 +65,12 @@ management:
   server:
     port: 8081
   endpoints:
-    enabled-by-default: false
     web:
+      exposure:
+        include: 'health,info,prometheus'
       base-path: /
       path-mapping:
-        prometheus: metrics
+        prometheus: /metrics
   endpoint:
     health:
       enabled: true
