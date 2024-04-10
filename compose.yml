@@ -7,7 +7,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=dev
     env_file:
-        - ./.env
+      - ./.env
   postgresql:
     image: postgres:16
     ports:
@@ -38,7 +38,7 @@ services:
     networks:
       - backend
 volumes:
-  postgresql: { }
+  postgresql: {}
 
 networks:
-  backend: { }
+  backend: {}
