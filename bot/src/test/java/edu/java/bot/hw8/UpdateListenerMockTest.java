@@ -7,6 +7,7 @@ import edu.java.bot.bot.BotService;
 import edu.java.bot.configuration.kafka.KafkaProperties;
 import edu.java.bot.controller.UpdateListener;
 import edu.java.bot.model.dto.request.LinkUpdateRequest;
+import edu.java.bot.service.UpdateService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,8 @@ import static org.mockito.Mockito.when;
 public class UpdateListenerMockTest {
     UpdateListener updateListener;
     KafkaProperties properties = new KafkaProperties(null, null, null, "topic", "topic_dlq", "group", "servers");
-
+    @Mock
+    UpdateService updateService;
     @Mock
     BotService botMock;
     @Mock
@@ -35,7 +37,7 @@ public class UpdateListenerMockTest {
     @SneakyThrows
     @Test
     public void testUsualQueue() {
-        updateListener = new UpdateListener(properties, botMock, mapperMock, kafkaTemplateMock);
+        updateListener = new UpdateListener(properties, updateService, mapperMock, kafkaTemplateMock);
         var e = new Exception();
         when(mapperMock.readValue(anyString(), (JavaType) any(Object.class))).thenReturn(e);
 
@@ -47,7 +49,7 @@ public class UpdateListenerMockTest {
     @SneakyThrows
     @Test
     public void testDlq() {
-        updateListener = new UpdateListener(properties, botMock, mapperMock, kafkaTemplateMock);
+        updateListener = new UpdateListener(properties, updateService, mapperMock, kafkaTemplateMock);
         when(mapperMock.readValue(anyString(), (JavaType) any(Object.class))).thenReturn(new LinkUpdateRequest());
 
         Assertions.assertDoesNotThrow(() -> updateListener.listenDeadLetterQueue("message"));
