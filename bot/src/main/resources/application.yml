@@ -1,6 +1,7 @@
 app:
   telegram-token: ${APP_TELEGRAM_TOKEN:token}
-  scrapper-base-url: ${BASE_URL:http://localhost:8080}
+#  scrapper-base-url: ${SCRAPPER_BASE_URL:http://localhost:8080}
+  scrapper-base-url: ${SCRAPPER_BASE_URL}
   retry:
     strategy: linear # exponential, constant
     max-attempts: 3
@@ -16,7 +17,7 @@ app:
     replicas: 1
     topic: topic1
     topic-dlq: topic1_dlq
-    servers: localhost:29091,localhost:29092,localhost:29093
+    servers: ${BOOTSTRAP_SERVERS:localhost:29091,localhost:29092,localhost:29093 }
     group-id: my-group-id
 
 spring:
@@ -30,13 +31,13 @@ spring:
   kafka:
     consumer:
       group-id: my-group-id
-    bootstrap-servers: localhost:29091,localhost:29092,localhost:29093
+    bootstrap-servers: ${BOOTSTRAP_SERVERS:localhost:29091,localhost:29092,localhost:29093 }
 
 springdoc:
   swagger-ui:
     path: /swagger-ui
 server:
-  port: ${BOT_PORT:8090 }
+  port: 8090
 
 logging:
   config: classpath:log4j2-plain.xml

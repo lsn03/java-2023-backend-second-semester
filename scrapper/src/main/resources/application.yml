@@ -51,7 +51,7 @@ springdoc:
     path: /swagger-ui
 
 server:
-  port: ${SCRAPPER_PORT:8080}
+  port: 8080
 logging:
   config: classpath:log4j2-plain.xml
 client:
