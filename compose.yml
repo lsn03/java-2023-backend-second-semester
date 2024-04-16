@@ -1,13 +1,13 @@
 services:
-  bot:
-    build: ./bot/.
-    ports:
-      - 8081:8081
-      - 5005:5005
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-    env_file:
-      - ./.env
+#  bot:
+#    build: ./bot/.
+#    ports:
+#      - 8081:8081
+#      - 5005:5005
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dev
+#    env_file:
+#        - ./.env
   postgresql:
     image: postgres:16
     ports:
@@ -30,8 +30,8 @@ services:
       - --url=jdbc:postgresql://postgresql:5432/scrapper
       - --username=postgres
       - --password=postgres
-      #      - --log-level=debug
-      #      - clearCheckSums
+#      - --log-level=debug
+#      - clearCheckSums
       - update
     volumes:
       - ./migrations:/liquibase/changelog

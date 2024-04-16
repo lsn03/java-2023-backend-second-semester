@@ -2,12 +2,11 @@ package edu.java.scrapper.hw5.jdbc.service;
 
 import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.jdbc.JdbcChatRepository;
-import edu.java.exception.exception.LinkNotFoundException;
 import edu.java.exception.exception.ListEmptyException;
 import edu.java.exception.exception.RepeatTrackException;
 import edu.java.exception.exception.UserDoesntExistException;
 import edu.java.scrapper.IntegrationTest;
-import edu.java.service.process.jdbc.JdbcLinkService;
+import edu.java.service.database.jdbc.JdbcLinkService;
 import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -80,18 +79,6 @@ public class JdbcLinkServiceTest extends IntegrationTest {
         assertThrows(ListEmptyException.class, () -> jdbcLinkService.findAll(tgChatId));
     }
 
-
-    @Test
-    @Rollback
-    @Transactional
-    public void testRemoveNotFoundException() {
-        linkForAction = new LinkDto();
-        linkForAction.setTgChatId(tgChatId);
-        linkForAction.setUri(uri);
-
-        assertThrows(LinkNotFoundException.class, () -> jdbcLinkService.remove(linkForAction));
-    }
-
     @Test
     @Rollback
     @Transactional
@@ -102,9 +89,9 @@ public class JdbcLinkServiceTest extends IntegrationTest {
         jdbcChatRepository.add(tgChatId);
         jdbcLinkService.add(linkForAction);
 
-       Integer cnt =  jdbcLinkService.remove(linkForAction);
+        Integer cnt = jdbcLinkService.remove(linkForAction);
 
-       assertEquals(2,cnt);
+        assertEquals(2, cnt);
 
     }
 }

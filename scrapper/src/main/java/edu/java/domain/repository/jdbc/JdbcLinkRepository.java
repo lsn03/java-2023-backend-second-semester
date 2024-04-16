@@ -2,13 +2,11 @@ package edu.java.domain.repository.jdbc;
 
 import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.LinkRepository;
-import edu.java.exception.exception.LinkNotFoundException;
 import java.net.URI;
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
@@ -22,16 +20,16 @@ import org.springframework.stereotype.Repository;
 @AllArgsConstructor
 public class JdbcLinkRepository implements LinkRepository {
     private static final String LINK_ID = "link_id";
-    private static final String URI = "uri";
-    private static final String HASH = "hash";
-    private static final String ADD_LINK = "insert into link (uri,created_at)  values (?,now())";
+    private static final String URI_FIELD = "uri";
+
+    private static final String ADD_LINK = "insert into link (uri,created_at)  values (?, ?)";
     private static final String FIND_LINK_ID_BY_URL = "select link_id from link where uri = ? limit 1 ";
     private static final String DELETE_BY_LINK_ID = "delete from link where link_id = (?) ;";
-    private static final String FIND_ALL = "select link_id, uri, hash, created_at, last_update from link";
+    private static final String FIND_ALL = "select link_id, uri, created_at, last_update from link";
     private static final String UPDATE_LINK =
-        "update link set uri = ?, last_update = now(), hash = ? where link_id = ? ";
+        "update link set uri = ?, last_update = now() where link_id = ? ";
     private static final String FIND_ALL_OLD_LINKS = """
-        select lc.link_id,uri,created_at,last_update,hash,chat_id
+        select lc.link_id,uri,created_at,last_update ,chat_id
              from link left join link_chat lc on
                 link.link_id = lc.link_id
          where last_update is null or  last_update < now() - interval
@@ -43,6 +41,7 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public LinkDto add(LinkDto linkDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
+        var create = linkDTO.getCreatedAt();
         jdbcTemplate.update(
             connection -> {
                 PreparedStatement ps = connection.prepareStatement(
@@ -50,6 +49,10 @@ public class JdbcLinkRepository implements LinkRepository {
                     new String[] {LINK_ID}
                 );
                 ps.setString(1, String.valueOf(linkDTO.getUri()));
+                ps.setObject(
+                    2,
+                    create == null ? LocalDateTime.now() : create.toLocalDateTime()
+                );
                 return ps;
             },
             keyHolder
@@ -63,7 +66,7 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public Long findUrl(URI uri) {
+    public Long findLinkIdByUrl(URI uri) {
 
         try {
             Long id;
@@ -74,14 +77,14 @@ public class JdbcLinkRepository implements LinkRepository {
             );
             return id;
         } catch (EmptyResultDataAccessException e) {
-            throw new LinkNotFoundException("Link " + uri + " not found.");
+            return null;
         }
 
     }
 
     @Override
     public Integer remove(LinkDto linkDTO) {
-        Long linkId = findUrl(linkDTO.getUri());
+        Long linkId = findLinkIdByUrl(linkDTO.getUri());
         linkDTO.setLinkId(linkId);
         int response = 0;
         List<LinkDto> list = jdbcLinkChatRepository.findAllByLinkId(linkDTO.getLinkId());
@@ -101,14 +104,19 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
+    public List<LinkDto> findAllByLinkId(Long linkId) {
+        return jdbcLinkChatRepository.findAllByLinkId(linkId);
+    }
+
+    @Override
     public List<LinkDto> findAll() {
         return jdbcTemplate.query(
             FIND_ALL,
             (rs, rowNum) -> new LinkDto(
-                java.net.URI.create(rs.getString(URI)),
+                java.net.URI.create(rs.getString(URI_FIELD)),
                 null,
                 rs.getLong(LINK_ID),
-                rs.getString(HASH),
+
                 null,
                 null
             )
@@ -121,7 +129,7 @@ public class JdbcLinkRepository implements LinkRepository {
             UPDATE_LINK,
             new Object[] {
                 linkDTO.getUri().toString(),
-                linkDTO.getHash(),
+
                 linkDTO.getLinkId(),
             }
         );
@@ -129,34 +137,21 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     public List<LinkDto> findAllOldLinks(Integer timeInSeconds) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         String interval = "'" + timeInSeconds + " seconds '";
 
         return jdbcTemplate.query(
             FIND_ALL_OLD_LINKS + interval,
             (rs, rowNum) -> {
                 LinkDto linkDTO = new LinkDto();
-                String createdAt = rs.getString("created_at");
-                int index = createdAt.lastIndexOf(".");
-                createdAt = createdAt.substring(0, index);
-                LocalDateTime localDateTimeCreatedAt = LocalDateTime.parse(createdAt, formatter);
-
-                var lastUpdateString = rs.getString("last_update");
-                LocalDateTime lastUpdate;
-                if (lastUpdateString == null) {
-                    lastUpdate = OffsetDateTime.now().toLocalDateTime();
-                } else {
-                    index = lastUpdateString.lastIndexOf(".");
-                    lastUpdateString = lastUpdateString.substring(0, index);
-                    lastUpdate = LocalDateTime.parse(lastUpdateString, formatter);
-                }
-                linkDTO.setLastUpdate(lastUpdate.atOffset(ZoneOffset.UTC));
-                linkDTO.setTgChatId(rs.getLong("chat_id"));
                 linkDTO.setLinkId(rs.getLong(LINK_ID));
-                linkDTO.setUri(java.net.URI.create(rs.getString(URI)));
-                linkDTO.setCreatedAt(localDateTimeCreatedAt.atOffset(ZoneOffset.UTC));
+                linkDTO.setUri(URI.create(rs.getString(URI_FIELD)));
+                linkDTO.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime().atOffset(ZoneOffset.UTC));
 
-                linkDTO.setHash(rs.getString(HASH));
+                Timestamp lastUpdate = rs.getTimestamp("last_update");
+                if (lastUpdate != null) {
+                    linkDTO.setLastUpdate(lastUpdate.toLocalDateTime().atOffset(ZoneOffset.UTC));
+                }
 
                 return linkDTO;
             }

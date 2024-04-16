@@ -2,7 +2,6 @@ package edu.java.scrapper.hw5.jdbc.repo;
 
 import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.jdbc.JdbcLinkRepository;
-import edu.java.exception.exception.LinkNotFoundException;
 import edu.java.scrapper.IntegrationTest;
 import java.net.URI;
 import org.junit.jupiter.api.Test;
@@ -22,21 +21,22 @@ public class JdbcLinkRepoTest extends IntegrationTest {
     @Autowired
     private JdbcLinkRepository jdbcLinkRepository;
 
-    LinkDto linkDto;
+    LinkDto linkDTO;
 
     @Test
     @Rollback
     @Transactional
     public void addFirstTime() {
 
-        linkDto = new LinkDto();
-        linkDto.setUri(URI.create("http://example.com"));
-        jdbcLinkRepository.add(linkDto);
+        linkDTO = new LinkDto();
+
+        linkDTO.setUri(URI.create("http://example.com"));
+        jdbcLinkRepository.add(linkDTO);
 
         var response = jdbcLinkRepository.findAll();
         assertNotNull(response);
         assertFalse(response.isEmpty());
-        assertEquals(linkDto, response.getFirst());
+        assertEquals(linkDTO, response.getFirst());
 
     }
 
@@ -45,10 +45,10 @@ public class JdbcLinkRepoTest extends IntegrationTest {
     @Transactional
     public void addSecondTime() {
 
-        linkDto = new LinkDto();
-        linkDto.setUri(URI.create("http://example.com"));
-        jdbcLinkRepository.add(linkDto);
-        assertThrows(DuplicateKeyException.class, () -> jdbcLinkRepository.add(linkDto));
+        linkDTO = new LinkDto();
+        linkDTO.setUri(URI.create("http://example.com"));
+        jdbcLinkRepository.add(linkDTO);
+        assertThrows(DuplicateKeyException.class, () -> jdbcLinkRepository.add(linkDTO));
 
     }
 
@@ -56,24 +56,15 @@ public class JdbcLinkRepoTest extends IntegrationTest {
     @Rollback
     @Transactional
     public void removeTest() {
-        linkDto = new LinkDto();
-        linkDto.setUri(URI.create("http://example.com"));
-        jdbcLinkRepository.add(linkDto);
-        assertNotNull(linkDto.getLinkId());
-        int affect = jdbcLinkRepository.remove(linkDto);
+        linkDTO = new LinkDto();
+        linkDTO.setUri(URI.create("http://example.com"));
+        jdbcLinkRepository.add(linkDTO);
+        assertNotNull(linkDTO.getLinkId());
+        int affect = jdbcLinkRepository.remove(linkDTO);
         assertTrue(affect != 0);
         var response = jdbcLinkRepository.findAll();
         assertTrue(response.isEmpty());
     }
 
-    @Test
-    @Rollback
-    @Transactional
-    public void removeNotExistLinkTest() {
-        linkDto = new LinkDto();
-        linkDto.setUri(URI.create("http://example.com"));
 
-        assertThrows( LinkNotFoundException.class, ()-> jdbcLinkRepository.remove(linkDto));
-
-    }
 }

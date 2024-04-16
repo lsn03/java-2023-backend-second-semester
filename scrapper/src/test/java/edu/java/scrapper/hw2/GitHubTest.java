@@ -8,8 +8,8 @@ import edu.java.model.github.dto.PullCommentDtoResponse;
 import edu.java.model.github.dto.PullCommitDtoResponse;
 import edu.java.model.github.dto.PullReviewDtoResponse;
 import edu.java.model.github.dto.info.UserInfoDto;
-import edu.java.service.GitHubService;
 import edu.java.service.client.GitHubClient;
+import edu.java.service.client.GitHubHttpClient;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WireMockTest
 public class GitHubTest {
+    public static final String TOKEN = "token";
     private String owner = "lsn03";
     private String repo = "java";
     private int pullNumber = 1;
@@ -64,7 +65,7 @@ public class GitHubTest {
                     ).withStatus(200)
                 )
         );
-        client = new GitHubService(baseUrl + port);
+        client = new GitHubHttpClient(baseUrl + port, TOKEN);
         var response = client.getIssueComments(owner, repo, pullNumber);
         assertEquals(expected, response);
     }
@@ -103,8 +104,7 @@ public class GitHubTest {
                 )
         );
 
-        client = new GitHubService(baseUrl);
-        client = new GitHubService(baseUrl + port);
+        client = new GitHubHttpClient(baseUrl + port, TOKEN);
         var response = client.getPullComments(owner, repo, pullNumber);
         assertEquals(expected, response);
     }
@@ -141,7 +141,7 @@ public class GitHubTest {
                 )
         );
 
-        client = new GitHubService(baseUrl + port);
+        client = new GitHubHttpClient(baseUrl + port, TOKEN);
         var response = client.getPullReviews(owner, repo, pullNumber);
         assertEquals(expected, response);
     }
@@ -191,7 +191,7 @@ public class GitHubTest {
                 )
         );
 
-        client = new GitHubService(baseUrl + port);
+        client = new GitHubHttpClient(baseUrl + port, TOKEN);
         var response = client.getAllCommitsInPullRequest(owner, repo, pullNumber);
         assertEquals(expected, response);
     }
