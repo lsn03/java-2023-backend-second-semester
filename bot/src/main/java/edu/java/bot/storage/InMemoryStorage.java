@@ -47,7 +47,7 @@ public class InMemoryStorage implements Storage {
             try {
                 scrapperHttpClient.makeChat(userId);
             } catch (ApiErrorException e) {
-                if (!e.getErrorResponse().getExceptionName().equals(UserAlreadyExistException.class.getSimpleName())) {
+                if (!e.getErrorResponse().getExceptionName().equals(BotExceptionType.USER_ALREADY_EXIST_EXCEPTION)) {
                     throw new RuntimeException(e);
                 }
                 users.add(userId);
@@ -102,14 +102,12 @@ public class InMemoryStorage implements Storage {
                 return urls2.getLists();
             }
         } catch (ApiErrorException e) {
-            if (!e.getErrorResponse().getExceptionName().equals(ListEmptyException.class.getSimpleName())) {
-                throw new IncorrectParametersException(e.getErrorResponse().getExceptionMessage());
+            ApiErrorResponse response = e.getErrorResponse();
+            if (!response.getExceptionName().equals(BotExceptionType.LIST_EMPTY_EXCEPTION.name())) {
+                throw new IncorrectParametersException(response.getExceptionMessage());
             }
         }
-        ApiErrorResponse response = (ApiErrorResponse) urls;
-        if (!response.getExceptionName().equals(BotExceptionType.LIST_EMPTY_EXCEPTION.name())) {
-            throw new IncorrectParametersException(response.getExceptionMessage());
-        }
+
         return List.of();
     }
 
