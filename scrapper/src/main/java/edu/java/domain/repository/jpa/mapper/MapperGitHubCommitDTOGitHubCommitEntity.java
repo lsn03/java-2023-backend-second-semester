@@ -1,6 +1,6 @@
 package edu.java.domain.repository.jpa.mapper;
 
-import edu.java.domain.model.GitHubCommitDTO;
+import edu.java.domain.model.GitHubCommitDto;
 import edu.java.domain.repository.jpa.entity.GitHubCommitEntity;
 import edu.java.domain.repository.jpa.entity.LinkEntity;
 import java.time.ZoneOffset;
@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class MapperGitHubCommitDTOGitHubCommitEntity {
-    public static GitHubCommitEntity dtoToEntity(GitHubCommitDTO dto) {
+    public static GitHubCommitEntity dtoToEntity(GitHubCommitDto dto) {
         var entity = new LinkEntity();
         entity.setLinkId(dto.getLinkId());
         return new GitHubCommitEntity(
@@ -21,8 +21,8 @@ public class MapperGitHubCommitDTOGitHubCommitEntity {
         );
     }
 
-    public static GitHubCommitDTO entityToDto(GitHubCommitEntity entity) {
-        return new GitHubCommitDTO(
+    public static GitHubCommitDto entityToDto(GitHubCommitEntity entity) {
+        return new GitHubCommitDto(
             entity.getCommitId(),
             entity.getLinkEntity().getLinkId(),
             entity.getSha(),

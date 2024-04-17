@@ -1,10 +1,10 @@
 package edu.java.service.processor;
 
-import edu.java.domain.model.GitHubCommitDTO;
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.GitHubCommitDto;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.LinkRepository;
-import edu.java.model.GitHubPullRequestUriDTO;
-import edu.java.model.UriDTO;
+import edu.java.model.GitHubPullRequestUriDto;
+import edu.java.model.UriDto;
 import edu.java.model.github.PullRequestModelResponse;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import edu.java.service.client.GitHubClient;
@@ -30,12 +30,12 @@ public class GitHubProcessor implements Processor {
     private final GitHubService gitHubService;
     private final LinkRepository jooqLinkRepository;
 
-    public List<LinkUpdateRequest> processUriDTO(LinkDTO linkDTO, UriDTO uriDto) {
-        if (!(uriDto instanceof GitHubPullRequestUriDTO)) {
+    public List<LinkUpdateRequest> processUriDTO(LinkDto linkDTO, UriDto uriDto) {
+        if (!(uriDto instanceof GitHubPullRequestUriDto)) {
             return null;
         }
 
-        GitHubPullRequestUriDTO uriDto1 = (GitHubPullRequestUriDTO) uriDto;
+        GitHubPullRequestUriDto uriDto1 = (GitHubPullRequestUriDto) uriDto;
 
         PullRequestModelResponse response =
             gitHubClient.fetchPullRequest(uriDto1.getOwner(), uriDto1.getRepo(),
@@ -48,10 +48,10 @@ public class GitHubProcessor implements Processor {
         return list;
     }
 
-    private LinkUpdateRequest processCommit(LinkDTO linkDTO, PullRequestModelResponse response) {
-        List<GitHubCommitDTO> commitsFromAPI = response.getPullCommitDTOS().stream().map(
+    private LinkUpdateRequest processCommit(LinkDto linkDTO, PullRequestModelResponse response) {
+        List<GitHubCommitDto> commitsFromAPI = response.getPullCommitDTOS().stream().map(
             pullCommitDTOResponse -> {
-                GitHubCommitDTO commit = GitHubCommitDTO.create(pullCommitDTOResponse);
+                GitHubCommitDto commit = GitHubCommitDto.create(pullCommitDTOResponse);
                 commit.setLinkId(linkDTO.getLinkId());
                 return commit;
             }).toList();
@@ -65,7 +65,10 @@ public class GitHubProcessor implements Processor {
         }
 
         var commitsFromDB = gitHubService.getCommits(linkDTO.getUri());
-        List<GitHubCommitDTO> listForUpdate = new ArrayList<>();
+
+        log.info(commitsFromDB.toString());
+        List<GitHubCommitDto> listForUpdate = new ArrayList<>();
+
 
         for (var commit : commitsFromAPI) {
             if (!commitsFromDB.contains(commit)) {

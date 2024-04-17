@@ -1,27 +1,38 @@
-package edu.java.model.github.dto;
+package edu.java.model.github.dto.info;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.java.model.github.dto.info.UserInfoDTO;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class IssueCommentDTOResponse {
+public class IssueInfoDto {
     @JsonProperty("html_url")
     private String htmlUrl;
 
+    @JsonProperty("id")
     private Long id;
 
-    private UserInfoDTO user;
+    @JsonProperty("user")
+    private UserInfoDto user;
 
+    @JsonProperty("body")
     private String body;
+
+    @JsonProperty("state")
+    private String state;
 
     @JsonProperty("created_at")
     private OffsetDateTime createdAt;
 
     @JsonProperty("updated_at")
     private OffsetDateTime updatedAt;
+
+    @JsonProperty("closed_at")
+    private OffsetDateTime closedAt;
+
+    @JsonProperty("closed_by")
+    private UserInfoDto closedBy;
 
 }

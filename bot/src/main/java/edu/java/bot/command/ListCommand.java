@@ -48,10 +48,10 @@ public class ListCommand implements Command {
         try {
             list = storage.getUserTracks(chatId);
         } catch (IncorrectParametersException e) {
-
-            if (e.getMessage().contains(RepeatTrackException.class.getSimpleName())) {
+                var msg = e.getMessage();
+            if (msg.contains(RepeatTrackException.class.getSimpleName())) {
                 message = new SendMessage(chatId, CommandUtils.URL_ALREADY_EXIST);
-            } else if (e.getMessage().contains(ListEmptyException.class.getSimpleName())) {
+            } else if (msg.contains(ListEmptyException.class.getSimpleName())) {
                 message = new SendMessage(chatId, CommandUtils.NOTHING_TO_TRACK);
             }
             return message;
