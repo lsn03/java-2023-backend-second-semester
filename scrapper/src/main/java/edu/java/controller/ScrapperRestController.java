@@ -5,8 +5,8 @@ import edu.java.model.scrapper.dto.request.AddLinkRequest;
 import edu.java.model.scrapper.dto.request.RemoveLinkRequest;
 import edu.java.model.scrapper.dto.response.LinkResponse;
 import edu.java.model.scrapper.dto.response.ListLinksResponse;
-import edu.java.service.process.LinkService;
-import edu.java.service.process.TgChatService;
+import edu.java.service.database.LinkService;
+import edu.java.service.database.TgChatService;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,8 +33,6 @@ public class ScrapperRestController {
     private final LinkService linkService;
     private final TgChatService chatService;
 
-
-
     @PostMapping(value = TG_CHAT_ID, produces = {"application/json"})
     public ResponseEntity<?> signUpChat(@PathVariable Long id) {
 
@@ -51,7 +49,7 @@ public class ScrapperRestController {
 
     @GetMapping(value = LINKS, produces = {"application/json"})
     public ResponseEntity<?> getTrackedLinks(@RequestHeader(HEADER_TG_CHAT_ID) Long chatId) {
-        List<LinkDto> list = (List<LinkDto>) linkService.findAll(chatId);
+        List<LinkDto> list = linkService.findAll(chatId);
 
         var response = new ListLinksResponse();
 

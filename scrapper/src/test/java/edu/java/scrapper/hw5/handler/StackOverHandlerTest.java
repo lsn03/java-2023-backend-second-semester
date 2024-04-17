@@ -1,10 +1,11 @@
 package edu.java.scrapper.hw5.handler;
 
+import edu.java.exception.exception.IncorrectParametersException;
 import edu.java.model.StackOverFlowQuestionUriDto;
-import edu.java.service.parser.StackOverFlowHandler;
+import edu.java.service.handler.StackOverFlowHandler;
+import java.net.URI;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import java.net.URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,7 +57,7 @@ public class StackOverHandlerTest {
         "https://example.com",
     })
     public void testHandleException(URI uri) {
-        assertThrows(IllegalArgumentException.class, () -> stackOverFlowHandler.handle(uri));
+        assertThrows(IncorrectParametersException.class, () -> stackOverFlowHandler.handle(uri));
     }
 
 }

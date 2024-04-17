@@ -1,27 +1,38 @@
 package edu.java.bot.storage;
 
+import edu.java.bot.exception.BotExceptionType;
+import edu.java.bot.exception.IncorrectParametersException;
+import edu.java.bot.model.dto.request.AddLinkRequest;
+import edu.java.bot.model.dto.request.RemoveLinkRequest;
+import edu.java.bot.model.dto.response.ApiErrorResponse;
+import edu.java.bot.model.dto.response.LinkResponse;
+import edu.java.bot.model.dto.response.ListLinksResponse;
+import edu.java.bot.model.dto.response.MyResponse;
 import edu.java.bot.processor.UserState;
 import edu.java.bot.service.LinkParserService;
-import java.util.ArrayList;
+import edu.java.bot.service.client.ScrapperHttpClient;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class InMemoryStorage implements Storage {
-    private final Map<Long, List<String>> trackedUrls;
-    private final Map<Long, Boolean> authUser;
+    private final Set<Long> users;
     private final Map<Long, UserState> userStateMap;
     private final LinkParserService parserService;
+    private final ScrapperHttpClient scrapperHttpClient;
 
     @Autowired
-    public InMemoryStorage(LinkParserService parserService) {
+    public InMemoryStorage(LinkParserService parserService, ScrapperHttpClient scrapperHttpClient) {
         this.parserService = parserService;
-        this.trackedUrls = new HashMap<>();
-        this.authUser = new HashMap<>();
+        this.users = new HashSet<>();
         this.userStateMap = new HashMap<>();
+        this.scrapperHttpClient = scrapperHttpClient;
     }
 
     @Override
@@ -29,57 +40,54 @@ public class InMemoryStorage implements Storage {
 
         if (!isUserAuth(userId)) {
             setUserState(userId, UserState.DEFAULT);
-            authUser.put(userId, true);
+
+            scrapperHttpClient.makeChat(userId);
+            users.add(userId);
         }
 
     }
 
     @Override
     public boolean isUserAuth(Long userId) {
-        return authUser.getOrDefault(userId, false);
+        return users.contains(userId);
     }
 
     @Override
-    public boolean addUrl(Long userId, String url) {
+    public Optional<ApiErrorResponse> addUrl(Long userId, String url) {
         parserService.process(url);
+        MyResponse response = scrapperHttpClient.trackLink(new AddLinkRequest(url), userId);
 
-        if (isUserAuth(userId)) {
-            List<String> urls = trackedUrls.computeIfAbsent(userId, k -> new ArrayList<>());
-            if (urls.contains(url)) {
-                return false;
-            } else {
-                urls.add(url);
-                return true;
-            }
-        } else {
-            return false;
+        if (response instanceof ApiErrorResponse) {
+            return Optional.of((ApiErrorResponse) response);
         }
+
+        return Optional.empty();
 
     }
 
     @Override
-    public boolean removeUrl(Long userId, String url) {
-        if (!isUserAuth(userId)) {
-            return false;
-        }
-        List<String> urls = (trackedUrls.get(userId));
-        if (urls == null) {
-            return false;
+    public Optional<ApiErrorResponse> removeUrl(Long userId, String url) {
+
+        MyResponse urls = scrapperHttpClient.unTrackLink(new RemoveLinkRequest(url), userId);
+        if (urls instanceof LinkResponse) {
+            return Optional.empty();
         }
 
-        parserService.process(url);
-        if (urls.remove(url)) {
-            if (urls.isEmpty()) {
-                trackedUrls.remove(userId);
-            }
-            return true;
-        }
-        return false;
+        ApiErrorResponse response = (ApiErrorResponse) urls;
+        return Optional.of(response);
     }
 
     @Override
-    public List<String> getUserTracks(Long userId) {
-        return new ArrayList<>(trackedUrls.getOrDefault(userId, List.of()));
+    public List<LinkResponse> getUserTracks(Long userId) {
+        MyResponse urls = scrapperHttpClient.getLinks(userId);
+        if (urls instanceof ListLinksResponse urls2) {
+            return urls2.getLists();
+        }
+        ApiErrorResponse response = (ApiErrorResponse) urls;
+        if (!response.getExceptionName().equals(BotExceptionType.LIST_EMPTY_EXCEPTION.name())) {
+            throw new IncorrectParametersException(response.getExceptionMessage());
+        }
+        return List.of();
     }
 
     @Override

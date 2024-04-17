@@ -3,6 +3,7 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.exception.BotExceptionType;
 import edu.java.bot.exception.UnsupportedSiteException;
 import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
@@ -80,14 +81,16 @@ public class TrackCommand implements Command {
 
     private SendMessage processAwaitingUrlState(Long chatId, String text) {
         if (!text.startsWith("/")) {
-            SendMessage message;
+            SendMessage message = null;
             try {
                 var result = storage.addUrl(chatId, text);
-                if (result) {
+                if (result.isEmpty()) {
                     storage.setUserState(chatId, UserState.DEFAULT);
                     message = new SendMessage(chatId, CommandUtils.URL_SUCCESSFULLY_ADDED);
                 } else {
-                    message = new SendMessage(chatId, CommandUtils.URL_ALREADY_EXIST);
+                    if (result.get().getExceptionName().equals(BotExceptionType.REPEAT_TRACK_EXCEPTION.name())) {
+                        message = new SendMessage(chatId, CommandUtils.URL_ALREADY_EXIST);
+                    }
                 }
                 return message;
             } catch (UnsupportedSiteException e) {

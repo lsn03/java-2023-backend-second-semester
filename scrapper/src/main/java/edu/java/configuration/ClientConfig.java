@@ -1,12 +1,15 @@
 package edu.java.configuration;
 
-import edu.java.service.BotHttpClient;
-import edu.java.service.GitHubService;
-import edu.java.service.StackOverFlowService;
+import edu.java.service.client.BotHttpClient;
 import edu.java.service.client.GitHubClient;
+import edu.java.service.client.GitHubHttpClient;
 import edu.java.service.client.StackOverFlowClient;
+import edu.java.service.client.StackOverFlowHttpClient;
 import edu.java.util.Utils;
 import lombok.AllArgsConstructor;
+import org.jooq.conf.RenderQuotedNames;
+import org.jooq.impl.DefaultConfiguration;
+import org.springframework.boot.autoconfigure.jooq.DefaultConfigurationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,19 +17,28 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 public class ClientConfig {
     private final ClientProperties properties;
+    private final ApplicationConfig config;
 
     @Bean
     public GitHubClient gitHubClient() {
-        return new GitHubService(properties.getValue(Utils.GITHUB_BASE_URL));
+        return new GitHubHttpClient(properties.getValue(Utils.GITHUB_BASE_URL), config.gitHubApiProperties().token());
     }
 
     @Bean
     public StackOverFlowClient stackOverFlowClient() {
-        return new StackOverFlowService(properties.getValue(Utils.SOF_BASE_URL));
+        return new StackOverFlowHttpClient(properties.getValue(Utils.SOF_BASE_URL), config);
     }
 
     @Bean
     public BotHttpClient botHttpClient() {
         return new BotHttpClient(properties.getValue(Utils.BOT_BASE_URL));
+    }
+
+    @Bean
+    public DefaultConfigurationCustomizer postgresJooqCustomizer() {
+        return (DefaultConfiguration c) -> c.settings()
+            .withRenderSchema(false)
+            .withRenderFormatted(true)
+            .withRenderQuotedNames(RenderQuotedNames.NEVER);
     }
 }

@@ -1,0 +1,41 @@
+app:
+  database-access-type: jdbc
+  scheduler:
+    enable: false
+    interval: 10s
+    force-check-delay: 10s
+  git-hub-api-properties:
+    token: ${APP_GITHUB_TOKEN:token}
+  stack-over-flow-api-properties:
+    key: ${SOF_KEY:key}
+    token: ${APP_SOF_ACCESS_TOKEN:token}
+
+
+spring:
+  liquibase:
+    enabled: false
+  application:
+    name: scrapper
+  datasource:
+    url: jdbc:postgresql://${DATASOURCE_DATABASE_HOSTNAME:localhost}:${DATASOURCE_DATABASE_PORT:5432}/scrapper
+    username: ${DATASOURCE_DATABASE_USERNAME:postgres}
+    password: ${DATASOURCE_DATABASE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  devtools:
+    restart:
+      enabled: false
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+
+server:
+  port: ${SCRAPPER_PORT:8080}
+logging:
+  config: classpath:log4j2-plain.xml
+client:
+  properties:
+    github-base-url: ${GITHUB_BASE_URL:https://api.github.com}
+    sof-base-url: ${SOF_BASE_URL:https://api.stackexchange.com/2.3}
+    bot-base-url: ${BOT_BASE_URL:http://localhost:8090}
+

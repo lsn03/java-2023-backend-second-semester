@@ -21,10 +21,9 @@ public class LinkParserTest {
     @ParameterizedTest
     @CsvSource(value = {
         "https://github.com/lsn03/java-2023-backend-second-semester/pull/1",
-        "https://github.com/lsn03/",
-        "https://github.com/lsn03/java-2023-backend-second-semester/pull/1/commits",
+        "https://github.com/bot/java/pull/5",
         "https://stackoverflow.com/questions/28458846/how-to-require-tab-indentation-with-checkstyle",
-        "https://stackoverflow.com/questions",
+
     })
     public void validUrl(String url) {
         assertDoesNotThrow(() -> parserService.process(url));

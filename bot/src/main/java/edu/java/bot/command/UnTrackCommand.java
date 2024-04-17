@@ -3,6 +3,7 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.exception.BotExceptionType;
 import edu.java.bot.exception.UnsupportedSiteException;
 import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
@@ -73,17 +74,20 @@ public class UnTrackCommand implements Command {
         if (text.startsWith("/")) {
             return new SendMessage(chatId, CommandUtils.AWAITING_URL);
         }
-
+        SendMessage sendMessage = null;
         try {
             var result = storage.removeUrl(chatId, text);
-            if (result) {
+            if (result.isEmpty()) {
                 storage.setUserState(chatId, UserState.DEFAULT);
-                return new SendMessage(chatId, CommandUtils.URL_SUCCESSFULLY_REMOVED);
+                sendMessage = new SendMessage(chatId, CommandUtils.URL_SUCCESSFULLY_REMOVED);
             } else {
-                return new SendMessage(chatId, CommandUtils.URL_NOT_FOUND);
+                if (result.get().getExceptionName().equals(BotExceptionType.LINK_NOT_FOUND_EXCEPTION.name())) {
+                    sendMessage = new SendMessage(chatId, CommandUtils.URL_NOT_FOUND);
+                }
             }
         } catch (UnsupportedSiteException e) {
             return new SendMessage(chatId, e.getMessage() + CommandUtils.EXCEPTION_MESSAGE);
         }
+        return sendMessage;
     }
 }

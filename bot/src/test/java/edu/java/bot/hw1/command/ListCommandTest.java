@@ -6,7 +6,9 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.command.CommandUtils;
 import edu.java.bot.command.ListCommand;
+import edu.java.bot.model.dto.response.LinkResponse;
 import edu.java.bot.storage.Storage;
+import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,13 +53,13 @@ public class ListCommandTest {
 
     @Test
     public void listIsNotEmpty() {
-        var example = "https://github.com/";
+        var example = new LinkResponse(id, URI.create("https://github.com/"));
         when(storage.getUserTracks(id)).thenReturn(List.of(example));
         SendMessage response = listCommand.handle(update);
         assertNotNull(response);
         var text = (String) response.getParameters().get(TEXT);
         assertFalse(text.isEmpty());
-        assertTrue(text.contains(example));
+        assertTrue(text.contains(example.getUrl().toString()));
     }
 
     @Test

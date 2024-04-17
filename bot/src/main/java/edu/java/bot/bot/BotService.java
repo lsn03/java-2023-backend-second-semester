@@ -34,16 +34,6 @@ public class BotService implements Bot {
         log.info("Create BotService");
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    private void setUpCommands() {
-        log.info("set up commands");
-        BotCommand[] botCommands = commandList.stream().map(command -> new BotCommand(
-            command.command(),
-            command.description()
-        )).toArray(BotCommand[]::new);
-
-        telegramBot.execute(new SetMyCommands(botCommands));
-    }
 
     @Override
     public <T extends BaseRequest<T, R>, R extends BaseResponse> void myExecute(BaseRequest<T, R> request) {
@@ -72,5 +62,16 @@ public class BotService implements Bot {
 
     public void setUpdatesListener(UpdatesListener listener) {
         telegramBot.setUpdatesListener(listener, new GetUpdates());
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    private void setUpCommands() {
+        log.info("set up commands");
+        BotCommand[] botCommands = commandList.stream().map(command -> new BotCommand(
+            command.command(),
+            command.description()
+        )).toArray(BotCommand[]::new);
+
+        telegramBot.execute(new SetMyCommands(botCommands));
     }
 }
