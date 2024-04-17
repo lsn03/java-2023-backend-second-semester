@@ -1,6 +1,6 @@
 package edu.java.domain.repository.jpa.mapper;
 
-import edu.java.domain.model.StackOverFlowAnswerDTO;
+import edu.java.domain.model.StackOverFlowAnswerDto;
 import edu.java.domain.repository.jpa.entity.LinkEntity;
 import edu.java.domain.repository.jpa.entity.StackOverFlowAnswerEntity;
 import java.time.ZoneOffset;
@@ -8,11 +8,11 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class MapperStackOverFlowDTOEntity {
-    public static StackOverFlowAnswerDTO entityToDto(StackOverFlowAnswerEntity entity) {
+    public static StackOverFlowAnswerDto entityToDto(StackOverFlowAnswerEntity entity) {
         var lastActivity = entity.getLastActivityDate();
         var lastEdit = entity.getLastEditDate();
 
-        return new StackOverFlowAnswerDTO(
+        return new StackOverFlowAnswerDto(
             entity.getLinkEntity().getLinkId(),
             entity.getAnswerId(),
             entity.getUserName(),
@@ -23,7 +23,7 @@ public class MapperStackOverFlowDTOEntity {
         );
     }
 
-    public static StackOverFlowAnswerEntity dtoToEntity(StackOverFlowAnswerDTO dto) {
+    public static StackOverFlowAnswerEntity dtoToEntity(StackOverFlowAnswerDto dto) {
         var lastActivity = dto.getLastActivityDate();
         var lastEdit = dto.getLastEditDate();
         var entity = new LinkEntity();

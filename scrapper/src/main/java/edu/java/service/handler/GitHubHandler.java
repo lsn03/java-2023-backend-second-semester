@@ -1,8 +1,8 @@
 package edu.java.service.handler;
 
 import edu.java.exception.exception.IncorrectParametersException;
-import edu.java.model.GitHubPullRequestUriDTO;
-import edu.java.model.UriDTO;
+import edu.java.model.GitHubPullRequestUriDto;
+import edu.java.model.UriDto;
 import java.net.URI;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,14 +23,14 @@ public class GitHubHandler implements Handler {
     }
 
     @Override
-    public UriDTO handle(URI uri) {
+    public UriDto handle(URI uri) {
         Matcher matcher = GITHUB_PULL_REQUEST_PATTERN.matcher(uri.toString());
         if (matcher.matches()) {
             String owner = matcher.group(GROUP_OWNER);
             String repo = matcher.group(GROUP_REPO);
             Integer id = Integer.parseInt(matcher.group(GROUP_ID));
 
-            return new GitHubPullRequestUriDTO(owner, repo, id);
+            return new GitHubPullRequestUriDto(owner, repo, id);
         } else {
 
             throw new IncorrectParametersException("Site: " + uri + " not supported");

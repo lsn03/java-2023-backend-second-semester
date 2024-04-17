@@ -26,7 +26,10 @@ public class ClientConfig {
 
     @Bean
     public StackOverFlowClient stackOverFlowClient() {
-        return new StackOverFlowHttpClient(properties.getValue(Utils.SOF_BASE_URL), config);
+        return new StackOverFlowHttpClient(
+            properties.getValue(Utils.SOF_BASE_URL),
+            config.stackOverFlowApiProperties()
+        );
     }
 
     @Bean

@@ -2,29 +2,25 @@ package edu.java.scrapper.hw4;
 
 import edu.java.scrapper.IntegrationTest;
 import java.util.List;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Testcontainers
 @SpringBootTest
 public class MigrationTest extends IntegrationTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     private String uri = "http://example.com";
-
-    @BeforeAll
-    public static void init() {
-
-    }
 
     @Test
     @Transactional

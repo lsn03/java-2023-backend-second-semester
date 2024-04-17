@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.command.CommandUtils;
 import edu.java.bot.command.TrackCommand;
+import edu.java.bot.exception.BotExceptionType;
 import edu.java.bot.exception.RepeatTrackException;
 import edu.java.bot.exception.UnsupportedSiteException;
 import edu.java.bot.model.dto.response.ApiErrorResponse;
@@ -104,7 +105,7 @@ public class TrackCommandTest {
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
         when(update.message().text()).thenReturn(site);
         when(storage.addUrl(id, site)).thenReturn(Optional.of(apiErrorResponse));
-        when(apiErrorResponse.getExceptionName()).thenReturn(RepeatTrackException.class.getSimpleName());
+        when(apiErrorResponse.getExceptionName()).thenReturn(BotExceptionType.REPEAT_TRACK_EXCEPTION.name());
         SendMessage response = trackCommand.handle(update);
         assertNotNull(response);
         assertEquals(expectedString, response.getParameters().get("text"));

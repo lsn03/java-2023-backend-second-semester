@@ -1,10 +1,10 @@
 package edu.java.service.processor;
 
-import edu.java.domain.model.LinkDTO;
-import edu.java.domain.model.StackOverFlowAnswerDTO;
+import edu.java.domain.model.LinkDto;
+import edu.java.domain.model.StackOverFlowAnswerDto;
 import edu.java.domain.repository.LinkRepository;
-import edu.java.model.StackOverFlowQuestionUriDTO;
-import edu.java.model.UriDTO;
+import edu.java.model.StackOverFlowQuestionUriDto;
+import edu.java.model.UriDto;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
 import edu.java.model.stack_over_flow.StackOverFlowModel;
 import edu.java.service.client.StackOverFlowClient;
@@ -28,12 +28,12 @@ public class StackOverFlowProcessor implements Processor {
     private final LinkRepository jooqLinkRepository;
 
     @Override
-    public List<LinkUpdateRequest> processUriDTO(LinkDTO linkDTO, UriDTO uriDto) {
-        if (!(uriDto instanceof StackOverFlowQuestionUriDTO)) {
+    public List<LinkUpdateRequest> processUriDTO(LinkDto linkDTO, UriDto uriDto) {
+        if (!(uriDto instanceof StackOverFlowQuestionUriDto)) {
             return null;
         }
 
-        StackOverFlowQuestionUriDTO uriDto1 = (StackOverFlowQuestionUriDTO) uriDto;
+        StackOverFlowQuestionUriDto uriDto1 = (StackOverFlowQuestionUriDto) uriDto;
         StackOverFlowModel response =
             stackOverFlowClient.fetchQuestionData(uriDto1.getQuestionId());
 
@@ -42,10 +42,10 @@ public class StackOverFlowProcessor implements Processor {
         return list;
     }
 
-    private LinkUpdateRequest processAnswer(LinkDTO linkDTO, StackOverFlowModel response) {
+    private LinkUpdateRequest processAnswer(LinkDto linkDTO, StackOverFlowModel response) {
         var answerFromAPI = response.getQuestionAnswerList().stream().map(
             questionAnswerDTOResponse -> {
-                StackOverFlowAnswerDTO answerDTO = StackOverFlowAnswerDTO.create(questionAnswerDTOResponse);
+                StackOverFlowAnswerDto answerDTO = StackOverFlowAnswerDto.create(questionAnswerDTOResponse);
                 answerDTO.setLinkId(linkDTO.getLinkId());
                 return answerDTO;
             }
@@ -60,7 +60,7 @@ public class StackOverFlowProcessor implements Processor {
         }
 
         var answersFromDB = stackOverFlowService.getAnswers(linkDTO.getLinkId());
-        List<StackOverFlowAnswerDTO> listForUpdate = new ArrayList<>();
+        List<StackOverFlowAnswerDto> listForUpdate = new ArrayList<>();
 
         for (var answer : answerFromAPI) {
             if (!answersFromDB.contains(answer)) {

@@ -8,17 +8,31 @@ app:
     max-attempts: 3
     max-delay: 5000 # ms
     start-delay: 5000 # ms
-#    status-codes: [ 409, 404, 200 ]
-    status-codes: [429, 500,501, 502,503]
+    status-codes: [429, 500, 501, 502, 503]
   rate:
     count: 20
     seconds: 60
+  kafka:
+    using-queue: ${USING_QUEUE:true}
+    partitions: 10
+    replicas: 1
+    topic: topic1
+    topic-dlq: topic1_dlq
+    servers: localhost:29091,localhost:29092,localhost:29093
+    group-id: my-group-id
 
 spring:
   application:
     name: bot
   jackson:
     time-zone: UTC
+  devtools:
+    restart:
+      enabled: false
+  kafka:
+    consumer:
+      group-id: my-group-id
+    bootstrap-servers: localhost:29091,localhost:29092,localhost:29093
 
 springdoc:
   swagger-ui:

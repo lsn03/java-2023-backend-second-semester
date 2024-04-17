@@ -1,12 +1,12 @@
 package edu.java.service.database;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import java.util.List;
 
 public interface LinkService {
-    LinkDTO add(LinkDTO linkDTO);
+    LinkDto add(LinkDto linkDTO);
 
-    Integer remove(LinkDTO linkDTO);
+    Integer remove(LinkDto linkDTO);
 
-    List<LinkDTO> findAll(Long tgChatId);
+    List<LinkDto> findAll(Long tgChatId);
 }

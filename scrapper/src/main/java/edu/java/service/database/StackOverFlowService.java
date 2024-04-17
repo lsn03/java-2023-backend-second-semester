@@ -1,15 +1,15 @@
 package edu.java.service.database;
 
-import edu.java.domain.model.StackOverFlowAnswerDTO;
+import edu.java.domain.model.StackOverFlowAnswerDto;
 import java.net.URI;
 import java.util.List;
 
 public interface StackOverFlowService {
-    Integer addAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList);
+    Integer addAnswers(List<StackOverFlowAnswerDto> stackOverFlowAnswerDtoList);
 
-    Integer deleteAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList);
+    Integer deleteAnswers(List<StackOverFlowAnswerDto> stackOverFlowAnswerDtoList);
 
-    List<StackOverFlowAnswerDTO> getAnswers(Long linkId);
+    List<StackOverFlowAnswerDto> getAnswers(Long linkId);
 
-    List<StackOverFlowAnswerDTO> getAnswers(URI uri);
+    List<StackOverFlowAnswerDto> getAnswers(URI uri);
 }

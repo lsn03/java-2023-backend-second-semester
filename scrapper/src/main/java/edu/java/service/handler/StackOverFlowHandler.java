@@ -1,8 +1,8 @@
 package edu.java.service.handler;
 
 import edu.java.exception.exception.IncorrectParametersException;
-import edu.java.model.StackOverFlowQuestionUriDTO;
-import edu.java.model.UriDTO;
+import edu.java.model.StackOverFlowQuestionUriDto;
+import edu.java.model.UriDto;
 import java.net.URI;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,12 +20,12 @@ public class StackOverFlowHandler implements Handler {
     }
 
     @Override
-    public UriDTO handle(URI uri) {
+    public UriDto handle(URI uri) {
         Matcher matcher = STACKOVERFLOW_QUESTION_PATTERN.matcher(uri.toString());
         if (matcher.matches()) {
             Integer id = Integer.parseInt(matcher.group(1));
 
-            return new StackOverFlowQuestionUriDTO(id);
+            return new StackOverFlowQuestionUriDto(id);
         } else {
 
             throw new IncorrectParametersException("Site: " + uri + " not supported");

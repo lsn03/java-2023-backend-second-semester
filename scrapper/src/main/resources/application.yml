@@ -1,15 +1,21 @@
 app:
-  database-access-type: jooq
+  database-access-type: jooq # jpa, jdbc
   scheduler:
-    enable: false
-    interval: 10s
+    enable: true
+    interval: 20s
     force-check-delay: 10s
   git-hub-api-properties:
     token: ${APP_GITHUB_TOKEN:token}
   stack-over-flow-api-properties:
     key: ${SOF_KEY:key}
     token: ${APP_SOF_ACCESS_TOKEN:token}
-
+  kafka:
+    using-queue: ${USING_QUEUE:true}
+    partitions: 10
+    replicas: 1
+    topic: topic1
+    servers: ${BOOTSTRAP_SERVERS:localhost:29091,localhost:29092,localhost:29093 }
+    client-id: my-client-id
 #  retry:
 #    strategy: constant
 #    max-attempts: 3
@@ -35,6 +41,10 @@ spring:
   devtools:
     restart:
       enabled: false
+  kafka:
+    producer:
+      client-id: my-client-id
+    bootstrap-servers: ${BOOTSTRAP_SERVERS:localhost:29091,localhost:29092,localhost:29093 }
 
 springdoc:
   swagger-ui:

@@ -22,9 +22,9 @@ public class ScrapperHttpClient {
     private final WebClient client;
     private final Retry retry;
 
-    public ScrapperHttpClient(ApplicationConfig config) {
-        client = WebClient.builder().baseUrl(config.scrapperBaseUrl()).build();
-        this.retry = config.retry().getRetrySpec();
+    public ScrapperHttpClient(ApplicationConfig.ScrapperProperties scrapperProperties) {
+        client = WebClient.builder().baseUrl(scrapperProperties.scrapperBaseUrl()).build();
+        this.retry = scrapperProperties.retryConfig().getRetrySpec();
     }
 
     public ApiErrorResponse makeChat(Long id) throws ApiErrorException {

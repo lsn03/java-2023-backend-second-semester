@@ -1,6 +1,6 @@
 package edu.java.domain.model;
 
-import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
+import edu.java.model.stack_over_flow.dto.QuestionAnswerDtoResponse;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Objects;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class StackOverFlowAnswerDTO {
+public class StackOverFlowAnswerDto {
     private Long linkId;
     private Long answerId;
     private String userName;
@@ -20,8 +20,8 @@ public class StackOverFlowAnswerDTO {
     private OffsetDateTime lastActivityDate;
     private OffsetDateTime lastEditDate;
 
-    public static StackOverFlowAnswerDTO create(QuestionAnswerDTOResponse questionAnswerDTOResponse) {
-        StackOverFlowAnswerDTO stackOverFlowAnswerDTO = new StackOverFlowAnswerDTO();
+    public static StackOverFlowAnswerDto create(QuestionAnswerDtoResponse questionAnswerDTOResponse) {
+        StackOverFlowAnswerDto stackOverFlowAnswerDTO = new StackOverFlowAnswerDto();
 
         stackOverFlowAnswerDTO.setAnswerId((long) questionAnswerDTOResponse.getAnswerId());
         stackOverFlowAnswerDTO.setUserName(questionAnswerDTOResponse.getOwner().getName());
@@ -46,7 +46,7 @@ public class StackOverFlowAnswerDTO {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        StackOverFlowAnswerDTO answerDTO = (StackOverFlowAnswerDTO) o;
+        StackOverFlowAnswerDto answerDTO = (StackOverFlowAnswerDto) o;
         return Objects.equals(linkId, answerDTO.linkId) && Objects.equals(answerId, answerDTO.answerId)
             && Objects.equals(userName, answerDTO.userName);
     }

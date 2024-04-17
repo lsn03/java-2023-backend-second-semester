@@ -1,7 +1,7 @@
 package edu.java.scrapper.hw5bonus.jooq;
 
-import edu.java.domain.model.GitHubCommitDTO;
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.GitHubCommitDto;
+import edu.java.domain.model.LinkDto;
 import edu.java.exception.exception.RecordAlreadyExistException;
 import edu.java.scrapper.IntegrationTest;
 import edu.java.service.database.GitHubService;
@@ -40,15 +40,15 @@ public class JooqGitHubServiceTest extends IntegrationTest {
     URI uri = URI.create(
         "https://github.com/lsn03/java-2023-backend-second-semester/pull/5"
     );
-    GitHubCommitDTO elem;
-    LinkDTO linkDTO;
+    GitHubCommitDto elem;
+    LinkDto linkDTO;
 
     @Test
     @Transactional
     @Rollback
     public void testAddSuccess() {
         prepareFill();
-        List<GitHubCommitDTO> listForAdd = List.of(
+        List<GitHubCommitDto> listForAdd = List.of(
             elem
         );
         int cnt = jooqGitHubService.addCommits(listForAdd);
@@ -64,7 +64,7 @@ public class JooqGitHubServiceTest extends IntegrationTest {
     @Rollback
     public void testAddException() {
         prepareFill();
-        List<GitHubCommitDTO> listForAdd = List.of(elem);
+        List<GitHubCommitDto> listForAdd = List.of(elem);
         jooqGitHubService.addCommits(listForAdd);
         assertThrows(RecordAlreadyExistException.class, () -> jooqGitHubService.addCommits(listForAdd));
     }
@@ -74,7 +74,7 @@ public class JooqGitHubServiceTest extends IntegrationTest {
     @Rollback
     public void testRemove() {
         prepareFill();
-        List<GitHubCommitDTO> listForAdd = List.of(
+        List<GitHubCommitDto> listForAdd = List.of(
             elem
         );
         int cnt = jooqGitHubService.addCommits(listForAdd);
@@ -85,7 +85,7 @@ public class JooqGitHubServiceTest extends IntegrationTest {
 
     private void prepareFill() {
         jooqTgChatService.add(TG_CHAT_ID);
-        linkDTO = new LinkDTO(
+        linkDTO = new LinkDto(
             uri,
             TG_CHAT_ID,
             null,
@@ -93,7 +93,7 @@ public class JooqGitHubServiceTest extends IntegrationTest {
             time
         );
         jooqLinkService.add(linkDTO);
-        elem = new GitHubCommitDTO(
+        elem = new GitHubCommitDto(
             1l,
             linkDTO.getLinkId(),
             "shashasha",

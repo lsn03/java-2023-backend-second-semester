@@ -2,7 +2,7 @@ package edu.java.domain.repository.jooq;
 
 import edu.java.domain.jooq.tables.StackoverflowAnswer;
 import edu.java.domain.jooq.tables.records.StackoverflowAnswerRecord;
-import edu.java.domain.model.StackOverFlowAnswerDTO;
+import edu.java.domain.model.StackOverFlowAnswerDto;
 import edu.java.domain.repository.StackOverFlowRepository;
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -11,7 +11,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.InsertValuesStep7;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class JooqStackOverFlowRepository implements StackOverFlowRepository {
@@ -19,8 +18,7 @@ public class JooqStackOverFlowRepository implements StackOverFlowRepository {
     private final JooqLinkRepository jooqLinkRepository;
 
     @Override
-    @Transactional
-    public Integer addAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
+    public Integer addAnswers(List<StackOverFlowAnswerDto> stackOverFlowAnswerDtoList) {
         InsertValuesStep7<StackoverflowAnswerRecord,
             Long,
             Long,
@@ -41,7 +39,7 @@ public class JooqStackOverFlowRepository implements StackOverFlowRepository {
             StackoverflowAnswer.STACKOVERFLOW_ANSWER.LAST_EDIT_DATE
         );
 
-        for (var answer : stackOverFlowAnswerDTOList) {
+        for (var answer : stackOverFlowAnswerDtoList) {
             var last = answer.getLastEditDate();
             step.values(
                 answer.getLinkId(),
@@ -57,9 +55,8 @@ public class JooqStackOverFlowRepository implements StackOverFlowRepository {
     }
 
     @Override
-    @Transactional
-    public Integer deleteAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
-        List<Long> answerIdList = stackOverFlowAnswerDTOList.stream().map(StackOverFlowAnswerDTO::getAnswerId).toList();
+    public Integer deleteAnswers(List<StackOverFlowAnswerDto> stackOverFlowAnswerDtoList) {
+        List<Long> answerIdList = stackOverFlowAnswerDtoList.stream().map(StackOverFlowAnswerDto::getAnswerId).toList();
 
         return dslContext.deleteFrom(StackoverflowAnswer.STACKOVERFLOW_ANSWER)
             .where(StackoverflowAnswer.STACKOVERFLOW_ANSWER.ANSWER_ID.in(answerIdList))
@@ -67,14 +64,13 @@ public class JooqStackOverFlowRepository implements StackOverFlowRepository {
     }
 
     @Override
-    @Transactional
-    public List<StackOverFlowAnswerDTO> getAnswers(Long linkId) {
+    public List<StackOverFlowAnswerDto> getAnswers(Long linkId) {
         return dslContext.selectFrom(StackoverflowAnswer.STACKOVERFLOW_ANSWER)
             .where(StackoverflowAnswer.STACKOVERFLOW_ANSWER.LINK_ID.eq(linkId))
             .fetch()
             .map(
                 stackoverflowAnswerRecord -> {
-                    StackOverFlowAnswerDTO dto = stackoverflowAnswerRecord.into(StackOverFlowAnswerDTO.class);
+                    StackOverFlowAnswerDto dto = stackoverflowAnswerRecord.into(StackOverFlowAnswerDto.class);
                     var last = stackoverflowAnswerRecord.getLastEditDate();
                     if (last != null) {
                         dto.setLastEditDate(last.atOffset(ZoneOffset.UTC));
@@ -87,8 +83,7 @@ public class JooqStackOverFlowRepository implements StackOverFlowRepository {
     }
 
     @Override
-    @Transactional
-    public List<StackOverFlowAnswerDTO> getAnswers(URI uri) {
+    public List<StackOverFlowAnswerDto> getAnswers(URI uri) {
         Long id = jooqLinkRepository.findLinkIdByUrl(uri);
 
         return getAnswers(id);

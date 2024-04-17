@@ -7,8 +7,8 @@ import java.time.OffsetDateTime;
 import lombok.Data;
 
 @Data
-public class QuestionAnswerDTOResponse {
-    private AccountDTO owner;
+public class QuestionAnswerDtoResponse {
+    private AccountDto owner;
 
     @JsonProperty("is_accepted")
     private boolean isAccepted;
@@ -26,8 +26,8 @@ public class QuestionAnswerDTOResponse {
     private int answerId;
 
     @JsonCreator
-    public QuestionAnswerDTOResponse(
-        @JsonProperty("owner") AccountDTO owner,
+    public QuestionAnswerDtoResponse(
+        @JsonProperty("owner") AccountDto owner,
         @JsonProperty("is_accepted") boolean isAccepted,
         @JsonProperty("creation_date") Long creationDate,
         @JsonProperty("last_activity_date") Long lastActivityDate,

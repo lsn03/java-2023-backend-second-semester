@@ -1,6 +1,6 @@
 package edu.java.controller;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.model.scrapper.dto.request.AddLinkRequest;
 import edu.java.model.scrapper.dto.request.RemoveLinkRequest;
 import edu.java.model.scrapper.dto.response.LinkResponse;
@@ -49,7 +49,7 @@ public class ScrapperRestController {
 
     @GetMapping(value = LINKS, produces = {"application/json"})
     public ResponseEntity<?> getTrackedLinks(@RequestHeader(HEADER_TG_CHAT_ID) Long chatId) {
-        List<LinkDTO> list = linkService.findAll(chatId);
+        List<LinkDto> list = linkService.findAll(chatId);
 
         var response = new ListLinksResponse();
 
@@ -66,7 +66,7 @@ public class ScrapperRestController {
         @RequestBody AddLinkRequest addLinkRequest,
         @RequestHeader(HEADER_TG_CHAT_ID) Long chatId
     ) {
-        LinkDTO linkDTO = new LinkDTO();
+        LinkDto linkDTO = new LinkDto();
         linkDTO.setTgChatId(chatId);
         linkDTO.setUri(URI.create(addLinkRequest.getLink()));
 
@@ -82,7 +82,7 @@ public class ScrapperRestController {
         @RequestBody RemoveLinkRequest removeLinkRequest,
         @RequestHeader(HEADER_TG_CHAT_ID) Long chatId
     ) {
-        LinkDTO linkDTO = new LinkDTO();
+        LinkDto linkDTO = new LinkDto();
         linkDTO.setTgChatId(chatId);
         linkDTO.setUri(URI.create(removeLinkRequest.getLink()));
         linkService.remove(linkDTO);

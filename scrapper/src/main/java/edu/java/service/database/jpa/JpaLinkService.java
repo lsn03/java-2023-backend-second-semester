@@ -1,6 +1,6 @@
 package edu.java.service.database.jpa;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.jpa.JpaLinkChatRepository;
 import edu.java.domain.repository.jpa.JpaLinkRepository;
 import edu.java.exception.exception.IncorrectParametersException;
@@ -20,7 +20,7 @@ public class JpaLinkService implements LinkService {
 
     @Override
     @Transactional
-    public LinkDTO add(LinkDTO linkDTO) {
+    public LinkDto add(LinkDto linkDTO) {
         for (var handler : handlers) {
             if (handler.canHandle(linkDTO.getUri())) {
                 Long linkId = jpaLinkRepository.findLinkIdByUrl(linkDTO.getUri());
@@ -40,7 +40,7 @@ public class JpaLinkService implements LinkService {
 
     @Override
     @Transactional
-    public Integer remove(LinkDTO linkDTO) {
+    public Integer remove(LinkDto linkDTO) {
         Long linkId = jpaLinkRepository.findLinkIdByUrl(linkDTO.getUri());
         linkDTO.setLinkId(linkId);
         int rows = jpaLinkChatRepository.remove(linkDTO);
@@ -52,9 +52,8 @@ public class JpaLinkService implements LinkService {
     }
 
     @Override
-    @Transactional
-    public List<LinkDTO> findAll(Long tgChatId) {
-        List<LinkDTO> response = jpaLinkRepository.findAllByChatId(tgChatId);
+    public List<LinkDto> findAll(Long tgChatId) {
+        List<LinkDto> response = jpaLinkRepository.findAllByChatId(tgChatId);
         if (response.isEmpty()) {
             throw new ListEmptyException("List empty for chat " + tgChatId);
         }

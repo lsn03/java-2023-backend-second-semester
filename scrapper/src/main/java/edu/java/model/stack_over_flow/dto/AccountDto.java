@@ -6,7 +6,7 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class AccountDTO {
+public class AccountDto {
     @JsonProperty("user_id")
     private int userId;
     @JsonProperty("display_name")

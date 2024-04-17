@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @WireMockTest
 public class ScrapperClientTest {
@@ -38,7 +37,7 @@ public class ScrapperClientTest {
     private final RetryConfig retryConfig =
         new RetryConfig(RetryType.CONSTANT, 3L, Duration.ofSeconds(5), Duration.ofSeconds(5), Set.of());
 
-    ApplicationConfig config;
+    ApplicationConfig.ScrapperProperties properties;
     ScrapperHttpClient client;
 
     ApiErrorResponse apiErrorResponse;
@@ -51,8 +50,8 @@ public class ScrapperClientTest {
         int port = wireMockRuntimeInfo.getHttpPort();
 
         String baseUrlWithPort = baseUrl + port;
-        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
-        client = new ScrapperHttpClient(config);
+        properties = new ApplicationConfig.ScrapperProperties(baseUrlWithPort, retryConfig);
+        client = new ScrapperHttpClient(properties);
 
         String url = String.format(TG_CHAT_TEMPLATE, chatId);
 
@@ -71,8 +70,8 @@ public class ScrapperClientTest {
     public void createChatError(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
-        client = new ScrapperHttpClient(config);
+        properties = new ApplicationConfig.ScrapperProperties(baseUrlWithPort, retryConfig);
+        client = new ScrapperHttpClient(properties);
 
         String url = String.format(TG_CHAT_TEMPLATE, chatId);
 
@@ -107,8 +106,8 @@ public class ScrapperClientTest {
     public void deleteChatSuccess(WireMockRuntimeInfo wireMockRuntimeInfo) {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
-        client = new ScrapperHttpClient(config);
+        properties = new ApplicationConfig.ScrapperProperties(baseUrlWithPort, retryConfig);
+        client = new ScrapperHttpClient(properties);
 
         String url = String.format(TG_CHAT_TEMPLATE, chatId);
 
@@ -126,8 +125,8 @@ public class ScrapperClientTest {
     public void deleteChatError(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
-        client = new ScrapperHttpClient(config);
+        properties = new ApplicationConfig.ScrapperProperties(baseUrlWithPort, retryConfig);
+        client = new ScrapperHttpClient(properties);
 
         String url = String.format(TG_CHAT_TEMPLATE, chatId);
 
@@ -157,8 +156,8 @@ public class ScrapperClientTest {
     public void trackLinkSuccess(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
-        client = new ScrapperHttpClient(config);
+        properties = new ApplicationConfig.ScrapperProperties(baseUrlWithPort, retryConfig);
+        client = new ScrapperHttpClient(properties);
 
         AddLinkRequest req = new AddLinkRequest("http:/example.com");
         LinkResponse linkResponse = new LinkResponse(1L, URI.create("http:/example.com"));
@@ -181,8 +180,8 @@ public class ScrapperClientTest {
     public void trackLinkError(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
-        client = new ScrapperHttpClient(config);
+        properties = new ApplicationConfig.ScrapperProperties(baseUrlWithPort, retryConfig);
+        client = new ScrapperHttpClient(properties);
 
         AddLinkRequest req = new AddLinkRequest("http:/example.com");
         apiErrorResponse = new ApiErrorResponse();
@@ -211,8 +210,8 @@ public class ScrapperClientTest {
     public void getLinkListSuccess(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
-        client = new ScrapperHttpClient(config);
+        properties = new ApplicationConfig.ScrapperProperties(baseUrlWithPort, retryConfig);
+        client = new ScrapperHttpClient(properties);
 
         ListLinksResponse req = new ListLinksResponse(List.of(), 0);
         json = ow.writeValueAsString(req);
@@ -233,8 +232,8 @@ public class ScrapperClientTest {
     public void getLinkListError(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
-        client = new ScrapperHttpClient(config);
+        properties = new ApplicationConfig.ScrapperProperties(baseUrlWithPort, retryConfig);
+        client = new ScrapperHttpClient(properties);
 
         apiErrorResponse = new ApiErrorResponse();
         apiErrorResponse.setCode("1");
@@ -260,8 +259,8 @@ public class ScrapperClientTest {
     public void unTrackLinkSuccess(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
-        client = new ScrapperHttpClient(config);
+        properties = new ApplicationConfig.ScrapperProperties(baseUrlWithPort, retryConfig);
+        client = new ScrapperHttpClient(properties);
 
         RemoveLinkRequest req = new RemoveLinkRequest("http:/example.com");
         LinkResponse linkResponse = new LinkResponse(1L, URI.create("http:/example.com"));
@@ -284,8 +283,8 @@ public class ScrapperClientTest {
     public void unTrackLinkError(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
-        client = new ScrapperHttpClient(config);
+        properties = new ApplicationConfig.ScrapperProperties(baseUrlWithPort, retryConfig);
+        client = new ScrapperHttpClient(properties);
 
         RemoveLinkRequest req = new RemoveLinkRequest("http:/example.com");
         apiErrorResponse = new ApiErrorResponse();
@@ -306,16 +305,14 @@ public class ScrapperClientTest {
             assertEquals(apiErrorResponse, e.getErrorResponse());
         }
 
-
     }
 
     @Test
     public void tooManyRequest(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
-        client = new ScrapperHttpClient(config);
-
+        properties = new ApplicationConfig.ScrapperProperties(baseUrlWithPort, retryConfig);
+        client = new ScrapperHttpClient(properties);
 
         apiErrorResponse = new ApiErrorResponse();
         apiErrorResponse.setCode("429");
@@ -335,7 +332,6 @@ public class ScrapperClientTest {
         } catch (ApiErrorException e) {
             assertEquals(apiErrorResponse, e.getErrorResponse());
         }
-
 
     }
 

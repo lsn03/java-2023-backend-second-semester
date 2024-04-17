@@ -1,6 +1,6 @@
 package edu.java.domain.repository.jpa;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.LinkRepository;
 import edu.java.domain.repository.jpa.entity.LinkEntity;
 import edu.java.domain.repository.jpa.mapper.MapperLinkDTOLinkEntity;
@@ -13,17 +13,20 @@ import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class JpaLinkRepository implements LinkRepository {
+    private static final String FIND_ALL_OLD_LINKS = """
+        select le
+        from LinkEntity le
+        where le.lastUpdate is null  or le.lastUpdate < :time
+        """;
     private final JpaLinkRepositoryInterface jpaLinkRepository;
     private final EntityManager entityManager;
     private final JpaLinkChatRepository jpaLinkChatRepository;
 
     @Override
-    @Transactional
-    public LinkDTO add(LinkDTO linkDTO) {
+    public LinkDto add(LinkDto linkDTO) {
 
         linkDTO.setCreatedAt(LocalDateTime.now().atOffset(ZoneOffset.UTC));
         var inserted = MapperLinkDTOLinkEntity.dtoToEntity(linkDTO);
@@ -38,8 +41,7 @@ public class JpaLinkRepository implements LinkRepository {
     }
 
     @Override
-    @Transactional
-    public Integer remove(LinkDTO linkDTO) {
+    public Integer remove(LinkDto linkDTO) {
         Long linkId = findLinkIdByUrl(linkDTO.getUri());
         linkDTO.setLinkId(linkId);
         var response = jpaLinkChatRepository.findAllByLinkId(linkId);
@@ -54,12 +56,12 @@ public class JpaLinkRepository implements LinkRepository {
     }
 
     @Override
-    public List<LinkDTO> findAllByChatId(Long tgChatId) {
+    public List<LinkDto> findAllByChatId(Long tgChatId) {
         return jpaLinkChatRepository.findAllByChatId(tgChatId);
     }
 
     @Override
-    public List<LinkDTO> findAllByLinkId(Long linkId) {
+    public List<LinkDto> findAllByLinkId(Long linkId) {
         return jpaLinkChatRepository.findAllByLinkId(linkId);
     }
 
@@ -70,27 +72,22 @@ public class JpaLinkRepository implements LinkRepository {
     }
 
     @Override
-    public List<LinkDTO> findAll() {
+    public List<LinkDto> findAll() {
         var entityList = jpaLinkRepository.findAll();
         return entityList.stream().map(MapperLinkDTOLinkEntity::entityToDto).toList();
     }
 
     @Override
-    @Transactional
-    public void updateLink(LinkDTO elem) {
+    public void updateLink(LinkDto elem) {
         elem.setLastUpdate(OffsetDateTime.now());
         var entity = MapperLinkDTOLinkEntity.dtoToEntity(elem);
         jpaLinkRepository.save(entity);
     }
 
     @Override
-    public List<LinkDTO> findAllOldLinks(Integer timeInSeconds) {
+    public List<LinkDto> findAllOldLinks(Integer timeInSeconds) {
         LocalDateTime differenceTime = LocalDateTime.now().minusSeconds(timeInSeconds);
-        var entityList = entityManager.createQuery("""
-                select le
-                from LinkEntity le
-                where le.lastUpdate is null  or le.lastUpdate < :time
-                """, LinkEntity.class)
+        var entityList = entityManager.createQuery(FIND_ALL_OLD_LINKS, LinkEntity.class)
             .setParameter("time", differenceTime)
             .getResultList();
 

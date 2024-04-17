@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class GitHubPullRequestUriDTO extends UriDTO {
+public class GitHubPullRequestUriDto extends UriDto {
     private String owner;
     private String repo;
     private Integer pullNumber;

@@ -3,7 +3,7 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.exception.RepeatTrackException;
+import edu.java.bot.exception.BotExceptionType;
 import edu.java.bot.exception.UnsupportedSiteException;
 import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
@@ -37,14 +37,8 @@ public class TrackCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        String username = update.message().chat().username();
         String text = update.message().text();
-        log.info(
-            "User @{} entered \"{}\" user_id={}",
-            username,
-            text,
-            chatId
-        );
+        CommandUtils.extractMessageForLog(update, log);
         if (!storage.isUserAuth(chatId)) {
             return new SendMessage(chatId, CommandUtils.USER_NOT_REGISTERED);
         }
@@ -88,7 +82,7 @@ public class TrackCommand implements Command {
                     storage.setUserState(chatId, UserState.DEFAULT);
                     message = new SendMessage(chatId, CommandUtils.URL_SUCCESSFULLY_ADDED);
                 } else {
-                    if (result.get().getExceptionName().equals(RepeatTrackException.class.getSimpleName())) {
+                    if (result.get().getExceptionName().equals(BotExceptionType.REPEAT_TRACK_EXCEPTION.name())) {
                         message = new SendMessage(chatId, CommandUtils.URL_ALREADY_EXIST);
                     }
                 }

@@ -1,7 +1,7 @@
 package edu.java.scrapper.hw5bonus.jdbc;
 
-import edu.java.domain.model.LinkDTO;
-import edu.java.domain.model.StackOverFlowAnswerDTO;
+import edu.java.domain.model.LinkDto;
+import edu.java.domain.model.StackOverFlowAnswerDto;
 import edu.java.exception.exception.RecordAlreadyExistException;
 import edu.java.scrapper.IntegrationTest;
 import edu.java.service.database.LinkService;
@@ -36,15 +36,15 @@ public class JdbcStackOverFlowServiceTest extends IntegrationTest {
     URI uri = URI.create(
         "https://stackoverflow.com/questions/4006772/cannot-delete-indents-nor-past-insertion-point/"
     );
-    LinkDTO linkDTO;
-    StackOverFlowAnswerDTO elem;
+    LinkDto linkDTO;
+    StackOverFlowAnswerDto elem;
 
     @Test
     @Transactional
     @Rollback
     public void testAddSuccess() {
         prepareFill();
-        List<StackOverFlowAnswerDTO> listForAdd = List.of(elem);
+        List<StackOverFlowAnswerDto> listForAdd = List.of(elem);
 
         int cnt = jdbcStackOverFlowService.addAnswers(listForAdd);
         assertEquals(1, cnt);
@@ -58,7 +58,7 @@ public class JdbcStackOverFlowServiceTest extends IntegrationTest {
     @Rollback
     public void testAddException() {
         prepareFill();
-        List<StackOverFlowAnswerDTO> listForAdd = List.of(elem);
+        List<StackOverFlowAnswerDto> listForAdd = List.of(elem);
 
         jdbcStackOverFlowService.addAnswers(listForAdd);
         assertThrows(RecordAlreadyExistException.class, () -> jdbcStackOverFlowService.addAnswers(listForAdd));
@@ -70,7 +70,7 @@ public class JdbcStackOverFlowServiceTest extends IntegrationTest {
     @Rollback
     public void testRemoveSuccess() {
         prepareFill();
-        List<StackOverFlowAnswerDTO> listForAdd = List.of(elem);
+        List<StackOverFlowAnswerDto> listForAdd = List.of(elem);
 
         int cnt = jdbcStackOverFlowService.addAnswers(listForAdd);
 
@@ -81,7 +81,7 @@ public class JdbcStackOverFlowServiceTest extends IntegrationTest {
 
     private void prepareFill() {
         jdbcTgChatService.add(TG_CHAT_ID);
-        linkDTO = new LinkDTO(
+        linkDTO = new LinkDto(
             uri,
             TG_CHAT_ID,
             null,
@@ -90,7 +90,7 @@ public class JdbcStackOverFlowServiceTest extends IntegrationTest {
         );
 
         jdbcLinkService.add(linkDTO);
-        elem = new StackOverFlowAnswerDTO(
+        elem = new StackOverFlowAnswerDto(
             linkDTO.getLinkId(),
             ANSWER_ID,
             "jon",

@@ -1,17 +1,17 @@
 package edu.java.scrapper.hw6.jpa.repo;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.ChatRepository;
 import edu.java.domain.repository.LinkChatRepository;
 import edu.java.domain.repository.LinkRepository;
 import edu.java.scrapper.IntegrationTest;
+import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import java.net.URI;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -28,13 +28,13 @@ public class JpaLinkChatRepositoryTest extends IntegrationTest {
     @Autowired
     private LinkRepository linkRepository;
     long chatId = 1l;
-    LinkDTO linkDTO;
+    LinkDto linkDTO;
 
     @Test
     @Transactional
     @Rollback
     public void addTest() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(uri);
         linkDTO.setTgChatId(chatId);
         chatRepository.add(chatId);
@@ -54,7 +54,7 @@ public class JpaLinkChatRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void addDuplicateTest() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(uri);
         linkDTO.setTgChatId(chatId);
         chatRepository.add(chatId);
@@ -74,7 +74,7 @@ public class JpaLinkChatRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void removeTest() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(uri);
         linkDTO.setTgChatId(chatId);
         chatRepository.add(chatId);

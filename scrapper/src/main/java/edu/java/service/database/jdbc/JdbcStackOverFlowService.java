@@ -1,6 +1,6 @@
 package edu.java.service.database.jdbc;
 
-import edu.java.domain.model.StackOverFlowAnswerDTO;
+import edu.java.domain.model.StackOverFlowAnswerDto;
 import edu.java.domain.repository.jdbc.JdbcStackOverFlowRepository;
 import edu.java.exception.exception.RecordAlreadyExistException;
 import edu.java.service.database.StackOverFlowService;
@@ -16,9 +16,9 @@ public class JdbcStackOverFlowService implements StackOverFlowService {
 
     @Override
     @Transactional
-    public Integer addAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
+    public Integer addAnswers(List<StackOverFlowAnswerDto> stackOverFlowAnswerDtoList) {
         try {
-            return jdbcStackOverFlowRepository.addAnswers(stackOverFlowAnswerDTOList);
+            return jdbcStackOverFlowRepository.addAnswers(stackOverFlowAnswerDtoList);
         } catch (DuplicateKeyException e) {
             throw new RecordAlreadyExistException(e);
         }
@@ -26,19 +26,17 @@ public class JdbcStackOverFlowService implements StackOverFlowService {
 
     @Override
     @Transactional
-    public Integer deleteAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
-        return jdbcStackOverFlowRepository.deleteAnswers(stackOverFlowAnswerDTOList);
+    public Integer deleteAnswers(List<StackOverFlowAnswerDto> stackOverFlowAnswerDtoList) {
+        return jdbcStackOverFlowRepository.deleteAnswers(stackOverFlowAnswerDtoList);
     }
 
     @Override
-    @Transactional
-    public List<StackOverFlowAnswerDTO> getAnswers(Long linkId) {
+    public List<StackOverFlowAnswerDto> getAnswers(Long linkId) {
         return jdbcStackOverFlowRepository.getAnswers(linkId);
     }
 
     @Override
-    @Transactional
-    public List<StackOverFlowAnswerDTO> getAnswers(URI uri) {
+    public List<StackOverFlowAnswerDto> getAnswers(URI uri) {
         return jdbcStackOverFlowRepository.getAnswers(uri);
     }
 }

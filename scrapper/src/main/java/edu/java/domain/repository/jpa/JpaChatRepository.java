@@ -1,6 +1,6 @@
 package edu.java.domain.repository.jpa;
 
-import edu.java.domain.model.ChatDTO;
+import edu.java.domain.model.ChatDto;
 import edu.java.domain.repository.ChatRepository;
 import edu.java.domain.repository.jpa.entity.ChatEntity;
 import edu.java.domain.repository.jpa.mapper.MapperChatDTOChatEntity;
@@ -41,7 +41,7 @@ public class JpaChatRepository implements ChatRepository {
     }
 
     @Override
-    public List<ChatDTO> findAll() {
+    public List<ChatDto> findAll() {
 
         List<ChatEntity> entityList = jpaChatRepository.findAll();
         return entityList.stream().map(MapperChatDTOChatEntity::entityToDto).toList();

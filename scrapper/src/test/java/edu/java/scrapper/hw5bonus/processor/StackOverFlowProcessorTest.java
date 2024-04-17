@@ -1,12 +1,12 @@
 package edu.java.scrapper.hw5bonus.processor;
 
-import edu.java.domain.model.LinkDTO;
-import edu.java.domain.model.StackOverFlowAnswerDTO;
+import edu.java.domain.model.LinkDto;
+import edu.java.domain.model.StackOverFlowAnswerDto;
 import edu.java.domain.repository.LinkRepository;
-import edu.java.model.StackOverFlowQuestionUriDTO;
+import edu.java.model.StackOverFlowQuestionUriDto;
 import edu.java.model.stack_over_flow.StackOverFlowModel;
-import edu.java.model.stack_over_flow.dto.AccountDTO;
-import edu.java.model.stack_over_flow.dto.QuestionAnswerDTOResponse;
+import edu.java.model.stack_over_flow.dto.AccountDto;
+import edu.java.model.stack_over_flow.dto.QuestionAnswerDtoResponse;
 import edu.java.service.client.StackOverFlowClient;
 import edu.java.service.database.StackOverFlowService;
 import edu.java.service.processor.StackOverFlowProcessor;
@@ -34,29 +34,29 @@ public class StackOverFlowProcessorTest {
     @Mock
     StackOverFlowService stackOverFlowService;
     OffsetDateTime time = OffsetDateTime.of(2015, 1, 1, 1, 1, 1, 0, ZoneOffset.UTC);
-    LinkDTO linkDTO;
+    LinkDto linkDTO;
     StackOverFlowModel dataFromApi;
 
     @Test
     public void testUriProcessor() {
         dataFromApi = new StackOverFlowModel();
-        List<QuestionAnswerDTOResponse> listFromApi = List.of(
-            new QuestionAnswerDTOResponse(new AccountDTO(1, "name"), false, 1l, 1l, null, 1),
-            new QuestionAnswerDTOResponse(new AccountDTO(2, "nam2"), false, 2l, 2l, null, 2)
+        List<QuestionAnswerDtoResponse> listFromApi = List.of(
+            new QuestionAnswerDtoResponse(new AccountDto(1, "name"), false, 1l, 1l, null, 1),
+            new QuestionAnswerDtoResponse(new AccountDto(2, "nam2"), false, 2l, 2l, null, 2)
 
         );
-        List<StackOverFlowAnswerDTO> listFromDb = List.of(
-            StackOverFlowAnswerDTO.create(listFromApi.getFirst())
+        List<StackOverFlowAnswerDto> listFromDb = List.of(
+            StackOverFlowAnswerDto.create(listFromApi.getFirst())
         );
 
         when(stackOverFlowClient.fetchQuestionData(1)).thenReturn(dataFromApi);
         when(stackOverFlowService.addAnswers(anyList())).thenReturn(1);
         when(stackOverFlowService.getAnswers(anyLong())).thenReturn(listFromDb);
-        lenient().doNothing().when(linkRepository).updateLink(any(LinkDTO.class));
+        lenient().doNothing().when(linkRepository).updateLink(any(LinkDto.class));
 
         dataFromApi.setQuestionAnswerList(listFromApi);
 
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setLastUpdate(time);
         linkDTO.setLinkId(1l);
         linkDTO.setUri(URI.create("https://github.com/lsn03/java-2023-backend-second-semester/pull/5"));
@@ -64,7 +64,7 @@ public class StackOverFlowProcessorTest {
 
         StackOverFlowProcessor stackOverFlowProcessor =
             new StackOverFlowProcessor(stackOverFlowClient, stackOverFlowService, linkRepository);
-        var responseList = stackOverFlowProcessor.processUriDTO(linkDTO, new StackOverFlowQuestionUriDTO(1));
+        var responseList = stackOverFlowProcessor.processUriDTO(linkDTO, new StackOverFlowQuestionUriDto(1));
 
         assertTrue(responseList.getFirst().getDescription().contains("Пользователь"));
 

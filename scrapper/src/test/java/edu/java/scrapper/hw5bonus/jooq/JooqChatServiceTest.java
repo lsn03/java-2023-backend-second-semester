@@ -1,6 +1,6 @@
 package edu.java.scrapper.hw5bonus.jooq;
 
-import edu.java.domain.model.ChatDTO;
+import edu.java.domain.model.ChatDto;
 import edu.java.exception.exception.UserAlreadyExistException;
 import edu.java.scrapper.IntegrationTest;
 import edu.java.service.database.TgChatService;
@@ -30,7 +30,7 @@ public class JooqChatServiceTest extends IntegrationTest {
 
         jooqTgChatService.add(TG_CHAT_ID);
         var response = (jooqTgChatService.findAll());
-        assertEquals(List.of(new ChatDTO(TG_CHAT_ID, true)), response);
+        assertEquals(List.of(new ChatDto(TG_CHAT_ID, true)), response);
     }
 
     @Test
@@ -88,6 +88,6 @@ public class JooqChatServiceTest extends IntegrationTest {
         jooqTgChatService.add(TG_CHAT_ID);
         jooqTgChatService.remove(TG_CHAT_ID);
         var response = (jooqTgChatService.findAll());
-        assertEquals(List.of(new ChatDTO(TG_CHAT_ID, false)), response);
+        assertEquals(List.of(new ChatDto(TG_CHAT_ID, false)), response);
     }
 }

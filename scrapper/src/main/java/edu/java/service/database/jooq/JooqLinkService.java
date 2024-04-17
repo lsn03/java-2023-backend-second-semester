@@ -1,6 +1,6 @@
 package edu.java.service.database.jooq;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.jooq.JooqLinkChatRepository;
 import edu.java.domain.repository.jooq.JooqLinkRepository;
 import edu.java.exception.exception.IncorrectParametersException;
@@ -26,7 +26,7 @@ public class JooqLinkService implements LinkService {
 
     @Override
     @Transactional
-    public LinkDTO add(LinkDTO linkDTO) {
+    public LinkDto add(LinkDto linkDTO) {
 
         for (var handler : handlers) {
             if (handler.canHandle(linkDTO.getUri())) {
@@ -64,7 +64,7 @@ public class JooqLinkService implements LinkService {
 
     @Override
     @Transactional
-    public Integer remove(LinkDTO linkDTO) {
+    public Integer remove(LinkDto linkDTO) {
         Long linkId = jooqLinkRepository.findLinkIdByUrl(linkDTO.getUri());
         linkDTO.setLinkId(linkId);
         int rows = jooqLinkChatRepository.remove(linkDTO);
@@ -72,9 +72,8 @@ public class JooqLinkService implements LinkService {
     }
 
     @Override
-    @Transactional
-    public List<LinkDTO> findAll(Long tgChatId) {
-        List<LinkDTO> response = jooqLinkRepository.findAllByChatId(tgChatId);
+    public List<LinkDto> findAll(Long tgChatId) {
+        List<LinkDto> response = jooqLinkRepository.findAllByChatId(tgChatId);
         if (response.isEmpty()) {
             throw new ListEmptyException("List empty for chat " + tgChatId);
         }

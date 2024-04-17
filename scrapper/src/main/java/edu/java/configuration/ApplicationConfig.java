@@ -1,6 +1,7 @@
 package edu.java.configuration;
 
 import edu.java.configuration.access.AccessType;
+import edu.java.configuration.kafka.KafkaProperties;
 import edu.java.configuration.rate.BucketProperties;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
@@ -14,12 +15,18 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ApplicationConfig(Scheduler scheduler,
                                 BucketProperties rate,
+                                KafkaProperties kafka,
                                 AccessType databaseAccessType,
                                 GitHubApiProperties gitHubApiProperties,
                                 StackOverFlowApiProperties stackOverFlowApiProperties) {
     @Bean
     public long schedulerInterval() {
         return scheduler.interval.toMillis();
+    }
+
+    @Bean
+    public KafkaProperties kafkaProperties() {
+        return kafka;
     }
 
     @Bean

@@ -1,22 +1,22 @@
 package edu.java.scrapper.hw6.jpa.service;
 
-import edu.java.domain.model.GitHubCommitDTO;
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.GitHubCommitDto;
+import edu.java.domain.model.LinkDto;
 import edu.java.exception.exception.RecordAlreadyExistException;
 import edu.java.scrapper.IntegrationTest;
 import edu.java.service.database.GitHubService;
 import edu.java.service.database.LinkService;
 import edu.java.service.database.TgChatService;
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,15 +37,15 @@ public class JpaGitHubServiceTest extends IntegrationTest {
     URI uri = URI.create(
         "https://github.com/lsn03/java-2023-backend-second-semester/pull/5"
     );
-    GitHubCommitDTO elem;
-    LinkDTO linkDTO;
+    GitHubCommitDto elem;
+    LinkDto linkDTO;
 
     @Test
     @Transactional
     @Rollback
     public void testAddSuccess() {
         prepareFill();
-        List<GitHubCommitDTO> listForAdd = List.of(
+        List<GitHubCommitDto> listForAdd = List.of(
             elem
         );
         int cnt = gitHubService.addCommits(listForAdd);
@@ -61,7 +61,7 @@ public class JpaGitHubServiceTest extends IntegrationTest {
     @Rollback
     public void testAddException() {
         prepareFill();
-        List<GitHubCommitDTO> listForAdd = List.of(elem);
+        List<GitHubCommitDto> listForAdd = List.of(elem);
         gitHubService.addCommits(listForAdd);
         assertThrows(RecordAlreadyExistException.class, () -> gitHubService.addCommits(listForAdd));
     }
@@ -71,7 +71,7 @@ public class JpaGitHubServiceTest extends IntegrationTest {
     @Rollback
     public void testRemove() {
         prepareFill();
-        List<GitHubCommitDTO> listForAdd = List.of(
+        List<GitHubCommitDto> listForAdd = List.of(
             elem
         );
         int cnt = gitHubService.addCommits(listForAdd);
@@ -82,7 +82,7 @@ public class JpaGitHubServiceTest extends IntegrationTest {
 
     private void prepareFill() {
         tgChatService.add(TG_CHAT_ID);
-        linkDTO = new LinkDTO(
+        linkDTO = new LinkDto(
             uri,
             TG_CHAT_ID,
             null,
@@ -90,7 +90,7 @@ public class JpaGitHubServiceTest extends IntegrationTest {
             time
         );
         linkService.add(linkDTO);
-        elem = new GitHubCommitDTO(
+        elem = new GitHubCommitDto(
             null,
             linkDTO.getLinkId(),
             "shashasha",
