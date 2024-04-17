@@ -26,7 +26,7 @@ public class StackOverFlowTest {
     String title = "Lorem";
     ApplicationConfig config = new ApplicationConfig(
         null,
-        null,
+        null, null,
         new ApplicationConfig.StackOverFlowApiProperties(TOKEN, KEY)
     );
 
@@ -34,7 +34,8 @@ public class StackOverFlowTest {
     public void testHeader(WireMockRuntimeInfo wireMockRuntimeInfo) {
         int port = wireMockRuntimeInfo.getHttpPort();
 
-        String url = String.format("/questions/%d?order=desc&sort=activity&site=stackoverflow&access_token=%s&key=%s",
+        String url = String.format(
+            "/questions/%d?order=desc&sort=activity&site=stackoverflow&access_token=%s&key=%s",
             questionId,
             TOKEN,
             KEY

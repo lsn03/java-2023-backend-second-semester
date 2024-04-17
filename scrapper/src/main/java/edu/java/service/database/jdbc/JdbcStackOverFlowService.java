@@ -8,10 +8,8 @@ import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
 public class JdbcStackOverFlowService implements StackOverFlowService {
     private final JdbcStackOverFlowRepository jdbcStackOverFlowRepository;
@@ -33,13 +31,11 @@ public class JdbcStackOverFlowService implements StackOverFlowService {
     }
 
     @Override
-    @Transactional
     public List<StackOverFlowAnswerDto> getAnswers(Long linkId) {
         return jdbcStackOverFlowRepository.getAnswers(linkId);
     }
 
     @Override
-    @Transactional
     public List<StackOverFlowAnswerDto> getAnswers(URI uri) {
         return jdbcStackOverFlowRepository.getAnswers(uri);
     }

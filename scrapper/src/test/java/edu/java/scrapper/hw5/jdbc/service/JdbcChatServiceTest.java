@@ -2,11 +2,13 @@ package edu.java.scrapper.hw5.jdbc.service;
 
 import edu.java.exception.exception.UserAlreadyExistException;
 import edu.java.scrapper.IntegrationTest;
+import edu.java.service.database.TgChatService;
 import edu.java.service.database.jdbc.JdbcTgChatService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -14,10 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@ActiveProfiles("jdbc")
 public class JdbcChatServiceTest extends IntegrationTest {
     public static final long TG_CHAT_ID = 1l;
     @Autowired
-    private JdbcTgChatService jdbcTgChatService;
+    private TgChatService jdbcTgChatService;
 
     @Test
     @Rollback

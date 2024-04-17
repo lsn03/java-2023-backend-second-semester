@@ -6,9 +6,13 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.command.CommandUtils;
 import edu.java.bot.command.TrackCommand;
+import edu.java.bot.exception.BotExceptionType;
+import edu.java.bot.exception.RepeatTrackException;
 import edu.java.bot.exception.UnsupportedSiteException;
+import edu.java.bot.model.dto.response.ApiErrorResponse;
 import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +40,9 @@ public class TrackCommandTest {
     private Chat chat;
     @Mock
     private Storage storage;
+    @Mock
+    ApiErrorResponse apiErrorResponse;
+
     private TrackCommand trackCommand;
     private String expectedString;
 
@@ -83,7 +90,7 @@ public class TrackCommandTest {
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
         when(update.message().text()).thenReturn(site);
-        when(storage.addUrl(id, site)).thenReturn(true);
+        when(storage.addUrl(id, site)).thenReturn(Optional.empty());
 
         SendMessage response = trackCommand.handle(update);
         assertNotNull(response);
@@ -97,8 +104,8 @@ public class TrackCommandTest {
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
         when(update.message().text()).thenReturn(site);
-        when(storage.addUrl(id, site)).thenReturn(false);
-
+        when(storage.addUrl(id, site)).thenReturn(Optional.of(apiErrorResponse));
+        when(apiErrorResponse.getExceptionName()).thenReturn(BotExceptionType.REPEAT_TRACK_EXCEPTION.name());
         SendMessage response = trackCommand.handle(update);
         assertNotNull(response);
         assertEquals(expectedString, response.getParameters().get("text"));
@@ -117,7 +124,7 @@ public class TrackCommandTest {
 
         when(storage.getUserState(id)).thenReturn(UserState.AWAITING_URL_FOR_TRACK);
         when(update.message().text()).thenReturn(site);
-        lenient().when(storage.addUrl(id, site)).thenReturn(true);
+        lenient().when(storage.addUrl(id, site)).thenReturn(Optional.empty());
 
         SendMessage response = trackCommand.handle(update);
         assertNotNull(response);

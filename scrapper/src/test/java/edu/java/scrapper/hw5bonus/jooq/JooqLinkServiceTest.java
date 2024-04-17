@@ -5,12 +5,15 @@ import edu.java.exception.exception.IncorrectParametersException;
 import edu.java.exception.exception.ListEmptyException;
 import edu.java.exception.exception.RepeatTrackException;
 import edu.java.scrapper.IntegrationTest;
+import edu.java.service.database.LinkService;
+import edu.java.service.database.TgChatService;
 import edu.java.service.database.jooq.JooqLinkService;
 import edu.java.service.database.jooq.JooqTgChatService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -19,13 +22,14 @@ import java.time.ZoneOffset;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("jooq")
 public class JooqLinkServiceTest extends IntegrationTest {
 
     private static final long TG_CHAT_ID = 1l;
     @Autowired
-    private JooqTgChatService jooqTgChatService;
+    private TgChatService jooqTgChatService;
     @Autowired
-    private JooqLinkService jooqLinkService;
+    private LinkService jooqLinkService;
     URI uri = URI.create("https://github.com/lsn03/java-2023-backend-second-semester/pull/5");
     LinkDto linkDTO;
     OffsetDateTime createdAt = OffsetDateTime.of(2015, 1, 1, 1, 1, 1, 0, ZoneOffset.UTC);

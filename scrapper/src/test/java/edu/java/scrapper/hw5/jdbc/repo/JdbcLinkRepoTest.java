@@ -1,7 +1,7 @@
 package edu.java.scrapper.hw5.jdbc.repo;
 
+import edu.java.domain.repository.LinkRepository;
 import edu.java.domain.model.LinkDto;
-import edu.java.domain.repository.jdbc.JdbcLinkRepository;
 import edu.java.scrapper.IntegrationTest;
 import java.net.URI;
 import org.junit.jupiter.api.Test;
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -17,9 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@ActiveProfiles("jdbc")
 public class JdbcLinkRepoTest extends IntegrationTest {
     @Autowired
-    private JdbcLinkRepository jdbcLinkRepository;
+    private LinkRepository jdbcLinkRepository;
 
     LinkDto linkDTO;
 
@@ -65,6 +67,5 @@ public class JdbcLinkRepoTest extends IntegrationTest {
         var response = jdbcLinkRepository.findAll();
         assertTrue(response.isEmpty());
     }
-
 
 }

@@ -11,10 +11,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.InsertValuesStep7;
-import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
-@Repository
 public class JooqStackOverFlowRepository implements StackOverFlowRepository {
     private final DSLContext dslContext;
     private final JooqLinkRepository jooqLinkRepository;

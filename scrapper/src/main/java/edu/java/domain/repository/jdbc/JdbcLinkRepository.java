@@ -16,7 +16,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-@Repository
 @AllArgsConstructor
 public class JdbcLinkRepository implements LinkRepository {
     private static final String LINK_ID = "link_id";

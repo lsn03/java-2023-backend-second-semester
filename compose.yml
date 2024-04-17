@@ -1,13 +1,31 @@
 services:
 #  bot:
+#    depends_on:
+#      - scrapper
 #    build: ./bot/.
 #    ports:
-#      - 8081:8081
+#      - 8090:8090
 #      - 5005:5005
 #    environment:
 #      - SPRING_PROFILES_ACTIVE=dev
 #    env_file:
-#        - ./.env
+#      - ./.env
+#    networks:
+#      - backend
+#
+#  scrapper:
+#    depends_on:
+#      - liquibase-migrations
+#    build: ./scrapper/.
+#    ports:
+#      - 8080:8080
+#      - 5006:5006
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=dev
+#    env_file:
+#      - ./.env
+#    networks:
+#      - backend
   postgresql:
     image: postgres:16
     ports:
@@ -30,8 +48,8 @@ services:
       - --url=jdbc:postgresql://postgresql:5432/scrapper
       - --username=postgres
       - --password=postgres
-#      - --log-level=debug
-#      - clearCheckSums
+      #      - --log-level=debug
+      #      - clearCheckSums
       - update
     volumes:
       - ./migrations:/liquibase/changelog

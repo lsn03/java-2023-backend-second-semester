@@ -13,14 +13,13 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
 public class JooqLinkService implements LinkService {
     private final JooqLinkRepository jooqLinkRepository;
     private final JooqLinkChatRepository jooqLinkChatRepository;
+
     private final List<Handler> handlers;
 
     @Override

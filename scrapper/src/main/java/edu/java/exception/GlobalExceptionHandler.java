@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
 
         errorResponse.setCode(String.valueOf(status.value()));
         errorResponse.setExceptionMessage(ex.getMessage());
-        errorResponse.setExceptionName(RepeatTrackException.class.getSimpleName());
+        errorResponse.setExceptionName(BotExceptionType.REPEAT_TRACK_EXCEPTION.name());
         errorResponse.setDescription(ERROR_LINK_ALREADY_TRACKED);
         errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));
         return ResponseEntity.status(status).body(errorResponse);
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
 
         errorResponse.setCode(String.valueOf(status.value()));
         errorResponse.setExceptionMessage(ex.getMessage());
-        errorResponse.setExceptionName(LinkNotFoundException.class.getSimpleName());
+        errorResponse.setExceptionName(BotExceptionType.LINK_NOT_FOUND_EXCEPTION.name());
         errorResponse.setDescription(ERROR_LINK_NOT_FOUND);
 
         errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));
@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
 
         errorResponse.setCode(String.valueOf(status.value()));
         errorResponse.setExceptionMessage(ex.getMessage());
-        errorResponse.setExceptionName(UserAlreadyExistException.class.getSimpleName());
+        errorResponse.setExceptionName(BotExceptionType.USER_ALREADY_EXIST_EXCEPTION.name());
         errorResponse.setDescription(ERROR_CHAT_ALREADY_EXIST);
 
         errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));
@@ -78,7 +78,7 @@ public class GlobalExceptionHandler {
 
         errorResponse.setCode(String.valueOf(status.value()));
         errorResponse.setExceptionMessage(ex.getMessage());
-        errorResponse.setExceptionName(UserDoesntExistException.class.getSimpleName());
+        errorResponse.setExceptionName(BotExceptionType.USER_DOESNT_EXIST_EXCEPTION.name());
         errorResponse.setDescription(ERROR_CHAT_NOT_EXIST);
 
         errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));
@@ -93,7 +93,7 @@ public class GlobalExceptionHandler {
 
         errorResponse.setCode(String.valueOf(status.value()));
         errorResponse.setExceptionMessage(ex.getMessage());
-        errorResponse.setExceptionName(ListEmptyException.class.getSimpleName());
+        errorResponse.setExceptionName(BotExceptionType.LIST_EMPTY_EXCEPTION.name());
         errorResponse.setDescription(ERROR_LIST_EMPTY);
 
         errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));
@@ -108,7 +108,7 @@ public class GlobalExceptionHandler {
 
         errorResponse.setCode(String.valueOf(status.value()));
         errorResponse.setExceptionMessage(ex.getMessage());
-        errorResponse.setExceptionName(IncorrectParametersException.class.getSimpleName());
+        errorResponse.setExceptionName(BotExceptionType.INCORRECT_PARAMETERS_EXCEPTION.name());
         errorResponse.setDescription(ERROR_INCORRECT_PARAMETERS);
 
         errorResponse.setStacktrace(stacktraceArrayToListString(ex.getStackTrace()));

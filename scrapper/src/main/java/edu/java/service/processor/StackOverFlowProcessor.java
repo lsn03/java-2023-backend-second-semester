@@ -13,10 +13,12 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StackOverFlowProcessor implements Processor {
     private static final int MAX_MESSAGE_SIZE = 5;
     private final static StringBuilder STRING_BUILDER = new StringBuilder();
@@ -53,6 +55,7 @@ public class StackOverFlowProcessor implements Processor {
             stackOverFlowService.addAnswers(answerFromAPI);
             linkDTO.setLastUpdate(OffsetDateTime.now());
             jooqLinkRepository.updateLink(linkDTO);
+            log.info("last_update is null, add {} answers for link_id {}", answerFromAPI.size(), linkDTO.getLinkId());
             return null;
         }
 
@@ -81,6 +84,7 @@ public class StackOverFlowProcessor implements Processor {
         if (STRING_BUILDER.isEmpty()) {
             return null;
         }
+        log.info("generate LinkUpdateRequest for link_id {}", linkDTO.getLinkId());
         return new LinkUpdateRequest(
             linkDTO.getLinkId(),
             linkDTO.getUri().toString(),

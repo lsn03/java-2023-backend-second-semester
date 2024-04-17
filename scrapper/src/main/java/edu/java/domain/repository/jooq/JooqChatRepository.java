@@ -6,14 +6,13 @@ import edu.java.domain.repository.ChatRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Repository;
 
-@Repository
 @RequiredArgsConstructor
 public class JooqChatRepository implements ChatRepository {
     private final DSLContext dslContext;
 
     @Override
+
     public void add(Long tgChatId) {
 
         if (findInActiveUserById(tgChatId)) {
@@ -30,6 +29,7 @@ public class JooqChatRepository implements ChatRepository {
     }
 
     @Override
+
     public void remove(Long tgChatId) {
         dslContext.update(Chat.CHAT)
             .set(Chat.CHAT.ACTIVE, false)
