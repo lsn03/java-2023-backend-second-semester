@@ -5,7 +5,6 @@ import edu.java.domain.repository.LinkChatRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 
 @AllArgsConstructor
 public class JdbcLinkChatRepository implements LinkChatRepository {
