@@ -10,6 +10,17 @@ app:
     key: ${SOF_KEY:key}
     token: ${APP_SOF_ACCESS_TOKEN:token}
 
+#  retry:
+#    strategy: constant
+#    max-attempts: 3
+#    max-delay: 3
+#    base-delay: 3
+#    multi: 3
+#    status-codes: [429, 500,501, 502,503]
+  rate:
+    count: 20
+    seconds: 60
+
 
 spring:
   liquibase:

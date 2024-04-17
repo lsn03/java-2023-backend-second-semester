@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -26,6 +25,7 @@ public class MigrationTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void testAddChat() {
+
         int cnt = jdbcTemplate.update("insert into chat values (?)", 1l);
         assertTrue(cnt == 1);
         List<Integer> count = jdbcTemplate.queryForList("SELECT chat_id FROM chat", Integer.class);

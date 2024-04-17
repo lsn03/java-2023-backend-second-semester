@@ -6,6 +6,10 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import edu.java.bot.configuration.ApplicationConfig;
+import edu.java.bot.configuration.RetryConfig;
+import edu.java.bot.configuration.RetryType;
+import edu.java.bot.exception.ApiErrorException;
 import edu.java.bot.model.dto.request.AddLinkRequest;
 import edu.java.bot.model.dto.request.RemoveLinkRequest;
 import edu.java.bot.model.dto.response.ApiErrorResponse;
@@ -13,9 +17,13 @@ import edu.java.bot.model.dto.response.LinkResponse;
 import edu.java.bot.model.dto.response.ListLinksResponse;
 import edu.java.bot.service.client.ScrapperHttpClient;
 import java.net.URI;
+import java.time.Duration;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -26,7 +34,11 @@ public class ScrapperClientTest {
     private static final String HEADER_TG_CHAT_ID = "Tg-Chat-Id";
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String APPLICATION_JSON = "application/json";
-    private String baseUrl = "http://localhost:";
+    private final String baseUrl = "http://localhost:";
+    private final RetryConfig retryConfig =
+        new RetryConfig(RetryType.CONSTANT, 3L, Duration.ofSeconds(5), Duration.ofSeconds(5), Set.of());
+
+    ApplicationConfig config;
     ScrapperHttpClient client;
 
     ApiErrorResponse apiErrorResponse;
@@ -37,8 +49,10 @@ public class ScrapperClientTest {
     @Test
     public void createChatSuccess(WireMockRuntimeInfo wireMockRuntimeInfo) {
         int port = wireMockRuntimeInfo.getHttpPort();
+
         String baseUrlWithPort = baseUrl + port;
-        client = new ScrapperHttpClient(baseUrlWithPort);
+        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
+        client = new ScrapperHttpClient(config);
 
         String url = String.format(TG_CHAT_TEMPLATE, chatId);
 
@@ -49,14 +63,16 @@ public class ScrapperClientTest {
                     .withStatus(200)
                 )
         );
-        assertNull(client.makeChat(chatId));
+        assertDoesNotThrow(() -> client.makeChat(chatId));
+
     }
 
     @Test
     public void createChatError(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        client = new ScrapperHttpClient(baseUrlWithPort);
+        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
+        client = new ScrapperHttpClient(config);
 
         String url = String.format(TG_CHAT_TEMPLATE, chatId);
 
@@ -79,15 +95,20 @@ public class ScrapperClientTest {
                 )
         );
 
-        ApiErrorResponse response = (client.makeChat(chatId));
-        assertEquals(apiErrorResponse, response);
+        try {
+            client.makeChat(chatId);
+        } catch (ApiErrorException e) {
+            assertEquals(apiErrorResponse, e.getErrorResponse());
+        }
+
     }
 
     @Test
     public void deleteChatSuccess(WireMockRuntimeInfo wireMockRuntimeInfo) {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        client = new ScrapperHttpClient(baseUrlWithPort);
+        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
+        client = new ScrapperHttpClient(config);
 
         String url = String.format(TG_CHAT_TEMPLATE, chatId);
 
@@ -105,7 +126,8 @@ public class ScrapperClientTest {
     public void deleteChatError(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        client = new ScrapperHttpClient(baseUrlWithPort);
+        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
+        client = new ScrapperHttpClient(config);
 
         String url = String.format(TG_CHAT_TEMPLATE, chatId);
 
@@ -123,18 +145,23 @@ public class ScrapperClientTest {
                 )
         );
 
-        ApiErrorResponse response = (client.deleteChat(chatId));
-        assertEquals(apiErrorResponse, response);
+        try {
+            client.deleteChat(chatId);
+        } catch (ApiErrorException e) {
+            assertEquals(apiErrorResponse, e.getErrorResponse());
+        }
+
     }
 
     @Test
     public void trackLinkSuccess(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        client = new ScrapperHttpClient(baseUrlWithPort);
+        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
+        client = new ScrapperHttpClient(config);
 
         AddLinkRequest req = new AddLinkRequest("http:/example.com");
-        LinkResponse linkResponse = new LinkResponse(1l, URI.create("http:/example.com"));
+        LinkResponse linkResponse = new LinkResponse(1L, URI.create("http:/example.com"));
         json = ow.writeValueAsString(linkResponse);
         WireMock.stubFor(
             WireMock.post(LINKS)
@@ -146,7 +173,7 @@ public class ScrapperClientTest {
                 )
         );
         var response = (client.trackLink(req, chatId));
-        assertTrue(response instanceof LinkResponse);
+        assertNotNull(response);
         assertEquals(linkResponse, response);
     }
 
@@ -154,11 +181,12 @@ public class ScrapperClientTest {
     public void trackLinkError(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        client = new ScrapperHttpClient(baseUrlWithPort);
+        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
+        client = new ScrapperHttpClient(config);
 
         AddLinkRequest req = new AddLinkRequest("http:/example.com");
         apiErrorResponse = new ApiErrorResponse();
-
+        apiErrorResponse.setCode("1");
         json = ow.writeValueAsString(apiErrorResponse);
         WireMock.stubFor(
             WireMock.post(LINKS)
@@ -169,16 +197,22 @@ public class ScrapperClientTest {
                     .withStatus(400)
                 )
         );
-        var response = (client.trackLink(req, chatId));
-        assertTrue(response instanceof ApiErrorResponse);
-        assertEquals(apiErrorResponse, response);
+
+        try {
+            client.trackLink(req, chatId);
+        } catch (ApiErrorException e) {
+            assertEquals(apiErrorResponse, e.getErrorResponse());
+        }
+//        assertTrue(response instanceof ApiErrorResponse);
+
     }
 
     @Test
     public void getLinkListSuccess(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        client = new ScrapperHttpClient(baseUrlWithPort);
+        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
+        client = new ScrapperHttpClient(config);
 
         ListLinksResponse req = new ListLinksResponse(List.of(), 0);
         json = ow.writeValueAsString(req);
@@ -192,7 +226,6 @@ public class ScrapperClientTest {
                 )
         );
         var response = (client.getLinks(chatId));
-        assertTrue(response instanceof ListLinksResponse);
         assertEquals(req, response);
     }
 
@@ -200,9 +233,11 @@ public class ScrapperClientTest {
     public void getLinkListError(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        client = new ScrapperHttpClient(baseUrlWithPort);
+        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
+        client = new ScrapperHttpClient(config);
 
         apiErrorResponse = new ApiErrorResponse();
+        apiErrorResponse.setCode("1");
         json = ow.writeValueAsString(apiErrorResponse);
         WireMock.stubFor(
             WireMock.get(LINKS)
@@ -213,19 +248,23 @@ public class ScrapperClientTest {
                     .withStatus(400)
                 )
         );
-        var response = (client.getLinks(chatId));
-        assertTrue(response instanceof ApiErrorResponse);
-        assertEquals(apiErrorResponse, response);
+        try {
+            client.getLinks(chatId);
+        } catch (ApiErrorException e) {
+            assertEquals(apiErrorResponse, e.getErrorResponse());
+        }
+
     }
 
     @Test
     public void unTrackLinkSuccess(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        client = new ScrapperHttpClient(baseUrlWithPort);
+        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
+        client = new ScrapperHttpClient(config);
 
         RemoveLinkRequest req = new RemoveLinkRequest("http:/example.com");
-        LinkResponse linkResponse = new LinkResponse(1l, URI.create("http:/example.com"));
+        LinkResponse linkResponse = new LinkResponse(1L, URI.create("http:/example.com"));
         json = ow.writeValueAsString(linkResponse);
         WireMock.stubFor(
             WireMock.delete(LINKS)
@@ -237,7 +276,7 @@ public class ScrapperClientTest {
                 )
         );
         var response = (client.unTrackLink(req, chatId));
-        assertTrue(response instanceof LinkResponse);
+        assertNotNull(response);
         assertEquals(linkResponse, response);
     }
 
@@ -245,11 +284,12 @@ public class ScrapperClientTest {
     public void unTrackLinkError(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
         int port = wireMockRuntimeInfo.getHttpPort();
         String baseUrlWithPort = baseUrl + port;
-        client = new ScrapperHttpClient(baseUrlWithPort);
+        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
+        client = new ScrapperHttpClient(config);
 
         RemoveLinkRequest req = new RemoveLinkRequest("http:/example.com");
         apiErrorResponse = new ApiErrorResponse();
-
+        apiErrorResponse.setCode("1");
         json = ow.writeValueAsString(apiErrorResponse);
         WireMock.stubFor(
             WireMock.delete(LINKS)
@@ -260,9 +300,43 @@ public class ScrapperClientTest {
                     .withStatus(400)
                 )
         );
-        var response = (client.unTrackLink(req, chatId));
-        assertTrue(response instanceof ApiErrorResponse);
-        assertEquals(apiErrorResponse, response);
+        try {
+            client.unTrackLink(req, chatId);
+        } catch (ApiErrorException e) {
+            assertEquals(apiErrorResponse, e.getErrorResponse());
+        }
+
+
+    }
+
+    @Test
+    public void tooManyRequest(WireMockRuntimeInfo wireMockRuntimeInfo) throws JsonProcessingException {
+        int port = wireMockRuntimeInfo.getHttpPort();
+        String baseUrlWithPort = baseUrl + port;
+        config = new ApplicationConfig(null,null, retryConfig, baseUrlWithPort);
+        client = new ScrapperHttpClient(config);
+
+
+        apiErrorResponse = new ApiErrorResponse();
+        apiErrorResponse.setCode("429");
+        json = ow.writeValueAsString(apiErrorResponse);
+        WireMock.stubFor(
+            WireMock.get(LINKS)
+                .willReturn(WireMock.aResponse()
+                    .withHeader(HEADER_TG_CHAT_ID, String.valueOf(chatId))
+                    .withHeader(CONTENT_TYPE, APPLICATION_JSON)
+                    .withBody(json)
+                    .withStatus(429)
+                )
+        );
+
+        try {
+            client.getLinks(chatId);
+        } catch (ApiErrorException e) {
+            assertEquals(apiErrorResponse, e.getErrorResponse());
+        }
+
+
     }
 
 }

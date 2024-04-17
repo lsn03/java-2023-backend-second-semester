@@ -12,8 +12,23 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     private static final String ERROR_INCORRECT_PARAMETERS = "Некорректные параметры запроса";
+    private static final String TO_MANY_REQUESTS = "Слишком много запросов!";
 
+    @ExceptionHandler(ToManyRequestException.class)
+    public ResponseEntity<ApiErrorResponse> handleToManyRequestException(ToManyRequestException ex) {
+        HttpStatus status = HttpStatus.TOO_MANY_REQUESTS;
+        ApiErrorResponse errorResponse = new ApiErrorResponse();
 
+        errorResponse.setCode(String.valueOf(status.value()));
+        errorResponse.setExceptionMessage(ex.getMessage());
+        errorResponse.setExceptionName(ToManyRequestException.class.getSimpleName());
+        errorResponse.setDescription(TO_MANY_REQUESTS);
+
+        errorResponse.setStacktrace(Arrays.stream(ex.getStackTrace())
+            .map(StackTraceElement::toString)
+            .collect(Collectors.toList()));
+        return ResponseEntity.status(status).body(errorResponse);
+    }
 
     @ExceptionHandler(IncorrectParametersException.class)
     public ResponseEntity<ApiErrorResponse> handleIncorrectParametersException(IncorrectParametersException ex) {

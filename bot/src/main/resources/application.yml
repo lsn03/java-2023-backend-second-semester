@@ -1,6 +1,18 @@
 app:
   telegram-token: ${APP_TELEGRAM_TOKEN:token}
   scrapper-base-url: ${BASE_URL:http://localhost:8080}
+  retry:
+#    strategy: exponential
+    strategy: linear
+#    strategy: constant
+    max-attempts: 3
+    max-delay: 5000 # ms
+    start-delay: 5000 # ms
+#    status-codes: [ 409, 404, 200 ]
+    status-codes: [429, 500,501, 502,503]
+  rate:
+    count: 20
+    seconds: 60
 
 spring:
   application:

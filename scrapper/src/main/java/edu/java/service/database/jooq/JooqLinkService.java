@@ -9,6 +9,8 @@ import edu.java.exception.exception.RepeatTrackException;
 import edu.java.exception.exception.UserDoesntExistException;
 import edu.java.service.database.LinkService;
 import edu.java.service.handler.Handler;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -31,6 +33,10 @@ public class JooqLinkService implements LinkService {
 
                 Long linkId = jooqLinkRepository.findLinkIdByUrl(linkDTO.getUri());
                 if (linkId == null) {
+                    if (linkDTO.getCreatedAt() == null) {
+                        linkDTO.setCreatedAt(LocalDateTime.now().atOffset(ZoneOffset.UTC));
+                    }
+
                     jooqLinkRepository.add(linkDTO);
                     linkId = linkDTO.getLinkId();
 
