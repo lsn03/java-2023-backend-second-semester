@@ -1,6 +1,6 @@
 package edu.java.service.database.jpa;
 
-import edu.java.domain.model.ChatDTO;
+import edu.java.domain.model.ChatDto;
 import edu.java.domain.repository.jpa.JpaChatRepository;
 import edu.java.service.database.TgChatService;
 import java.util.List;
@@ -24,7 +24,7 @@ public class JpaTgChatService implements TgChatService {
     }
 
     @Override
-    public List<ChatDTO> findAll() {
+    public List<ChatDto> findAll() {
         return jpaChatRepository.findAll();
     }
 }

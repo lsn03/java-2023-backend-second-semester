@@ -1,7 +1,7 @@
 package edu.java.scrapper.hw6.jpa.repo;
 
-import edu.java.domain.model.LinkDTO;
-import edu.java.domain.model.StackOverFlowAnswerDTO;
+import edu.java.domain.model.LinkDto;
+import edu.java.domain.model.StackOverFlowAnswerDto;
 import edu.java.domain.repository.LinkRepository;
 import edu.java.domain.repository.StackOverFlowRepository;
 import edu.java.exception.exception.RecordAlreadyExistException;
@@ -35,12 +35,12 @@ public class JpaStackOverFlowRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     public void addAnswers() {
-        LinkDTO linkDTO = new LinkDTO();
+        LinkDto linkDTO = new LinkDto();
         linkDTO.setTgChatId(1l);
         linkDTO.setUri(uri);
         linkRepository.add(linkDTO);
 
-        StackOverFlowAnswerDTO elem1 = new StackOverFlowAnswerDTO(
+        StackOverFlowAnswerDto elem1 = new StackOverFlowAnswerDto(
             linkDTO.getLinkId(),
             1l,
             "jon",
@@ -49,7 +49,7 @@ public class JpaStackOverFlowRepositoryTest extends IntegrationTest {
             time,
             time
         );
-        StackOverFlowAnswerDTO elem2 = new StackOverFlowAnswerDTO(
+        StackOverFlowAnswerDto elem2 = new StackOverFlowAnswerDto(
             linkDTO.getLinkId(),
             2l,
             "jon2",
@@ -71,11 +71,11 @@ public class JpaStackOverFlowRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     public void deleteCommits() {
-        LinkDTO linkDTO = new LinkDTO();
+        LinkDto linkDTO = new LinkDto();
         linkDTO.setTgChatId(1l);
         linkDTO.setUri(uri);
         linkRepository.add(linkDTO);
-        StackOverFlowAnswerDTO elem1 = new StackOverFlowAnswerDTO(
+        StackOverFlowAnswerDto elem1 = new StackOverFlowAnswerDto(
             linkDTO.getLinkId(),
             1l,
             "jon",
@@ -84,7 +84,7 @@ public class JpaStackOverFlowRepositoryTest extends IntegrationTest {
             time,
             time
         );
-        StackOverFlowAnswerDTO elem2 = new StackOverFlowAnswerDTO(
+        StackOverFlowAnswerDto elem2 = new StackOverFlowAnswerDto(
             linkDTO.getLinkId(),
             2l,
             "jon2",
@@ -106,12 +106,12 @@ public class JpaStackOverFlowRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     public void addException() {
-        LinkDTO linkDTO = new LinkDTO();
+        LinkDto linkDTO = new LinkDto();
         linkDTO.setTgChatId(1l);
         linkDTO.setUri(uri);
         linkRepository.add(linkDTO);
 
-        StackOverFlowAnswerDTO elem1 = new StackOverFlowAnswerDTO(
+        StackOverFlowAnswerDto elem1 = new StackOverFlowAnswerDto(
             linkDTO.getLinkId(),
             1l,
             "jon",
@@ -120,7 +120,7 @@ public class JpaStackOverFlowRepositoryTest extends IntegrationTest {
             time,
             time
         );
-        StackOverFlowAnswerDTO elem2 = new StackOverFlowAnswerDTO(
+        StackOverFlowAnswerDto elem2 = new StackOverFlowAnswerDto(
             linkDTO.getLinkId(),
             2l,
             "jon2",

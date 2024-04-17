@@ -1,6 +1,6 @@
 package edu.java.domain.repository.jpa;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.LinkChatRepository;
 import edu.java.domain.repository.jpa.entity.ChatEntity;
 import edu.java.domain.repository.jpa.entity.LinkChatEntity;
@@ -23,7 +23,7 @@ public class JpaLinkChatRepository implements LinkChatRepository {
     private final JpaChatRepositoryInterface jpaChatRepository;
 
     @Override
-    public void add(LinkDTO linkDTO) {
+    public void add(LinkDto linkDTO) {
 
         var entity = jpaLinkChatRepository.findByChat_ChatIdAndLink_LinkId(linkDTO.getTgChatId(), linkDTO.getLinkId());
         if (entity.isPresent()) {
@@ -43,7 +43,7 @@ public class JpaLinkChatRepository implements LinkChatRepository {
     }
 
     @Override
-    public Integer remove(LinkDTO linkDTO) {
+    public Integer remove(LinkDto linkDTO) {
 
         return entityManager.createQuery("""
                 delete from LinkChatEntity lce
@@ -60,7 +60,7 @@ public class JpaLinkChatRepository implements LinkChatRepository {
     }
 
     @Override
-    public List<LinkDTO> findAllByChatId(Long tgChatId) {
+    public List<LinkDto> findAllByChatId(Long tgChatId) {
         return entityManager.createQuery("""
                 select le
                 from LinkEntity le
@@ -76,7 +76,7 @@ public class JpaLinkChatRepository implements LinkChatRepository {
     }
 
     @Override
-    public List<LinkDTO> findAllByLinkId(Long linkId) {
+    public List<LinkDto> findAllByLinkId(Long linkId) {
         var list = entityManager.createQuery("""
                 select le
                 from LinkEntity le inner join LinkChatEntity lc on

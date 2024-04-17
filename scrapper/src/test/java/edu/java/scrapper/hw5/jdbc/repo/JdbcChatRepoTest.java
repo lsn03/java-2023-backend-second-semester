@@ -1,7 +1,7 @@
 package edu.java.scrapper.hw5.jdbc.repo;
 
 import edu.java.domain.model.ChatDto;
-import edu.java.domain.repository.jdbc.JdbcChatRepository;
+import edu.java.domain.repository.ChatRepository;
 import edu.java.scrapper.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

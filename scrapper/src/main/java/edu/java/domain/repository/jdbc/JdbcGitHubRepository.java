@@ -40,7 +40,7 @@ public class JdbcGitHubRepository implements GitHubRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Integer addCommits(List<GitHubCommitDTO> gitHubCommitList) {
+    public Integer addCommits(List<GitHubCommitDto> gitHubCommitList) {
 
         int[][] updateCounts = jdbcTemplate.batchUpdate(ADD_COMMIT, gitHubCommitList, gitHubCommitList.size(),
             (ps, commit) -> {
@@ -56,7 +56,7 @@ public class JdbcGitHubRepository implements GitHubRepository {
     }
 
     @Override
-    public Integer deleteCommits(List<GitHubCommitDTO> gitHubCommitList) {
+    public Integer deleteCommits(List<GitHubCommitDto> gitHubCommitList) {
 
         int[][] updateCounts =
             jdbcTemplate.batchUpdate(DELETE_BY_LINK_ID_SHA, gitHubCommitList, gitHubCommitList.size(),
@@ -70,7 +70,7 @@ public class JdbcGitHubRepository implements GitHubRepository {
     }
 
     @Override
-    public List<GitHubCommitDTO> getCommits(Long linkId) {
+    public List<GitHubCommitDto> getCommits(Long linkId) {
         return jdbcTemplate.query(
             GET_COMMITS_BY_LINK_ID,
             (rs, rowNum) -> getGitHubCommitDTO(rs), linkId
@@ -78,7 +78,7 @@ public class JdbcGitHubRepository implements GitHubRepository {
     }
 
     @Override
-    public List<GitHubCommitDTO> getCommits(URI uri) {
+    public List<GitHubCommitDto> getCommits(URI uri) {
 
         return jdbcTemplate.query(
             GET_COMMITS_BY_URI,

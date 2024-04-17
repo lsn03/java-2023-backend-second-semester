@@ -1,6 +1,6 @@
 package edu.java.service.database.jpa;
 
-import edu.java.domain.model.GitHubCommitDTO;
+import edu.java.domain.model.GitHubCommitDto;
 import edu.java.domain.repository.jpa.JpaGitHubRepository;
 import edu.java.exception.exception.LinkNotFoundException;
 import edu.java.exception.exception.RecordAlreadyExistException;
@@ -18,7 +18,7 @@ public class JpaGitHubService implements GitHubService {
 
     @Override
     @Transactional
-    public Integer addCommits(List<GitHubCommitDTO> gitHubCommitList) {
+    public Integer addCommits(List<GitHubCommitDto> gitHubCommitList) {
         try {
             return jpaGitHubRepository.addCommits(gitHubCommitList);
         } catch (EntityExistsException e) {
@@ -30,17 +30,17 @@ public class JpaGitHubService implements GitHubService {
 
     @Override
     @Transactional
-    public Integer deleteCommits(List<GitHubCommitDTO> gitHubCommitList) {
+    public Integer deleteCommits(List<GitHubCommitDto> gitHubCommitList) {
         return jpaGitHubRepository.deleteCommits(gitHubCommitList);
     }
 
     @Override
-    public List<GitHubCommitDTO> getCommits(Long linkId) {
+    public List<GitHubCommitDto> getCommits(Long linkId) {
         return jpaGitHubRepository.getCommits(linkId);
     }
 
     @Override
-    public List<GitHubCommitDTO> getCommits(URI uri) {
+    public List<GitHubCommitDto> getCommits(URI uri) {
         return jpaGitHubRepository.getCommits(uri);
     }
 }

@@ -29,7 +29,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
     @Override
     @Transactional
     public List<LinkUpdateRequest> update() {
-        List<LinkDto> list = jdbcLinkRepository.findAllOldLinks(oldLinksInSeconds);
+        List<LinkDto> list = jpaLinkRepository.findAllOldLinks(oldLinksInSeconds);
 
         List<LinkUpdateRequest> answer = new ArrayList<>();
 
@@ -51,7 +51,7 @@ public class LinkUpdateServiceImpl implements LinkUpdaterService {
                 jpaLinkRepository.findAllByLinkId(elem.getLinkId())
                     .stream()
                     .map(
-                        LinkDTO::getTgChatId
+                        LinkDto::getTgChatId
                     ).toList();
 
             for (var responseElem : response) {
