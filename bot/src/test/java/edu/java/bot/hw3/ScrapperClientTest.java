@@ -23,6 +23,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -118,7 +119,7 @@ public class ScrapperClientTest {
                     .withStatus(200)
                 )
         );
-        assertNull(client.deleteChat(chatId));
+        assertFalse(client.deleteChat(chatId).isPresent());
     }
 
     @Test

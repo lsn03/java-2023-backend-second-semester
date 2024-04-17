@@ -46,14 +46,15 @@ public class InMemoryStorage implements Storage {
 
             try {
                 scrapperHttpClient.makeChat(userId);
+                users.add(userId);
             } catch (ApiErrorException e) {
                 if (!e.getErrorResponse().getExceptionName().equals(BotExceptionType.USER_ALREADY_EXIST_EXCEPTION)) {
                     throw new RuntimeException(e);
                 }
                 users.add(userId);
             } catch (Exception e) {
-                log.error("{} {}", e.getMessage(), e.getStackTrace());
-                throw new RuntimeException(e);
+                log.error("error {} ", e);
+//                throw new RuntimeException(e);
             }
 
         }
@@ -82,7 +83,7 @@ public class InMemoryStorage implements Storage {
 
     @Override
     public Optional<ApiErrorResponse> removeUrl(Long userId, String url) {
-
+        parserService.process(url);
         try {
             scrapperHttpClient.unTrackLink(new RemoveLinkRequest(url), userId);
         } catch (ApiErrorException e) {

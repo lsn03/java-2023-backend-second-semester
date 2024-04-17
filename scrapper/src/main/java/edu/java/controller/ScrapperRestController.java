@@ -38,13 +38,13 @@ public class ScrapperRestController {
 
         chatService.add(id);
 
-        return ResponseEntity.ok(CHAT_SUCCESSFUL_SIGN_UP);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = TG_CHAT_ID, produces = {"application/json"})
     public ResponseEntity<?> deleteChat(@PathVariable Long id) {
         chatService.remove(id);
-        return ResponseEntity.ok(CHAT_SUCCESSFUL_REMOVED);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = LINKS, produces = {"application/json"})

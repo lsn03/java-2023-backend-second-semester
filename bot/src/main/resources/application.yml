@@ -2,9 +2,7 @@ app:
   telegram-token: ${APP_TELEGRAM_TOKEN:token}
   scrapper-base-url: ${BASE_URL:http://localhost:8080}
   retry:
-#    strategy: exponential
-    strategy: linear
-#    strategy: constant
+    strategy: linear # exponential, constant
     max-attempts: 3
     max-delay: 5000 # ms
     start-delay: 5000 # ms
@@ -13,7 +11,7 @@ app:
     count: 20
     seconds: 60
   kafka:
-    using-queue: ${USING_QUEUE:true}
+    using-queue: ${USING_QUEUE:false}
     partitions: 10
     replicas: 1
     topic: topic1
@@ -42,3 +40,26 @@ server:
 
 logging:
   config: classpath:log4j2-plain.xml
+
+# Metrics
+management:
+  server:
+    port: 8091
+
+  endpoints:
+    web:
+      exposure:
+        include: 'health,info,prometheus'
+      base-path: /
+      path-mapping:
+        prometheus: /metrics
+  endpoint:
+    health:
+      enabled: true
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
+  tags:
+    application: ${spring.application.name}
+

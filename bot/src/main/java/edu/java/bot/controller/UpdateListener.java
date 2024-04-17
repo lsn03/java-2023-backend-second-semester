@@ -1,10 +1,9 @@
 package edu.java.bot.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.bot.BotService;
 import edu.java.bot.configuration.kafka.KafkaProperties;
 import edu.java.bot.model.dto.request.LinkUpdateRequest;
+import edu.java.bot.service.UpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +18,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UpdateListener {
     private final KafkaProperties properties;
-    private final BotService botService;
+    private final UpdateService updateService;
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String, String> kafkaTemplate;
-    private final StringBuilder stringBuilder = new StringBuilder();
 
     @KafkaListener(
         topics = "#{kafkaProperties.topic}",
@@ -53,12 +51,6 @@ public class UpdateListener {
     private void processMessage(String topic, String message) throws Exception {
         LinkUpdateRequest linkUpdateRequest = objectMapper.readValue(message, LinkUpdateRequest.class);
         log.info("[BOT] Received from topic={}, message={}, data={}", topic, message, linkUpdateRequest);
-        stringBuilder.setLength(0);
-        stringBuilder.append("New changes at link ").append(linkUpdateRequest.getUrl())
-            .append(System.lineSeparator()).append(linkUpdateRequest.getDescription());
-
-        for (var chatId : linkUpdateRequest.getTgChatIds()) {
-            botService.myExecute(new SendMessage(chatId, stringBuilder.toString()));
-        }
+        updateService.sendUpdate(linkUpdateRequest);
     }
 }

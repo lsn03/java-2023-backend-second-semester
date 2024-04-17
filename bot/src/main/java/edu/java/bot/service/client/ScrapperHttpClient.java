@@ -7,6 +7,7 @@ import edu.java.bot.model.dto.request.RemoveLinkRequest;
 import edu.java.bot.model.dto.response.ApiErrorResponse;
 import edu.java.bot.model.dto.response.LinkResponse;
 import edu.java.bot.model.dto.response.ListLinksResponse;
+import java.util.Optional;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -27,7 +28,7 @@ public class ScrapperHttpClient {
         this.retry = scrapperProperties.retryConfig().getRetrySpec();
     }
 
-    public ApiErrorResponse makeChat(Long id) throws ApiErrorException {
+    public Optional<ApiErrorResponse> makeChat(Long id) throws ApiErrorException {
 
         return client.post()
             .uri(String.format(TG_CHAT, id))
@@ -36,14 +37,17 @@ public class ScrapperHttpClient {
                 HttpStatusCode::isError,
                 clientResponse -> (clientResponse.bodyToMono(ApiErrorResponse.class).map(ApiErrorException::new)
                     .flatMap(Mono::error))
+
             )
             .bodyToMono(ApiErrorResponse.class)
+            .map(Optional::ofNullable)
+            .defaultIfEmpty(Optional.empty())
             .retryWhen(retry)
             .block();
 
     }
 
-    public ApiErrorResponse deleteChat(Long id) throws ApiErrorException {
+    public Optional<ApiErrorResponse> deleteChat(Long id) throws ApiErrorException {
 
         return client.delete()
             .uri(String.format(TG_CHAT, id))
@@ -54,6 +58,8 @@ public class ScrapperHttpClient {
                     .flatMap(Mono::error))
             )
             .bodyToMono(ApiErrorResponse.class)
+            .map(Optional::ofNullable)
+            .defaultIfEmpty(Optional.empty())
             .retryWhen(retry)
             .block();
     }
