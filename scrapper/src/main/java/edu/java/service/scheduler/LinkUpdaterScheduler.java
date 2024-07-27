@@ -2,8 +2,7 @@ package edu.java.service.scheduler;
 
 import edu.java.configuration.ApplicationConfig;
 import edu.java.model.scrapper.dto.request.LinkUpdateRequest;
-import edu.java.model.scrapper.dto.response.ApiErrorResponse;
-import edu.java.service.client.BotHttpClient;
+import edu.java.service.sender.Sender;
 import edu.java.service.updater.LinkUpdaterService;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -18,8 +17,8 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class LinkUpdaterScheduler {
     private final ApplicationConfig applicationConfig;
-    private final BotHttpClient botHttpClient;
     private final LinkUpdaterService linkUpdaterService;
+    private final Sender sender;
 
     @Scheduled(fixedDelayString = "#{@schedulerInterval}")
     public void update() {
@@ -31,12 +30,7 @@ public class LinkUpdaterScheduler {
 
         if (response != null) {
             for (var elem : response) {
-                ApiErrorResponse ans = botHttpClient.sendUpdates(elem).block();
-                if (ans != null) {
-                    log.error("{} error while Sending update {}", ans, elem);
-                } else {
-                    log.info("send updates {}", response);
-                }
+                sender.send(elem);
             }
         }
     }

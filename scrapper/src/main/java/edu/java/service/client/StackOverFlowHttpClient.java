@@ -14,9 +14,9 @@ public class StackOverFlowHttpClient implements StackOverFlowClient {
     private final String key;
     private final WebClient webClient;
 
-    public StackOverFlowHttpClient(String url, ApplicationConfig config) {
-        this.key = config.stackOverFlowApiProperties().key();
-        this.stackOverFlowToken = config.stackOverFlowApiProperties().token();
+    public StackOverFlowHttpClient(String url, ApplicationConfig.StackOverFlowApiProperties config) {
+        this.key = config.key();
+        this.stackOverFlowToken = config.token();
         webClient = WebClient.builder()
             .baseUrl(url)
             .defaultHeader("User-Agent", "lsn03SOF")

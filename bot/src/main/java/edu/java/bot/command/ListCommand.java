@@ -9,14 +9,13 @@ import edu.java.bot.exception.RepeatTrackException;
 import edu.java.bot.model.dto.response.LinkResponse;
 import edu.java.bot.storage.Storage;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class ListCommand implements Command {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Storage storage;
     private final StringBuilder st;
 
@@ -39,9 +38,7 @@ public class ListCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        String username = update.message().chat().username();
-        String text = update.message().text();
-        logger.info("User @{} entered \"{}\" user_id={}", username, text, chatId);
+        CommandUtils.extractMessageForLog(update, log);
 
         if (!storage.isUserAuth(chatId)) {
             return new SendMessage(chatId, CommandUtils.USER_NOT_REGISTERED);
