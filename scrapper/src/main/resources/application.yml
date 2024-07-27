@@ -10,7 +10,7 @@ app:
     key: ${SOF_KEY:key}
     token: ${APP_SOF_ACCESS_TOKEN:token}
   kafka:
-    using-queue: ${USING_QUEUE:true}
+    using-queue: ${USING_QUEUE:false}
     partitions: 10
     replicas: 1
     topic: topic1
@@ -59,4 +59,25 @@ client:
     github-base-url: ${GITHUB_BASE_URL:https://api.github.com}
     sof-base-url: ${SOF_BASE_URL:https://api.stackexchange.com/2.3}
     bot-base-url: ${BOT_BASE_URL:http://localhost:8090}
+
+# Metrics
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include: 'health,info,prometheus'
+      base-path: /
+      path-mapping:
+        prometheus: /metrics
+  endpoint:
+    health:
+      enabled: true
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
+  tags:
+    application: ${spring.application.name}
 

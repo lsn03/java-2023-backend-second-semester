@@ -10,6 +10,7 @@ import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.command.Command;
 import edu.java.bot.configuration.ApplicationConfig;
+import io.micrometer.core.instrument.Counter;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -18,29 +19,33 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-
 public class BotService implements Bot {
     private final TelegramBot telegramBot;
     private final List<Command> commandList;
     private final ApplicationConfig applicationConfig;
     private final BotFactory botFactory;
+    private final Counter counter;
 
-    public BotService(List<Command> commandList, ApplicationConfig applicationConfig, BotFactory botFactory) {
+    public BotService(
+        List<Command> commandList,
+        ApplicationConfig applicationConfig,
+        BotFactory botFactory,
+        Counter counter
+    ) {
         this.commandList = commandList;
         this.applicationConfig = applicationConfig;
         this.botFactory = botFactory;
-
+        this.counter = counter;
         telegramBot = this.botFactory.create(applicationConfig.telegramToken());
         log.info("Create BotService");
     }
-
 
     @Override
     public <T extends BaseRequest<T, R>, R extends BaseResponse> void myExecute(BaseRequest<T, R> request) {
 
         log.info("myExecute {}", request.getParameters());
         telegramBot.execute(request);
-
+        counter.increment();
     }
 
     @Override

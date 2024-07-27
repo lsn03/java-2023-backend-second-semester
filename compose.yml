@@ -128,33 +128,34 @@ services:
     volumes:
       - kafka_data_3:/var/lib/kafka/data
 
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+      - prometheus_data:/prometheus
+    networks:
+      - backend
+    ports:
+      - 9090:9090
+  grafana:
+    image: grafana/grafana-oss
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - backend
 
-#  init-kafka:
-#    image: confluentinc/cp-kafka:7.2.1
-#    depends_on:
-#      - kafka1
-#      - kafka2
-#      - kafka3
-#    entrypoint: [ '/bin/sh', '-c' ]
-#    command: |
-#      "
-#      # blocks until kafka is reachable
-#      kafka-topics --bootstrap-server kafka1:9091,kafka2:9092,kafka3:9093 --list
-#
-#      echo -e 'Creating kafka topics'
-#      kafka-topics --bootstrap-server kafka1:9091,kafka2:9092,kafka3:9093 --create --if-not-exists --topic topic1 --replication-factor 1 --partitions 10
-#
-#
-#      echo -e 'Successfully created the following topics:'
-#      kafka-topics --bootstrap-server kafka1:9091,kafka2:9092,kafka3:9093 --list
-#      "
-#    networks:
-#      - backend
 volumes:
   postgresql: {}
   kafka_data_1: {}
   kafka_data_2: {}
   kafka_data_3: {}
+  prometheus_data: {}
+  grafana_data: {}
 
 networks:
   backend: {}
