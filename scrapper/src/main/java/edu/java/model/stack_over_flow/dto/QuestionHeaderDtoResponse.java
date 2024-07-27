@@ -11,9 +11,9 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class QuestionHeaderDTOResponse {
+public class QuestionHeaderDtoResponse {
 
-    private AccountDTO owner;
+    private AccountDto owner;
 
     @JsonProperty("is_answered")
     private boolean isAnswered;
@@ -29,8 +29,8 @@ public class QuestionHeaderDTOResponse {
     private String link;
 
     @JsonCreator
-    public QuestionHeaderDTOResponse(
-        AccountDTO owner,
+    public QuestionHeaderDtoResponse(
+        AccountDto owner,
         @JsonProperty("is_answered") boolean isAnswered,
         @JsonProperty("last_edit_date") long lastEdit,
         String title,

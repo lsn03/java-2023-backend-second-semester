@@ -29,12 +29,8 @@ public class CancelCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        log.info(
-            "User @{} entered \"{}\" user_id={}",
-            update.message().chat().username(),
-            update.message().text(),
-            chatId
-        );
+        CommandUtils.extractMessageForLog(update, log);
+
         if (!storage.isUserAuth(chatId)) {
             return new SendMessage(chatId, CommandUtils.USER_NOT_REGISTERED);
         } else {

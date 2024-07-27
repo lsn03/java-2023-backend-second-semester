@@ -1,6 +1,6 @@
 package edu.java.domain.repository.jdbc;
 
-import edu.java.domain.model.StackOverFlowAnswerDTO;
+import edu.java.domain.model.StackOverFlowAnswerDto;
 import edu.java.domain.repository.StackOverFlowRepository;
 import java.net.URI;
 import java.sql.ResultSet;
@@ -22,19 +22,35 @@ public class JdbcStackOverFlowRepository implements StackOverFlowRepository {
     private static final int INS_CREATION_DATE_INDEX = 5;
     private static final int INS_LAST_ACTIVITY_DATE_INDEX = 6;
     private static final int INS_LAST_EDIT_INDEX = 7;
+    private static final String GET_ANSWERS_BY_LINK_ID = """
+        select link_id, answer_id, user_name, is_accepted, creation_date, last_activity_date, last_edit_date
+        from stackoverflow_answer
+        where link_id = ?;
+                        """;
+    private static final String GET_ANSWERS_BY_URI = """
+        select l.link_id, answer_id, user_name, is_accepted, creation_date, last_activity_date, last_edit_date
+        from stackoverflow_answer
+        inner join public.link l on l.link_id = stackoverflow_answer.link_id
+        where l.uri = ?
+        """;
+    private static final String DELETE_BY_ANSWER_ID = "DELETE FROM stackoverflow_answer WHERE answer_id IN (";
+    private static final String ADD_ANSWERS = """
+        insert into stackoverflow_answer (link_id, answer_id, user_name, is_accepted, creation_date,
+             last_activity_date, last_edit_date)
+             values (?,?,?,?,?,?,?);
+
+        """;
 
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Integer addAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
+    public Integer addAnswers(List<StackOverFlowAnswerDto> stackOverFlowAnswerDtoList) {
         String sql =
-            "insert into stackoverflow_answer (link_id, answer_id, user_name, is_accepted, creation_date, "
-                + "last_activity_date, last_edit_date)"
-                + "values (?,?,?,?,?,?,?);";
+            ADD_ANSWERS;
         int[][] updateCounts = jdbcTemplate.batchUpdate(
             sql,
-            stackOverFlowAnswerDTOList,
-            stackOverFlowAnswerDTOList.size(),
+            stackOverFlowAnswerDtoList,
+            stackOverFlowAnswerDtoList.size(),
             (ps, answer) -> {
                 var last = answer.getLastEditDate();
 
@@ -52,14 +68,14 @@ public class JdbcStackOverFlowRepository implements StackOverFlowRepository {
     }
 
     @Override
-    public Integer deleteAnswers(List<StackOverFlowAnswerDTO> stackOverFlowAnswerDTOList) {
-        List<Long> answerIdList = stackOverFlowAnswerDTOList.stream()
-            .map(StackOverFlowAnswerDTO::getAnswerId)
+    public Integer deleteAnswers(List<StackOverFlowAnswerDto> stackOverFlowAnswerDtoList) {
+        List<Long> answerIdList = stackOverFlowAnswerDtoList.stream()
+            .map(StackOverFlowAnswerDto::getAnswerId)
             .toList();
 
         String inSql = String.join(",", Collections.nCopies(answerIdList.size(), "?"));
 
-        String sql = "DELETE FROM stackoverflow_answer WHERE answer_id IN (" + inSql + ")";
+        String sql = DELETE_BY_ANSWER_ID + inSql + ")";
 
         Object[] args = answerIdList.toArray();
 
@@ -68,27 +84,18 @@ public class JdbcStackOverFlowRepository implements StackOverFlowRepository {
     }
 
     @Override
-    public List<StackOverFlowAnswerDTO> getAnswers(Long linkId) {
+    public List<StackOverFlowAnswerDto> getAnswers(Long linkId) {
         return jdbcTemplate.query(
-            """
-                select link_id, answer_id, user_name, is_accepted, creation_date, last_activity_date, last_edit_date
-                from stackoverflow_answer
-                where link_id = ?;
-                                """, (rs, rowNum) -> {
+            GET_ANSWERS_BY_LINK_ID, (rs, rowNum) -> {
                 return getStackOverFlowAnswerDTO(rs);
             }, new Object[] {linkId}
         );
     }
 
     @Override
-    public List<StackOverFlowAnswerDTO> getAnswers(URI uri) {
+    public List<StackOverFlowAnswerDto> getAnswers(URI uri) {
         return jdbcTemplate.query(
-            """
-                select l.link_id, answer_id, user_name, is_accepted, creation_date, last_activity_date, last_edit_date
-                from stackoverflow_answer
-                inner join public.link l on l.link_id = stackoverflow_answer.link_id
-                where l.uri = ?
-                """, (rs, rowNum) -> {
+            GET_ANSWERS_BY_URI, (rs, rowNum) -> {
                 return getStackOverFlowAnswerDTO(rs);
             }, new Object[] {uri.toString()}
         );
@@ -99,9 +106,9 @@ public class JdbcStackOverFlowRepository implements StackOverFlowRepository {
     }
 
     @NotNull
-    private static StackOverFlowAnswerDTO getStackOverFlowAnswerDTO(ResultSet rs) throws SQLException {
+    private static StackOverFlowAnswerDto getStackOverFlowAnswerDTO(ResultSet rs) throws SQLException {
         var last = rs.getTimestamp(INS_LAST_EDIT_INDEX);
-        return new StackOverFlowAnswerDTO(
+        return new StackOverFlowAnswerDto(
             rs.getLong(INS_LINK_ID_INDEX),
             rs.getLong(INS_ANSWER_ID_INDEX),
             rs.getString(INS_USERNAME_INDEX),

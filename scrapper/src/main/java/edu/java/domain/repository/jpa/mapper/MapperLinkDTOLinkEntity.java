@@ -1,6 +1,6 @@
 package edu.java.domain.repository.jpa.mapper;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.jpa.entity.LinkEntity;
 import java.net.URI;
 import java.time.ZoneOffset;
@@ -8,11 +8,11 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class MapperLinkDTOLinkEntity {
-    public static LinkDTO entityToDto(LinkEntity entity) {
+    public static LinkDto entityToDto(LinkEntity entity) {
         var created = entity.getCreatedAt();
         var update = entity.getLastUpdate();
         var linkChats = entity.getLinkChats();
-        LinkDTO linkDTO = new LinkDTO();
+        LinkDto linkDTO = new LinkDto();
 
         linkDTO.setUri(URI.create(entity.getUri()));
         linkDTO.setLinkId(entity.getLinkId());
@@ -29,7 +29,7 @@ public class MapperLinkDTOLinkEntity {
         return linkDTO;
     }
 
-    public static LinkEntity dtoToEntity(LinkDTO dto) {
+    public static LinkEntity dtoToEntity(LinkDto dto) {
         var created = dto.getCreatedAt();
         var update = dto.getLastUpdate();
 

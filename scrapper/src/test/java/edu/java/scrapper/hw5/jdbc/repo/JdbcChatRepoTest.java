@@ -1,8 +1,7 @@
 package edu.java.scrapper.hw5.jdbc.repo;
 
-import edu.java.domain.model.ChatDTO;
+import edu.java.domain.model.ChatDto;
 import edu.java.domain.repository.ChatRepository;
-import edu.java.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.scrapper.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class JdbcChatRepoTest extends IntegrationTest {
     @Transactional
     public void addFirstTime() {
         long chatId = 1234;
-        var expected = new ChatDTO(chatId, true);
+        var expected = new ChatDto(chatId, true);
 
         assertDoesNotThrow(() -> jdbcChatRepository.add(chatId));
         var response = jdbcChatRepository.findAll().get(0);

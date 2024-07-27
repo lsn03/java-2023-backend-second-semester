@@ -3,7 +3,7 @@ package edu.java.bot.command;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.exception.LinkNotFoundException;
+import edu.java.bot.exception.BotExceptionType;
 import edu.java.bot.exception.UnsupportedSiteException;
 import edu.java.bot.processor.UserState;
 import edu.java.bot.storage.Storage;
@@ -31,14 +31,8 @@ public class UnTrackCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        String username = update.message().chat().username();
         String text = update.message().text();
-        log.info(
-            "User @{} entered \"{}\" user_id={}",
-            username,
-            text,
-            chatId
-        );
+        CommandUtils.extractMessageForLog(update, log);
         if (!storage.isUserAuth(chatId)) {
             return new SendMessage(chatId, CommandUtils.USER_NOT_REGISTERED);
         }
@@ -81,7 +75,7 @@ public class UnTrackCommand implements Command {
                 storage.setUserState(chatId, UserState.DEFAULT);
                 sendMessage = new SendMessage(chatId, CommandUtils.URL_SUCCESSFULLY_REMOVED);
             } else {
-                if (result.get().getExceptionName().equals(LinkNotFoundException.class.getSimpleName())) {
+                if (result.get().getExceptionName().equals(BotExceptionType.LINK_NOT_FOUND_EXCEPTION.name())) {
                     sendMessage = new SendMessage(chatId, CommandUtils.URL_NOT_FOUND);
                 }
             }

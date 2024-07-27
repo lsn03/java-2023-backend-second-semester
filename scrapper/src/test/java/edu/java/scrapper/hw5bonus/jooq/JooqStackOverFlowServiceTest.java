@@ -1,7 +1,7 @@
 package edu.java.scrapper.hw5bonus.jooq;
 
-import edu.java.domain.model.LinkDTO;
-import edu.java.domain.model.StackOverFlowAnswerDTO;
+import edu.java.domain.model.LinkDto;
+import edu.java.domain.model.StackOverFlowAnswerDto;
 import edu.java.exception.exception.RecordAlreadyExistException;
 import edu.java.scrapper.IntegrationTest;
 import edu.java.service.database.LinkService;
@@ -39,15 +39,15 @@ public class JooqStackOverFlowServiceTest extends IntegrationTest {
     URI uri = URI.create(
         "https://stackoverflow.com/questions/4006772/cannot-delete-indents-nor-past-insertion-point/"
     );
-    LinkDTO linkDTO;
-    StackOverFlowAnswerDTO elem;
+    LinkDto linkDTO;
+    StackOverFlowAnswerDto elem;
 
     @Test
     @Transactional
     @Rollback
     public void testAddSuccess() {
         prepareFill();
-        List<StackOverFlowAnswerDTO> listForAdd = List.of(elem);
+        List<StackOverFlowAnswerDto> listForAdd = List.of(elem);
 
         int cnt = jooqStackOverFlowService.addAnswers(listForAdd);
         assertEquals(1, cnt);
@@ -61,7 +61,7 @@ public class JooqStackOverFlowServiceTest extends IntegrationTest {
     @Rollback
     public void testAddException() {
         prepareFill();
-        List<StackOverFlowAnswerDTO> listForAdd = List.of(elem);
+        List<StackOverFlowAnswerDto> listForAdd = List.of(elem);
 
         jooqStackOverFlowService.addAnswers(listForAdd);
         assertThrows(RecordAlreadyExistException.class, () -> jooqStackOverFlowService.addAnswers(listForAdd));
@@ -73,7 +73,7 @@ public class JooqStackOverFlowServiceTest extends IntegrationTest {
     @Rollback
     public void testRemoveSuccess() {
         prepareFill();
-        List<StackOverFlowAnswerDTO> listForAdd = List.of(elem);
+        List<StackOverFlowAnswerDto> listForAdd = List.of(elem);
 
         int cnt = jooqStackOverFlowService.addAnswers(listForAdd);
 
@@ -84,7 +84,7 @@ public class JooqStackOverFlowServiceTest extends IntegrationTest {
 
     private void prepareFill() {
         jooqTgChatService.add(TG_CHAT_ID);
-        linkDTO = new LinkDTO(
+        linkDTO = new LinkDto(
             uri,
             TG_CHAT_ID,
             null,
@@ -93,7 +93,7 @@ public class JooqStackOverFlowServiceTest extends IntegrationTest {
         );
 
         jooqLinkService.add(linkDTO);
-        elem = new StackOverFlowAnswerDTO(
+        elem = new StackOverFlowAnswerDto(
             linkDTO.getLinkId(),
             ANSWER_ID,
             "jon",

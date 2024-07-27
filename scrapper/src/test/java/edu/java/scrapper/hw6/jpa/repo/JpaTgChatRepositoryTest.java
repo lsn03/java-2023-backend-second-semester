@@ -1,6 +1,6 @@
 package edu.java.scrapper.hw6.jpa.repo;
 
-import edu.java.domain.model.ChatDTO;
+import edu.java.domain.model.ChatDto;
 import edu.java.domain.repository.ChatRepository;
 import edu.java.exception.exception.UserAlreadyExistException;
 import edu.java.scrapper.IntegrationTest;
@@ -26,7 +26,7 @@ public class JpaTgChatRepositoryTest extends IntegrationTest {
     @Transactional
     public void addFirstTime() {
         long chatId = 1234;
-        var expected = new ChatDTO(chatId, true);
+        var expected = new ChatDto(chatId, true);
 
         assertDoesNotThrow(() -> jpaChatRepository.add(chatId));
         var response = jpaChatRepository.findAll();

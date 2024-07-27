@@ -1,4 +1,4 @@
-package edu.java.model;
+package edu.java.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class StackOverFlowQuestionUriDTO extends UriDTO {
-    private Integer questionId;
+public class ChatDto {
+    private Long chatId;
+    private boolean active;
 }

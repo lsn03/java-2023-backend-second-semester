@@ -1,21 +1,21 @@
 package edu.java.scrapper.hw6.jpa.service;
 
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.LinkDto;
 import edu.java.exception.exception.IncorrectParametersException;
 import edu.java.exception.exception.ListEmptyException;
 import edu.java.exception.exception.RepeatTrackException;
 import edu.java.scrapper.IntegrationTest;
 import edu.java.service.database.LinkService;
 import edu.java.service.database.TgChatService;
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,14 +31,15 @@ public class JpaLinkServiceTest extends IntegrationTest {
     @Autowired
     private LinkService linkService;
     URI uri = URI.create("https://github.com/lsn03/java-2023-backend-second-semester/pull/5");
-    LinkDTO linkDTO;
+
     OffsetDateTime createdAt = OffsetDateTime.of(2015, 1, 1, 1, 1, 1, 0, ZoneOffset.UTC);
+    private LinkDto linkDTO;
 
     @Test
     @Transactional
     @Rollback
     public void testAddFirstTimeSuccess() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(uri);
         linkDTO.setTgChatId(TG_CHAT_ID);
         linkDTO.setCreatedAt(createdAt);
@@ -55,7 +56,7 @@ public class JpaLinkServiceTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void testAddTwiceTime() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(uri);
         linkDTO.setTgChatId(TG_CHAT_ID);
         linkDTO.setCreatedAt(createdAt);
@@ -70,7 +71,7 @@ public class JpaLinkServiceTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void testAddInvalidLink() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(URI.create("https://example.com"));
         linkDTO.setTgChatId(TG_CHAT_ID);
         linkDTO.setCreatedAt(createdAt);
@@ -92,7 +93,7 @@ public class JpaLinkServiceTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void testRemoveForOneChat() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(uri);
         linkDTO.setTgChatId(TG_CHAT_ID);
         linkDTO.setCreatedAt(createdAt);
@@ -109,7 +110,7 @@ public class JpaLinkServiceTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void testRemoveForTwoChats() {
-        linkDTO = new LinkDTO();
+        linkDTO = new LinkDto();
         linkDTO.setUri(uri);
         linkDTO.setTgChatId(TG_CHAT_ID);
         linkDTO.setCreatedAt(createdAt);

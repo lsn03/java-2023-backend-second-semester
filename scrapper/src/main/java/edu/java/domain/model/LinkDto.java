@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class LinkDTO {
+public class LinkDto {
     private URI uri;
     private Long tgChatId;
     private Long linkId;
@@ -25,7 +25,7 @@ public class LinkDTO {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        LinkDTO linkDTO = (LinkDTO) o;
+        LinkDto linkDTO = (LinkDto) o;
         return Objects.equals(uri, linkDTO.uri) && Objects.equals(tgChatId, linkDTO.tgChatId)
             && Objects.equals(linkId, linkDTO.linkId) && Objects.equals(createdAt, linkDTO.createdAt)
             && Objects.equals(lastUpdate, linkDTO.lastUpdate);

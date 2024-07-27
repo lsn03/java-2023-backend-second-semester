@@ -1,6 +1,6 @@
 package edu.java.domain.repository.jpa;
 
-import edu.java.domain.model.GitHubCommitDTO;
+import edu.java.domain.model.GitHubCommitDto;
 import edu.java.domain.repository.GitHubRepository;
 import edu.java.domain.repository.jpa.mapper.MapperGitHubCommitDTOGitHubCommitEntity;
 import edu.java.exception.exception.RecordAlreadyExistException;
@@ -10,7 +10,6 @@ import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 public class JpaGitHubRepository implements GitHubRepository {
@@ -18,8 +17,7 @@ public class JpaGitHubRepository implements GitHubRepository {
     private final JpaGitHubRepositoryInterface jpaGitHubRepository;
 
     @Override
-    @Transactional
-    public Integer addCommits(List<GitHubCommitDTO> gitHubCommitList) {
+    public Integer addCommits(List<GitHubCommitDto> gitHubCommitList) {
         int cnt = 0;
         for (var commitDto : gitHubCommitList) {
             var entity = MapperGitHubCommitDTOGitHubCommitEntity.dtoToEntity(commitDto);
@@ -41,8 +39,7 @@ public class JpaGitHubRepository implements GitHubRepository {
     }
 
     @Override
-    @Transactional
-    public Integer deleteCommits(List<GitHubCommitDTO> gitHubCommitList) {
+    public Integer deleteCommits(List<GitHubCommitDto> gitHubCommitList) {
         int cnt = 0;
         for (var commit : gitHubCommitList) {
             var entity = jpaGitHubRepository.findByLinkEntityLinkIdAndSha(commit.getLinkId(), commit.getSha());
@@ -56,15 +53,13 @@ public class JpaGitHubRepository implements GitHubRepository {
     }
 
     @Override
-    @Transactional
-    public List<GitHubCommitDTO> getCommits(Long linkId) {
+    public List<GitHubCommitDto> getCommits(Long linkId) {
         return jpaGitHubRepository.findAllByLinkEntityLinkId(linkId).stream()
             .map(MapperGitHubCommitDTOGitHubCommitEntity::entityToDto).toList();
     }
 
     @Override
-    @Transactional
-    public List<GitHubCommitDTO> getCommits(URI uri) {
+    public List<GitHubCommitDto> getCommits(URI uri) {
         return jpaGitHubRepository.findAllByLinkEntityUri(uri.toString()).stream()
             .map(MapperGitHubCommitDTOGitHubCommitEntity::entityToDto).toList();
     }

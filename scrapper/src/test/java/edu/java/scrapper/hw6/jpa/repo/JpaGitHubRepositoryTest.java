@@ -1,7 +1,7 @@
 package edu.java.scrapper.hw6.jpa.repo;
 
-import edu.java.domain.model.GitHubCommitDTO;
-import edu.java.domain.model.LinkDTO;
+import edu.java.domain.model.GitHubCommitDto;
+import edu.java.domain.model.LinkDto;
 import edu.java.domain.repository.GitHubRepository;
 import edu.java.domain.repository.LinkRepository;
 import edu.java.exception.exception.RecordAlreadyExistException;
@@ -33,14 +33,14 @@ public class JpaGitHubRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     public void addCommits() {
-        LinkDTO linkDTO = new LinkDTO();
+        LinkDto linkDTO = new LinkDto();
         linkDTO.setTgChatId(1l);
         linkDTO.setUri(uri);
         linkRepository.add(linkDTO);
         var commitsList = List.of(
-            new GitHubCommitDTO(null, linkDTO.getLinkId(), "shashasha1", "author1", LocalDateTime.now().atOffset(
+            new GitHubCommitDto(null, linkDTO.getLinkId(), "shashasha1", "author1", LocalDateTime.now().atOffset(
                 ZoneOffset.UTC), "message"),
-            new GitHubCommitDTO(
+            new GitHubCommitDto(
                 null,
                 linkDTO.getLinkId(),
                 "shashasha2",
@@ -49,11 +49,11 @@ public class JpaGitHubRepositoryTest extends IntegrationTest {
                 "message2"
             )
         );
-        LinkDTO linkDTO2 = new LinkDTO();
+        LinkDto linkDTO2 = new LinkDto();
         linkDTO2.setTgChatId(25l);
         linkDTO2.setUri(URI.create("https://example.com/2"));
         linkRepository.add(linkDTO2);
-        gitHubRepository.addCommits(List.of(new GitHubCommitDTO(
+        gitHubRepository.addCommits(List.of(new GitHubCommitDto(
             null,
             linkDTO2.getLinkId(),
             "shashasha233",
@@ -77,14 +77,14 @@ public class JpaGitHubRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     public void deleteCommits() {
-        LinkDTO linkDTO = new LinkDTO();
+        LinkDto linkDTO = new LinkDto();
         linkDTO.setTgChatId(1l);
         linkDTO.setUri(uri);
         linkRepository.add(linkDTO);
         var commitsList = List.of(
-            new GitHubCommitDTO(null, linkDTO.getLinkId(), "shashasha1", "author1", LocalDateTime.now().atOffset(
+            new GitHubCommitDto(null, linkDTO.getLinkId(), "shashasha1", "author1", LocalDateTime.now().atOffset(
                 ZoneOffset.UTC), "message"),
-            new GitHubCommitDTO(
+            new GitHubCommitDto(
                 null,
                 linkDTO.getLinkId(),
                 "shashasha2",
@@ -105,14 +105,14 @@ public class JpaGitHubRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     public void addCommitsException() {
-        LinkDTO linkDTO = new LinkDTO();
+        LinkDto linkDTO = new LinkDto();
         linkDTO.setTgChatId(1l);
         linkDTO.setUri(uri);
         linkRepository.add(linkDTO);
         var commitsList = List.of(
-            new GitHubCommitDTO(null, linkDTO.getLinkId(), "shashasha1", "author1", LocalDateTime.now().atOffset(
+            new GitHubCommitDto(null, linkDTO.getLinkId(), "shashasha1", "author1", LocalDateTime.now().atOffset(
                 ZoneOffset.UTC), "message"),
-            new GitHubCommitDTO(
+            new GitHubCommitDto(
                 null,
                 linkDTO.getLinkId(),
                 "shashasha2",

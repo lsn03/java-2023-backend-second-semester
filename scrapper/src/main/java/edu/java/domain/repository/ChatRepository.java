@@ -1,6 +1,6 @@
 package edu.java.domain.repository;
 
-import edu.java.domain.model.ChatDTO;
+import edu.java.domain.model.ChatDto;
 import java.util.List;
 
 public interface ChatRepository {
@@ -9,5 +9,5 @@ public interface ChatRepository {
 
     void remove(Long tgChatId);
 
-    List<ChatDTO> findAll();
+    List<ChatDto> findAll();
 }

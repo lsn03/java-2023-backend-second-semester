@@ -1,16 +1,16 @@
 package edu.java.scrapper.hw6.jpa.service;
 
-import edu.java.domain.model.ChatDTO;
+import edu.java.domain.model.ChatDto;
 import edu.java.exception.exception.UserAlreadyExistException;
 import edu.java.scrapper.IntegrationTest;
 import edu.java.service.database.TgChatService;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,7 +29,7 @@ public class JpaChatServiceTest extends IntegrationTest {
     public void addFirstTime() {
         tgChatService.add(TG_CHAT_ID);
         var response = tgChatService.findAll();
-        assertEquals(List.of(new ChatDTO(TG_CHAT_ID, true)), response);
+        assertEquals(List.of(new ChatDto(TG_CHAT_ID, true)), response);
     }
 
     @Test
@@ -86,6 +86,6 @@ public class JpaChatServiceTest extends IntegrationTest {
         tgChatService.add(TG_CHAT_ID);
         tgChatService.remove(TG_CHAT_ID);
         var response = (tgChatService.findAll());
-        assertEquals(List.of(new ChatDTO(TG_CHAT_ID, false)), response);
+        assertEquals(List.of(new ChatDto(TG_CHAT_ID, false)), response);
     }
 }
